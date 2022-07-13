@@ -44,22 +44,6 @@ const FavoritesScreen = () => {
       >
         <ScrollView>
           <Stack space={4} w="100%" alignItems="center">
-            {favorites.length > 0 ? (
-              <Input
-                bg="#CFB53B"
-                p={3}
-                w={{
-                  base: "85%",
-                  md: "25%",
-                }}
-                placeholder="Search List"
-                onChangeText={(text) => searchFilterFunction(text)}
-                value={search}
-                underlineColorAndroid="transparent"
-                placeholderTextColor="white"
-                color="white"
-              />
-            ) : null}
             <Error error={error} />
             {favorites.map((result, i) => {
               return (
