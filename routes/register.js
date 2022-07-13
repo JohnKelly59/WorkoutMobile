@@ -35,7 +35,7 @@ router.post("/register", async function (req, res, done) {
   } catch (err) {
     console.error(err);
     res.status(400).send({
-      message: error,
+      message: err,
     });
   }
 });
