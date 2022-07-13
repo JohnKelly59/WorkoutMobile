@@ -36,7 +36,7 @@ import { useWorkout } from "../contexts/WorkoutContext";
 import WorkoutSearchList from "../components/WorkoutSearchList";
 import ChosenExercisesTable from "../components/ChosenExercisesTable";
 
-const WorkoutSettingsScreen = (props) => {
+const WorkoutSettingsTimeScreen = (props) => {
   const targetMuscles = [
     { label: "", value: "" },
     { label: "Abductors", value: "abductors" },
@@ -65,7 +65,6 @@ const WorkoutSettingsScreen = (props) => {
   const onClose = () => setIsOpen(false);
   const cancelRef = React.useRef(null);
 
-  const [searchParam, setSearchParam] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
   const {
@@ -111,43 +110,42 @@ const WorkoutSettingsScreen = (props) => {
               p="4"
               pb="3"
             >
-              Search For Exercise
+              Workout Duration
             </Heading>
-            <Select
-              textAlign="center"
-              bg="#CFB53B"
-              p={3}
-              color="white"
-              _actionSheetBody={{ h: "300" }}
-              style={{ flex: 1 }}
-              selectedValue={searchParam}
-              minWidth="100%"
-              accessibilityLabel="Exercise Count"
-              placeholder="Search by Muscle"
-              placeholderTextColor="white"
-              _selectedItem={{
-                bg: "#CFB53B",
-                endIcon: <CheckIcon size="5" />,
-              }}
-              mt={1}
-              onValueChange={(itemValue) => selectedSearchParam(itemValue)}
-            >
-              {targetMuscles.map((muscle, i) => {
-                return (
-                  <Select.Item
-                    label={muscle.label}
-                    value={muscle.value}
-                    key={i}
-                  />
-                );
-              })}
-            </Select>
+            <View style={styles.rnDateTimePicker}>
+              <TimePicker
+                defaultValue={{ hours: 0, minutes: 0, seconds: 0 }}
+                hoursUnit="Hours"
+                minutesUnit="Minutes"
+                secondsUnit="Seconds"
+                value={workoutDuration}
+                onChange={(e) => durationDateChange(e)}
+                textColor="white"
+                pickerShows={["hours", "minutes", "seconds"]}
+              />
+            </View>
 
-            {chosenExercises.length > 0 ? (
-              <>
-                <ChosenExercisesTable />
-              </>
-            ) : null}
+            <Heading
+              alignItems="center"
+              color="#CFB53B"
+              fontSize="xl"
+              p="4"
+              pb="3"
+            >
+              Rest Between Sets
+            </Heading>
+            <View style={styles.rnDateTimePicker}>
+              <TimePicker
+                defaultValue={{ hours: 0, minutes: 0, seconds: 0 }}
+                hoursUnit="Hours"
+                minutesUnit="Minutes"
+                secondsUnit="Seconds"
+                value={restDuration}
+                onChange={(e) => restDateChange(e)}
+                textColor="white"
+                pickerShows={["hours", "minutes", "seconds"]}
+              />
+            </View>
           </Stack>
         </ScrollView>
         <WorkoutSearchList
@@ -159,15 +157,13 @@ const WorkoutSettingsScreen = (props) => {
 
         {chosenExercises.length > 0 ? (
           <Button
-            onPress={() =>
-              props.navigation.navigate("WorkoutSettingsTimeScreen")
-            }
+            onPress={() => props.navigation.navigate("WorkoutScreen")}
             style={styles.button}
             p={5}
             size="lg"
             minWidth="100%"
           >
-            Next
+            Begin Training
           </Button>
         ) : null}
 
@@ -207,4 +203,4 @@ const styles = StyleSheet.create({
   text: { color: "#CFB53B", fontSize: 20, paddingTop: 20 },
 });
 
-export default WorkoutSettingsScreen;
+export default WorkoutSettingsTimeScreen;

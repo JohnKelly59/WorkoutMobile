@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Text, ScrollView, StyleSheet, ImageBackground } from "react-native";
 import { Button, NativeBaseProvider, Stack } from "native-base";
+import { useWorkout } from "../contexts/WorkoutContext";
 
 function HomeScreen(props) {
+  const { chosenExercises } = useWorkout();
+
   return (
     <ImageBackground
       source={require("../../public/images/ape.jpg")}
@@ -18,15 +21,31 @@ function HomeScreen(props) {
           alignItems="center"
           style={{ paddingTop: 190 }}
         >
-          <Button
-            size={250}
-            style={styles.button}
-            onPress={() => props.navigation.navigate("WorkoutSettingsScreen")}
-          >
-            <Text style={{ color: "white", fontWeight: "bold", fontSize: 30 }}>
-              Start Workout
-            </Text>
-          </Button>
+          {chosenExercises.length > 0 ? (
+            <Button
+              size={250}
+              style={styles.button}
+              onPress={() => props.navigation.navigate("WorkoutScreen")}
+            >
+              <Text
+                style={{ color: "white", fontWeight: "bold", fontSize: 30 }}
+              >
+                Resume Workout
+              </Text>
+            </Button>
+          ) : (
+            <Button
+              size={250}
+              style={styles.button}
+              onPress={() => props.navigation.navigate("WorkoutSettingsScreen")}
+            >
+              <Text
+                style={{ color: "white", fontWeight: "bold", fontSize: 30 }}
+              >
+                Start Workout
+              </Text>
+            </Button>
+          )}
         </Stack>
       </NativeBaseProvider>
     </ImageBackground>
