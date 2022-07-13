@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "monsterFitness",
-    "slug": "monsterFitness",
+    "name": "Monster Fitness",
+    "slug": "monsterFitnessWorkoutApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/apeHomeIcon.jpg",
@@ -14,10 +14,13 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "userInterfaceStyle": "automatic"
+      "userInterfaceStyle": "automatic",
+      "bundleIdentifier": "com.batboy12.monsterFitnessWorkoutApp"
     },
     "android": {
       "userInterfaceStyle": "automatic",

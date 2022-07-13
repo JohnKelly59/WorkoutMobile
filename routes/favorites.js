@@ -17,7 +17,7 @@ router.post("/favorites", async function (req, res) {
     //check if db is empty
     if (favData.length == 0) {
       console.log("No record found");
-      res.send({ message: "No Favorites" });
+      res.send([]);
     } else {
       const favWorkouts = [];
 
