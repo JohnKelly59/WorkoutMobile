@@ -1,0 +1,24 @@
+{
+  "cli": {
+    "version": ">= 0.55.1"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {}
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "batboy.john91@gmail.com",
+        "ascAppId": "1634358262",
+        "appleTeamId": "8G7LBF94P8"
+      }
+    }
+  }
+}
