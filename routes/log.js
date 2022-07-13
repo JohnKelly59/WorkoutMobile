@@ -15,6 +15,10 @@ router.post("/log", async function (req, res) {
   }
 });
 
+router.get("/", async function (req, res) {
+  res.status(200).send("Success");
+});
+
 router.post("/addLog", async function (req, res) {
   // retrieves name and email from user
   let title = req.body.title;
