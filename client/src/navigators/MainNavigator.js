@@ -7,6 +7,7 @@ import SearchScreen from "../screens/SearchScreen";
 import RandomScreen from "../screens/RandomScreen";
 import LogsNavigator from "../navigators/LogsNavigator";
 import WorkoutNavigator from "../navigators/WorkoutNavigator";
+import AccountScreen from "../screens/AccountScreen";
 import { Button, Text } from "react-native";
 import {
   Ionicons,
@@ -41,7 +42,7 @@ const MainNavigator = () => {
     <>
       <Tab.Navigator
         initialRouteName={"Workout"}
-        screenOptions={{
+        screenOptions={({ route, navigation }) => ({
           tabBarActiveTintColor: "#CFB53B",
           headerTitleStyle: {
             color: "#CFB53B",
@@ -56,19 +57,13 @@ const MainNavigator = () => {
           headerRight: () => (
             <Button
               color="#CFB53B"
-              title="Log Out"
-              onPress={async () => {
-                try {
-                  setLoading(true);
-                  await logout();
-                } catch (e) {
-                  setError(e.message);
-                  setLoading(false);
-                }
+              title="Settings"
+              onPress={() => {
+                navigation.navigate("Account");
               }}
             />
           ),
-        }}
+        })}
       >
         <Tab.Screen
           name="Random"
@@ -123,6 +118,14 @@ const MainNavigator = () => {
             tabBarIcon: () => (
               <MaterialIcons name="notes" color={"#CFB53B"} size={24} />
             ),
+          }}
+        />
+        <Tab.Screen
+          name="Account"
+          component={AccountScreen}
+          options={{
+            tabBarButton: () => null,
+            tabBarVisible: false,
           }}
         />
       </Tab.Navigator>
