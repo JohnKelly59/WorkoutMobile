@@ -10,7 +10,7 @@ router.post("/register", async function (req, res, done) {
   const name = req.body.name;
   const email = req.body.email;
 
-  console.log(name);
+
   if (name === null || email === null || req.body.password === null) {
     res.status(400).send("No data");
   } else {
@@ -41,6 +41,7 @@ router.post("/register", async function (req, res, done) {
       res.status(400).send({
         message: err,
       });
+
     }
   }
 });
