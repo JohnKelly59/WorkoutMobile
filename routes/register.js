@@ -45,4 +45,28 @@ router.post("/register", async function (req, res, done) {
   }
 });
 
+router.post("/deleteUser", async function (req, res, done) {
+  const email = req.body.email;
+  console.log(email);
+  if (email === null) {
+    res.status(400).send("No data");
+  } else {
+    try {
+      let user = await User.findOneAndDelete({ email: email });
+      if (user) {
+        done(null, user, { message: "User Deleted" });
+        res.status(200).send("Success");
+      } else {
+        //creates new user
+        console.log("user was not deleted");
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(400).send({
+        message: err,
+      });
+    }
+  }
+});
+
 module.exports = router;

@@ -53,6 +53,15 @@ const useAuth = () => {
       },
 
       logout: async () => {
+        console.log("running logout?");
+        await SecureStore.deleteItemAsync("user");
+        dispatch(createAction("REMOVE_USER"));
+      },
+      deleteUser: async (user) => {
+        console.log(user);
+        const deleted = await axios.post(`${API_URL}/deleteUser`, {
+          email: user.email,
+        });
         await SecureStore.deleteItemAsync("user");
         dispatch(createAction("REMOVE_USER"));
       },
