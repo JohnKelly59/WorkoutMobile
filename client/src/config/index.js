@@ -1,3 +1,3 @@
 import { Platform } from "react-native";
 export const API_URL =
-  Platform.OS === "ios" ? "https://mwafjk.com" : "http://localhost:8081";
+  Platform.OS === "ios" ? "http://192.168.1.138:8081" : "http://localhost:8081";
