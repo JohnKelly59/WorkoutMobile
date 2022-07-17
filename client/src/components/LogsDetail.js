@@ -71,7 +71,7 @@ const LogsDetail = (props) => {
   };
 
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: "black" }}>
       <ScrollView contentContainerStyle={[styles.container]}>
         <Text style={styles.time}>{`Created At ${formatDate(log.time)}`}</Text>
         <Text style={styles.title}>{log.title}</Text>
@@ -92,7 +92,7 @@ const LogsDetail = (props) => {
         onSubmit={handleUpdate}
         visible={showModal}
       />
-    </>
+    </View>
   );
 };
 
@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
   container: {
     // flex: 1,
     paddingTop: 50,
+
     paddingHorizontal: 15,
   },
   title: {

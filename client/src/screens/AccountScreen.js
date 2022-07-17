@@ -57,14 +57,27 @@ const AccountScreen = ({ navigation }) => {
         <NativeBaseProvider>
           <Stack space={4} w="100%" alignItems="center">
             <Error error={error} />
-
+            <Text style={{ color: "white" }}>{user.email}</Text>
+            <LogoutDialog
+              logout={logout}
+              isLogoutOpen={isLogoutOpen}
+              onLogoutClose={onLogoutClose}
+              cancelRef={cancelRef}
+            />
+            <DeleteDialog
+              user={user}
+              deleteUser={deleteUser}
+              isDeleteOpen={isDeleteOpen}
+              onDeleteClose={onDeleteClose}
+              cancelRef2={cancelRef2}
+            />
             <Button
               p={5}
               size="lg"
               minWidth="100%"
               style={styles.button}
               onPress={() => {
-                console.log(isLogoutOpen), setIsLogoutOpen(!isLogoutOpen);
+                setIsLogoutOpen(!isLogoutOpen);
               }}
             >
               Log Out
@@ -81,19 +94,6 @@ const AccountScreen = ({ navigation }) => {
           >
             Delete Account
           </Button>
-          <LogoutDialog
-            logout={logout}
-            isLogoutOpen={isLogoutOpen}
-            onLogoutClose={onLogoutClose}
-            cancelRef={cancelRef}
-          />
-          <DeleteDialog
-            user={user}
-            deleteUser={deleteUser}
-            isDeleteOpen={isDeleteOpen}
-            onLogoutClose={onDeleteClose}
-            cancelRef={cancelRef2}
-          />
         </NativeBaseProvider>
         <Loading loading={loading} />
       </AuthContainer>
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button: {
-    marginTop: 460,
+    marginTop: 200,
     backgroundColor: "#CFB53B",
     flex: 1,
     borderRadius: 0,

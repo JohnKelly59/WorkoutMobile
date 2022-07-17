@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import FavoriteStar from "../components/FavoriteStar";
 import {
+  Spacer,
   Input,
   Heading,
   AspectRatio,
@@ -29,7 +30,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFavorites } from "../contexts/FavoritesContext";
 
-const FavoritesScreen = () => {
+const FavoritesScreen = ({ navigation }) => {
   const { favorites } = useFavorites();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
@@ -43,8 +44,24 @@ const FavoritesScreen = () => {
       <NativeBaseProvider
         style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
       >
+        <HStack space={0} justifyContent="center" alignItems="center">
+          <Button bg={"#CFB53B"} style={{ flex: 1 }} borderRadius={1} size="lg">
+            Exercises
+          </Button>
+          <Button
+            bg={"black"}
+            style={{ flex: 1 }}
+            borderRadius={1}
+            size="lg"
+            onPress={() => {
+              navigation.navigate("FavoriteWorkoutsScreen");
+            }}
+          >
+            Workouts
+          </Button>
+        </HStack>
         <ScrollView>
-          <Stack space={4} w="100%" alignItems="center">
+          <Stack space={3} w="100%" alignItems="center">
             <Error error={error} />
             {favorites.length <= 0 ? (
               <View style={styles.emptyHeaderContainer}>

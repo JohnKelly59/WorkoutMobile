@@ -33,7 +33,9 @@ import {
   Checkbox,
 } from "native-base";
 import { useWorkout } from "../contexts/WorkoutContext";
+import { useFavoriteWorkouts } from "../contexts/FavoriteWorkoutsContext";
 import WorkoutSearchList from "../components/WorkoutSearchList";
+import FavoritesSearchList from "../components/FavoritesSearchList";
 import ChosenExercisesTable from "../components/ChosenExercisesTable";
 
 const WorkoutSettingsScreen = (props) => {
@@ -61,11 +63,16 @@ const WorkoutSettingsScreen = (props) => {
   ];
 
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isFavoriteOpen, setIsFavoriteOpen] = React.useState(false);
 
   const onClose = () => setIsOpen(false);
   const cancelRef = React.useRef(null);
+  const onFavoriteClose = () => setIsFavoriteOpen(false);
+  const cancelRef2 = React.useRef(null);
 
   const [searchParam, setSearchParam] = React.useState("");
+  const [favoriteParam, setFavoritehParam] = React.useState("");
+  const [favWorkoutParam, setFavWorkoutParam] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
   const {
@@ -76,7 +83,10 @@ const WorkoutSettingsScreen = (props) => {
     setRestDuration,
     chosenExercises,
     getExerciseSearch,
+    addChosenExercise,
   } = useWorkout();
+
+  const { favoriteWorkouts } = useFavoriteWorkouts();
 
   const durationDateChange = (e) => {
     console.log(e);
@@ -122,8 +132,8 @@ const WorkoutSettingsScreen = (props) => {
               style={{ flex: 1 }}
               selectedValue={searchParam}
               minWidth="100%"
-              accessibilityLabel="Exercise Count"
-              placeholder="Search by Muscle"
+              accessibilityLabel="Search Param"
+              placeholder="Search for Exercise"
               placeholderTextColor="white"
               _selectedItem={{
                 bg: "#CFB53B",
@@ -143,6 +153,67 @@ const WorkoutSettingsScreen = (props) => {
               })}
             </Select>
 
+            <Heading
+              alignItems="center"
+              color="#CFB53B"
+              fontSize="xl"
+              p="4"
+              pb="3"
+            >
+              Favorite Exercises
+            </Heading>
+            <Button
+              style={styles.favoritesButton}
+              onPress={() => setIsFavoriteOpen(!isFavoriteOpen)}
+              p={2}
+              size="md"
+              minWidth="100%"
+            >
+              Favorite Exercises
+            </Button>
+
+            <Heading
+              alignItems="center"
+              color="#CFB53B"
+              fontSize="xl"
+              p="4"
+              pb="3"
+            >
+              Favorite Workouts
+            </Heading>
+            <Select
+              textAlign="center"
+              bg="#CFB53B"
+              p={3}
+              color="white"
+              _actionSheetBody={{ h: "300" }}
+              style={{ flex: 1 }}
+              selectedValue={searchParam}
+              minWidth="100%"
+              accessibilityLabel="Workouts"
+              placeholder="Favorite Workouts"
+              placeholderTextColor="white"
+              _selectedItem={{
+                bg: "#CFB53B",
+                endIcon: <CheckIcon size="5" />,
+              }}
+              mt={1}
+              onValueChange={async (itemValue) => {
+                let picked = await favoriteWorkouts[itemValue].exercises.map(
+                  (exercise) => {
+                    return exercise.name;
+                  }
+                );
+                addChosenExercise(picked);
+              }}
+            >
+              {favoriteWorkouts.map((favWorkout, i) => {
+                return (
+                  <Select.Item label={favWorkout.title} value={i} key={i} />
+                );
+              })}
+            </Select>
+
             {chosenExercises.length > 0 ? (
               <>
                 <ChosenExercisesTable />
@@ -155,6 +226,11 @@ const WorkoutSettingsScreen = (props) => {
           isOpen={isOpen}
           onClose={onClose}
           cancelRef={cancelRef}
+        />
+        <FavoritesSearchList
+          isOpen={isFavoriteOpen}
+          onClose={onFavoriteClose}
+          cancelRef={cancelRef2}
         />
 
         {chosenExercises.length > 0 ? (
@@ -196,6 +272,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     borderColor: "white",
     borderWidth: 1,
+  },
+  favoritesButton: {
+    backgroundColor: "#CFB53B",
   },
   rnDateTimePicker: {
     borderColor: "white",

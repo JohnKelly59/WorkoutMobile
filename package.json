@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "npm run server",
+    "start": "cross-env concurrently \"npm run server\" \"npm run client\"",
     "client": "cd client &&  cross-env npm start",
     "server": "cross-env  nodemon server.js --ignore client/",
     "test": "echo \"Error: no test specified\" && exit 1"

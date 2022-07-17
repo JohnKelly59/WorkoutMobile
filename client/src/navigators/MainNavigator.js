@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ImageBackground, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import CoverScreen from "../screens/FavoritesScreen";
+import FavoriteWorkoutsNavigator from "../navigators/FavoriteWorkoutsNavigator";
 import HomeScreen from "../screens/HomeScreen";
 import SearchScreen from "../screens/SearchScreen";
 import RandomScreen from "../screens/RandomScreen";
@@ -78,7 +78,7 @@ const MainNavigator = () => {
         />
         <Tab.Screen
           name="Favorites"
-          component={CoverScreen}
+          component={FavoriteWorkoutsNavigator}
           options={{
             headerStatusBarHeight: 40,
             tabBarLabel: "Favorites",
