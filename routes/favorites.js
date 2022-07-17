@@ -109,7 +109,7 @@ router.post("/addFavoriteWorkout", async function (req, res) {
 router.post("/removeFavoriteWorokut", async function (req, res) {
   try {
     // delete favorite exercise from favorite db
-    const deletion = await Favorite.deleteOne({
+    const deletion = await FavoriteWorkouts.deleteOne({
       userEmail: req.body.email,
       title: req.body.title,
     });
