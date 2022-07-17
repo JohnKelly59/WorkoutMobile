@@ -6,6 +6,7 @@ import WorkoutScreen from "../screens/WorkoutScreen";
 import WorkoutSettingsScreen from "../screens/WorkoutSettingsScreen";
 import WorkoutSettingsTimeScreen from "../screens/WorkoutSettingsTimeScreen";
 import WorkoutProvider from "../contexts/WorkoutContext";
+import FavoriteWorkoutsProvider from "../contexts/FavoriteWorkoutsContext";
 import HomeScreen from "../screens/HomeScreen";
 
 const WorkoutStack = createStackNavigator();
@@ -17,26 +18,30 @@ const WorkoutNavigator = (navigation) => {
 
   return (
     <WorkoutProvider>
-      <WorkoutStack.Navigator
-        screenOptions={{ headerTitle: "", headerTransparent: true }}
-      >
-        <WorkoutStack.Screen component={HomeScreen} name="HomeScreen" />
-        <WorkoutStack.Screen
-          component={RenderWorkoutSettingsScreen}
-          name="WorkoutSettingsScreen"
-          options={{ headerLeft: () => null }}
-        />
-        <WorkoutStack.Screen
-          component={WorkoutSettingsTimeScreen}
-          name="WorkoutSettingsTimeScreen"
-          options={{ headerLeft: () => null }}
-        />
-        <WorkoutStack.Screen
-          component={WorkoutScreen}
-          name="WorkoutScreen"
-          options={{ headerLeft: () => null }}
-        />
-      </WorkoutStack.Navigator>
+      <FavoritesProvider>
+        <FavoriteWorkoutsProvider>
+          <WorkoutStack.Navigator
+            screenOptions={{ headerTitle: "", headerTransparent: true }}
+          >
+            <WorkoutStack.Screen component={HomeScreen} name="HomeScreen" />
+            <WorkoutStack.Screen
+              component={RenderWorkoutSettingsScreen}
+              name="WorkoutSettingsScreen"
+              options={{ headerLeft: () => null }}
+            />
+            <WorkoutStack.Screen
+              component={WorkoutSettingsTimeScreen}
+              name="WorkoutSettingsTimeScreen"
+              options={{ headerLeft: () => null }}
+            />
+            <WorkoutStack.Screen
+              component={WorkoutScreen}
+              name="WorkoutScreen"
+              options={{ headerLeft: () => null }}
+            />
+          </WorkoutStack.Navigator>
+        </FavoriteWorkoutsProvider>
+      </FavoritesProvider>
     </WorkoutProvider>
   );
 };

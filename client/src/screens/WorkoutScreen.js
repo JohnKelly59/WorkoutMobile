@@ -16,6 +16,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import CardFlip from "react-native-card-flip";
 import { useWorkout } from "../contexts/WorkoutContext";
+import { useFavoriteWorkouts } from "../contexts/FavoriteWorkoutsContext";
 import Carousel from "react-native-snap-carousel";
 import {
   Input,
@@ -52,11 +53,12 @@ const WorkoutScreen = ({ navigation }) => {
     chosenExercises,
     getExerciseSearch,
     addChosenExercise,
-    removeChosenExercise,
     editReps,
     editSets,
     startOver,
   } = useWorkout();
+
+  const { addFavoriteWorkout } = useFavoriteWorkouts();
 
   useEffect(() => {
     getChosenExerciseCards(chosenExercises);
@@ -76,11 +78,24 @@ const WorkoutScreen = ({ navigation }) => {
   const onClose = () => setIsOpen(false);
   const [start, setStart] = React.useState(true);
   const [running, setRunning] = React.useState(false);
+  const [end, setEnd] = React.useState(false);
+  const onEnd = () => setEnd(false);
   const onStart = () => {
     setStart(false), setRunning(true);
   };
+  const [title, setTitle] = React.useState("");
 
   const PATTERN = [1 * 1000];
+
+  const handleOnSubmit = async () => {
+    const favoriteWorkout = {
+      id: Date.now(),
+      title: title,
+      exercises: chosenExercises,
+      time: Date.now(),
+    };
+    addFavoriteWorkout(favoriteWorkout);
+  };
 
   const openTimer = (e) => {
     if (e === true) {
@@ -89,25 +104,16 @@ const WorkoutScreen = ({ navigation }) => {
   };
 
   const displayEndAlert = () => {
-    Alert.alert(
-      "Finished?",
-      "Are you sure you want to end the workout?",
-      [
-        {
-          text: "Finish",
-          onPress: () => {
-            startOver(), navigation.navigate("HomeScreen");
-          },
-        },
-        {
-          text: "Cancel",
-          onPress: () => console.log("cancel"),
-        },
-      ],
+    setEnd(true);
+  };
+
+  const needTitleAlert = () => {
+    Alert.alert("Wait!", "You need a title to save a workout.", [
       {
-        cancelable: true,
-      }
-    );
+        text: "OK",
+        onPress: () => console.log("ok"),
+      },
+    ]);
   };
 
   const rendorCarousel = ({ index }) => {
@@ -387,6 +393,66 @@ const WorkoutScreen = ({ navigation }) => {
                   onPress={onStart}
                 >
                   Begin Workout
+                </Button>
+              </Button.Group>
+            </AlertDialog.Footer>
+          </AlertDialog.Content>
+        </AlertDialog>
+
+        <AlertDialog
+          style={{
+            paddingTop: "50%",
+            height: "80%",
+            width: "100%",
+          }}
+          isOpen={end}
+          onClose={onEnd}
+        >
+          <AlertDialog.Content>
+            <AlertDialog.CloseButton />
+            <AlertDialog.Header backgroundColor="#CFB53B">
+              Finished?
+            </AlertDialog.Header>
+            <AlertDialog.Body backgroundColor="black">
+              <Text style={{ color: "white" }}>
+                Do you want to save this workout?
+              </Text>
+              <Input
+                placeholder="Insert Workout Name"
+                placeholderTextColor="white"
+                color="white"
+                onChangeText={setTitle}
+              />
+            </AlertDialog.Body>
+            <AlertDialog.Footer
+              backgroundColor="#CFB53B"
+              justifyContent="flex-end"
+            >
+              <Button.Group>
+                <Button
+                  variant="unstyled"
+                  colorScheme="coolGray"
+                  onPress={() => {
+                    startOver(), navigation.navigate("HomeScreen");
+                  }}
+                >
+                  Don't Save
+                </Button>
+                <Button
+                  backgroundColor="black"
+                  _text={{
+                    color: "#CFB53B",
+                  }}
+                  size="sm"
+                  onPress={async () => {
+                    title !== ""
+                      ? handleOnSubmit().then(() => {
+                          startOver(), navigation.navigate("HomeScreen");
+                        })
+                      : needTitleAlert();
+                  }}
+                >
+                  Save
                 </Button>
               </Button.Group>
             </AlertDialog.Footer>
