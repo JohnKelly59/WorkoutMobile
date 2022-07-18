@@ -53,36 +53,24 @@ const AccountScreen = ({ navigation }) => {
       resizeMode="cover"
       style={styles.image}
     >
-      <AuthContainer>
-        <NativeBaseProvider>
-          <Stack space={4} w="100%" alignItems="center">
-            <Error error={error} />
-            <Text style={{ color: "white" }}>{user.email}</Text>
-            <LogoutDialog
-              logout={logout}
-              isLogoutOpen={isLogoutOpen}
-              onLogoutClose={onLogoutClose}
-              cancelRef={cancelRef}
-            />
-            <DeleteDialog
-              user={user}
-              deleteUser={deleteUser}
-              isDeleteOpen={isDeleteOpen}
-              onDeleteClose={onDeleteClose}
-              cancelRef2={cancelRef2}
-            />
-            <Button
-              p={5}
-              size="lg"
-              minWidth="100%"
-              style={styles.button}
-              onPress={() => {
-                setIsLogoutOpen(!isLogoutOpen);
-              }}
-            >
-              Log Out
-            </Button>
-          </Stack>
+      <NativeBaseProvider
+        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+      >
+        <ScrollView>
+          <Text style={{ color: "white" }}>{user.email}</Text>
+
+          <Button
+            p={5}
+            size="lg"
+            minWidth="100%"
+            style={styles.button}
+            onPress={() => {
+              setIsLogoutOpen(!isLogoutOpen);
+            }}
+          >
+            Log Out
+          </Button>
+
           <Button
             p={2}
             size="lg"
@@ -94,9 +82,22 @@ const AccountScreen = ({ navigation }) => {
           >
             Delete Account
           </Button>
-        </NativeBaseProvider>
-        <Loading loading={loading} />
-      </AuthContainer>
+        </ScrollView>
+        <LogoutDialog
+          logout={logout}
+          isLogoutOpen={isLogoutOpen}
+          onLogoutClose={onLogoutClose}
+          cancelRef={cancelRef}
+        />
+        <DeleteDialog
+          user={user}
+          deleteUser={deleteUser}
+          isDeleteOpen={isDeleteOpen}
+          onDeleteClose={onDeleteClose}
+          cancelRef2={cancelRef2}
+        />
+      </NativeBaseProvider>
+      <Loading loading={loading} />
     </ImageBackground>
   );
 };
