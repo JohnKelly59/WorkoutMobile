@@ -114,6 +114,22 @@ const LoginScreen = ({ navigation }) => {
           >
             Sign In
           </Button>
+          <Button
+            p={5}
+            size="lg"
+            minWidth="100%"
+            style={styles.search}
+            onPress={async () => {
+              try {
+                await navigation.navigate("GuestSearchScreen");
+              } catch (e) {
+                setError("Incorrect username or password");
+                setLoading(false);
+              }
+            }}
+          >
+            Seacrch Exercises
+          </Button>
         </NativeBaseProvider>
         <Loading loading={loading} />
       </AuthContainer>
@@ -140,6 +156,11 @@ const styles = StyleSheet.create({
   },
   signin: {
     marginTop: 0,
+    backgroundColor: "#CFB53B",
+    borderRadius: 0,
+  },
+  search: {
+    marginBottom: 20,
     backgroundColor: "#CFB53B",
     borderRadius: 0,
   },
