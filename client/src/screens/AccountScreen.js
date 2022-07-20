@@ -24,13 +24,14 @@ import {
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import DeleteDialog from "../components/DeleteDialog";
 import LogoutDialog from "../components/LogoutDialog";
+import UserContext from "../contexts/UserContext";
 
 const AccountScreen = ({ navigation }) => {
   const { logout, deleteUser } = React.useContext(AuthContext);
   const [show, setShow] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
-  const [user, setUser] = React.useState({});
+  const user = React.useContext(UserContext);
   const [isLogoutOpen, setIsLogoutOpen] = React.useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
   const cancelRef = React.useRef(null);
@@ -38,14 +39,6 @@ const AccountScreen = ({ navigation }) => {
 
   const onLogoutClose = () => setIsLogoutOpen(false);
   const onDeleteClose = () => setIsDeleteOpen(false);
-
-  React.useEffect(() => {
-    SecureStore.getItemAsync("user").then((user) => {
-      if (user) {
-        setUser(JSON.parse(user));
-      }
-    });
-  }, []);
 
   return (
     <ImageBackground
@@ -58,30 +51,45 @@ const AccountScreen = ({ navigation }) => {
       >
         <ScrollView>
           <Text style={{ color: "white" }}>{user.email}</Text>
+          {user.firstName === "Guest" ? (
+            <Button
+              p={7}
+              size="lg"
+              minWidth="100%"
+              style={styles.button}
+              onPress={() => {
+                logout();
+              }}
+            >
+              Sign in
+            </Button>
+          ) : (
+            <>
+              <Button
+                p={5}
+                size="lg"
+                minWidth="100%"
+                style={styles.button}
+                onPress={() => {
+                  setIsLogoutOpen(!isLogoutOpen);
+                }}
+              >
+                Log Out
+              </Button>
 
-          <Button
-            p={5}
-            size="lg"
-            minWidth="100%"
-            style={styles.button}
-            onPress={() => {
-              setIsLogoutOpen(!isLogoutOpen);
-            }}
-          >
-            Log Out
-          </Button>
-
-          <Button
-            p={2}
-            size="lg"
-            minWidth="100%"
-            style={styles.signin}
-            onPress={() => {
-              setIsDeleteOpen(!isDeleteOpen);
-            }}
-          >
-            Delete Account
-          </Button>
+              <Button
+                p={2}
+                size="lg"
+                minWidth="100%"
+                style={styles.signin}
+                onPress={() => {
+                  setIsDeleteOpen(!isDeleteOpen);
+                }}
+              >
+                Delete Account
+              </Button>
+            </>
+          )}
         </ScrollView>
         <LogoutDialog
           logout={logout}

@@ -1,10 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { Text, ScrollView, StyleSheet, ImageBackground } from "react-native";
+import {
+  Text,
+  ScrollView,
+  StyleSheet,
+  ImageBackground,
+  Alert,
+} from "react-native";
+
+import UserContext from "../contexts/UserContext";
 import { Button, NativeBaseProvider, Stack } from "native-base";
 import { useWorkout } from "../contexts/WorkoutContext";
 
 function HomeScreen(props) {
   const { chosenExercises } = useWorkout();
+  const user = React.useContext(UserContext);
+  const isGuest = () => {
+    if (user.firstName !== "Guest") {
+      props.navigation.navigate("WorkoutSettingsScreen");
+    } else {
+      Alert.alert("Wait!", "You must be signed in to use this feature.", [
+        {
+          text: "OK",
+          onPress: () => console.log("ok"),
+        },
+      ]);
+    }
+  };
 
   return (
     <ImageBackground
@@ -34,11 +55,7 @@ function HomeScreen(props) {
               </Text>
             </Button>
           ) : (
-            <Button
-              size={250}
-              style={styles.button}
-              onPress={() => props.navigation.navigate("WorkoutSettingsScreen")}
-            >
+            <Button size={250} style={styles.button} onPress={() => isGuest()}>
               <Text
                 style={{ color: "white", fontWeight: "bold", fontSize: 30 }}
               >

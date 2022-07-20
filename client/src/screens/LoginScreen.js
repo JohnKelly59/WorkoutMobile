@@ -23,7 +23,7 @@ import {
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 
 const LoginScreen = ({ navigation }) => {
-  const { login } = React.useContext(AuthContext);
+  const { login, signinAsGuest } = React.useContext(AuthContext);
   const [loginUsername, setLoginUsername] = React.useState(null);
   const [loginPassword, setLoginPassword] = React.useState(null);
   const [show, setShow] = React.useState(false);
@@ -121,14 +121,14 @@ const LoginScreen = ({ navigation }) => {
             style={styles.search}
             onPress={async () => {
               try {
-                await navigation.navigate("GuestSearchScreen");
+                await signinAsGuest();
               } catch (e) {
                 setError("Incorrect username or password");
                 setLoading(false);
               }
             }}
           >
-            Seacrch Exercises
+            Sign in as Guest
           </Button>
         </NativeBaseProvider>
         <Loading loading={loading} />
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   },
   search: {
     marginBottom: 20,
-    backgroundColor: "#CFB53B",
+    backgroundColor: null,
     borderRadius: 0,
   },
 });

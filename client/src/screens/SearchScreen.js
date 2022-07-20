@@ -26,6 +26,7 @@ import {
 } from "native-base";
 import { useFavorites } from "../contexts/FavoritesContext";
 import FavoriteStar from "../components/FavoriteStar";
+import UserContext from "../contexts/UserContext";
 
 const SearchScreen = () => {
   const [
@@ -41,6 +42,7 @@ const SearchScreen = () => {
   const [equipment, setEquipment] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
+  const user = React.useContext(UserContext);
 
   const bodyParts = [
     { label: "", value: "" },
@@ -289,30 +291,32 @@ const SearchScreen = () => {
                       >
                         {result.id}
                       </Center>
-                      <Center
-                        bg="#CFB53B"
-                        _dark={{
-                          bg: "#CFB53B",
-                        }}
-                        _text={{
-                          color: "warmGray.50",
-                          fontWeight: "700",
-                          fontSize: "xs",
-                        }}
-                        position="absolute"
-                        top="0"
-                        right="0"
-                        px="3"
-                        py="1.5"
-                      >
-                        {favorites.some(
-                          (favorite) => favorite.id === result.id
-                        ) ? (
-                          <FavoriteStar icon={"star"} id={result.id} />
-                        ) : (
-                          <FavoriteStar icon={"staro"} id={result.id} />
-                        )}
-                      </Center>
+                      {user.firstName !== "Guest" ? (
+                        <Center
+                          bg="#CFB53B"
+                          _dark={{
+                            bg: "#CFB53B",
+                          }}
+                          _text={{
+                            color: "warmGray.50",
+                            fontWeight: "700",
+                            fontSize: "xs",
+                          }}
+                          position="absolute"
+                          top="0"
+                          right="0"
+                          px="3"
+                          py="1.5"
+                        >
+                          {favorites.some(
+                            (favorite) => favorite.id === result.id
+                          ) ? (
+                            <FavoriteStar icon={"star"} id={result.id} />
+                          ) : (
+                            <FavoriteStar icon={"staro"} id={result.id} />
+                          )}
+                        </Center>
+                      ) : null}
                     </Box>
                     <Stack p="4" space={1}>
                       <Stack space={2}>
