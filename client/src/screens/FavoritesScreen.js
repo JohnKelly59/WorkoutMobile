@@ -9,6 +9,7 @@ import {
   ImageBackground,
   View,
   Text,
+  Alert,
 } from "react-native";
 import FavoriteStar from "../components/FavoriteStar";
 import {
@@ -29,12 +30,14 @@ import {
 } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFavorites } from "../contexts/FavoritesContext";
+import UserContext from "../contexts/UserContext";
 
 const FavoritesScreen = ({ navigation }) => {
   const { favorites } = useFavorites();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
-  const [search, setSearch] = React.useState("");
+  const user = React.useContext(UserContext);
+
   return (
     <ImageBackground
       source={require("../../public/images/ape.jpg")}

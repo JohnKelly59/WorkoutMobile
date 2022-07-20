@@ -28,6 +28,7 @@ import {
   Button,
 } from "native-base";
 import { useFavorites } from "../contexts/FavoritesContext";
+import UserContext from "../contexts/UserContext";
 
 const RandomScreen = () => {
   const [
@@ -37,7 +38,7 @@ const RandomScreen = () => {
     randomFilterFunction,
     random,
   ] = useRandomResults();
-
+  const user = React.useContext(UserContext);
   const { favorites } = useFavorites();
   const [bodyPart, setBodyPart] = React.useState("");
   const [exercises, setExercises] = React.useState("");
@@ -141,31 +142,32 @@ const RandomScreen = () => {
             >
               {randomResults[i].id}
             </Center>
-
-            <Center
-              bg="#CFB53B"
-              _dark={{
-                bg: "#CFB53B",
-              }}
-              _text={{
-                color: "warmGray.50",
-                fontWeight: "700",
-                fontSize: "xs",
-              }}
-              position="absolute"
-              top="0"
-              right="0"
-              px="3"
-              py="1.5"
-            >
-              {favorites.some(
-                (favorite) => favorite.id === randomResults[i].id
-              ) ? (
-                <FavoriteStar icon={"star"} id={randomResults[i].id} />
-              ) : (
-                <FavoriteStar icon={"staro"} id={randomResults[i].id} />
-              )}
-            </Center>
+            {user.firstName !== "Guest" ? (
+              <Center
+                bg="#CFB53B"
+                _dark={{
+                  bg: "#CFB53B",
+                }}
+                _text={{
+                  color: "warmGray.50",
+                  fontWeight: "700",
+                  fontSize: "xs",
+                }}
+                position="absolute"
+                top="0"
+                right="0"
+                px="3"
+                py="1.5"
+              >
+                {favorites.some(
+                  (favorite) => favorite.id === randomResults[i].id
+                ) ? (
+                  <FavoriteStar icon={"star"} id={randomResults[i].id} />
+                ) : (
+                  <FavoriteStar icon={"staro"} id={randomResults[i].id} />
+                )}
+              </Center>
+            ) : null}
           </Box>
           <Stack p="4" space={1}>
             <Stack space={2}>

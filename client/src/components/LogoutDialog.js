@@ -17,11 +17,7 @@ import { useWorkout } from "../contexts/WorkoutContext";
 const LogoutDialog = (props) => {
   return (
     <AlertDialog
-      style={{
-        paddingTop: "50%",
-        height: "80%",
-        width: "100%",
-      }}
+      style={{}}
       leastDestructiveRef={props.cancelRef}
       isOpen={props.isLogoutOpen}
       onClose={props.onLogoutClose}

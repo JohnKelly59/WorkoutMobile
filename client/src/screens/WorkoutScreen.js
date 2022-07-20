@@ -16,6 +16,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import CardFlip from "react-native-card-flip";
 import { useWorkout } from "../contexts/WorkoutContext";
+import UserContext from "../contexts/UserContext";
 import { useFavoriteWorkouts } from "../contexts/FavoriteWorkoutsContext";
 import Carousel from "react-native-snap-carousel";
 import {
@@ -84,17 +85,45 @@ const WorkoutScreen = ({ navigation }) => {
     setStart(false), setRunning(true);
   };
   const [title, setTitle] = React.useState("");
+  const user = React.useContext(UserContext);
 
   const PATTERN = [1 * 1000];
 
+  const needTitleAlert = () => {
+    Alert.alert("Wait!", "You need a title to save a workout.", [
+      {
+        text: "OK",
+        onPress: () => console.log("ok"),
+      },
+    ]);
+  };
+
+  const signInAlert = () => {
+    Alert.alert("Wait!", "You need to be signed in to save workouts.", [
+      {
+        text: "OK",
+        onPress: () => console.log("ok"),
+      },
+    ]);
+  };
+
   const handleOnSubmit = async () => {
-    const favoriteWorkout = {
-      id: Date.now(),
-      title: title,
-      exercises: chosenExercises,
-      time: Date.now(),
-    };
-    addFavoriteWorkout(favoriteWorkout);
+    if (title === "") {
+      needTitleAlert();
+    } else if (user.firstName === "Guest") {
+      signInAlert();
+    } else {
+      const favoriteWorkout = {
+        id: Date.now(),
+        title: title,
+        exercises: chosenExercises,
+        time: Date.now(),
+      };
+      addFavoriteWorkout(favoriteWorkout).then((e) => {
+        startOver();
+        navigation.navigate("HomeScreen");
+      });
+    }
   };
 
   const openTimer = (e) => {
@@ -105,15 +134,6 @@ const WorkoutScreen = ({ navigation }) => {
 
   const displayEndAlert = () => {
     setEnd(true);
-  };
-
-  const needTitleAlert = () => {
-    Alert.alert("Wait!", "You need a title to save a workout.", [
-      {
-        text: "OK",
-        onPress: () => console.log("ok"),
-      },
-    ]);
   };
 
   const rendorCarousel = ({ index }) => {
@@ -445,11 +465,7 @@ const WorkoutScreen = ({ navigation }) => {
                   }}
                   size="sm"
                   onPress={async () => {
-                    title !== ""
-                      ? handleOnSubmit().then(() => {
-                          startOver(), navigation.navigate("HomeScreen");
-                        })
-                      : needTitleAlert();
+                    handleOnSubmit();
                   }}
                 >
                   Save

@@ -52,6 +52,18 @@ const useAuth = () => {
         dispatch(createAction("SET_USER", user));
       },
 
+      signinAsGuest: async (loginUsername, loginPassword) => {
+        const user = {
+          firstName: "Guest",
+          id: "Guest123",
+          email: "Guest Account",
+          token: "Guest456",
+        };
+
+        await SecureStore.setItemAsync("user", JSON.stringify(user));
+        dispatch(createAction("SET_USER", user));
+      },
+
       logout: async () => {
         console.log("running logout?");
         await SecureStore.deleteItemAsync("user");

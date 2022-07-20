@@ -20,7 +20,7 @@ import AuthContainer from "../components/AuthContainer";
 import AuthContext from "../contexts/AuthContext";
 import Loading from "../components/Loading";
 import Error from "../components/Error";
-import * as SecureStore from "expo-secure-store";
+import UserContext from "../contexts/UserContext";
 
 const Tab = createBottomTabNavigator();
 
@@ -28,15 +28,7 @@ const MainNavigator = () => {
   const { logout } = React.useContext(AuthContext);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
-  const [currentUser, setCurrentUser] = useState({});
-
-  useEffect(() => {
-    SecureStore.getItemAsync("user").then((user) => {
-      if (user) {
-        setCurrentUser(JSON.parse(user));
-      }
-    });
-  }, []);
+  const user = React.useContext(UserContext);
 
   return (
     <>
@@ -51,7 +43,7 @@ const MainNavigator = () => {
             <Text
               style={{ color: "#CFB53B", fontWeight: "bold", fontSize: 17 }}
             >
-              {currentUser.firstName}
+              {user.firstName}
             </Text>
           ),
           headerRight: () => (
@@ -76,17 +68,19 @@ const MainNavigator = () => {
             ),
           }}
         />
-        <Tab.Screen
-          name="Favorites"
-          component={FavoriteWorkoutsNavigator}
-          options={{
-            headerStatusBarHeight: 40,
-            tabBarLabel: "Favorites",
-            tabBarIcon: () => (
-              <Ionicons name="md-star" color={"#CFB53B"} size={24} />
-            ),
-          }}
-        />
+        {user.firstName !== "Guest" ? (
+          <Tab.Screen
+            name="Favorites"
+            component={FavoriteWorkoutsNavigator}
+            options={{
+              headerStatusBarHeight: 40,
+              tabBarLabel: "Favorites",
+              tabBarIcon: () => (
+                <Ionicons name="md-star" color={"#CFB53B"} size={24} />
+              ),
+            }}
+          />
+        ) : null}
         <Tab.Screen
           name="Workout"
           component={WorkoutNavigator}
@@ -109,17 +103,19 @@ const MainNavigator = () => {
             ),
           }}
         />
-        <Tab.Screen
-          name="Logs"
-          component={LogsNavigator}
-          options={{
-            headerStatusBarHeight: 40,
-            tabBarLabel: "Logs",
-            tabBarIcon: () => (
-              <MaterialIcons name="notes" color={"#CFB53B"} size={24} />
-            ),
-          }}
-        />
+        {user.firstName !== "Guest" ? (
+          <Tab.Screen
+            name="Logs"
+            component={LogsNavigator}
+            options={{
+              headerStatusBarHeight: 40,
+              tabBarLabel: "Logs",
+              tabBarIcon: () => (
+                <MaterialIcons name="notes" color={"#CFB53B"} size={24} />
+              ),
+            }}
+          />
+        ) : null}
         <Tab.Screen
           name="Account"
           component={AccountScreen}

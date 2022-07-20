@@ -17,11 +17,7 @@ import { useWorkout } from "../contexts/WorkoutContext";
 const DeleteDialog = (props) => {
   return (
     <AlertDialog
-      style={{
-        paddingTop: "50%",
-        height: "80%",
-        width: "100%",
-      }}
+      style={{}}
       leastDestructiveRef={props.cancelRef2}
       isOpen={props.isDeleteOpen}
       onClose={props.onDeleteClose}

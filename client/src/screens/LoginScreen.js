@@ -23,7 +23,7 @@ import {
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 
 const LoginScreen = ({ navigation }) => {
-  const { login } = React.useContext(AuthContext);
+  const { login, signinAsGuest } = React.useContext(AuthContext);
   const [loginUsername, setLoginUsername] = React.useState(null);
   const [loginPassword, setLoginPassword] = React.useState(null);
   const [show, setShow] = React.useState(false);
@@ -114,6 +114,22 @@ const LoginScreen = ({ navigation }) => {
           >
             Sign In
           </Button>
+          <Button
+            p={5}
+            size="lg"
+            minWidth="100%"
+            style={styles.search}
+            onPress={async () => {
+              try {
+                await signinAsGuest();
+              } catch (e) {
+                setError("Incorrect username or password");
+                setLoading(false);
+              }
+            }}
+          >
+            Sign in as Guest
+          </Button>
         </NativeBaseProvider>
         <Loading loading={loading} />
       </AuthContainer>
@@ -141,6 +157,11 @@ const styles = StyleSheet.create({
   signin: {
     marginTop: 0,
     backgroundColor: "#CFB53B",
+    borderRadius: 0,
+  },
+  search: {
+    marginBottom: 20,
+    backgroundColor: null,
     borderRadius: 0,
   },
 });
