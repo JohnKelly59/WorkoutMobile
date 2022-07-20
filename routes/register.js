@@ -10,7 +10,6 @@ router.post("/register", async function (req, res, done) {
   const name = req.body.name;
   const email = req.body.email;
 
-
   if (name === null || email === null || req.body.password === null) {
     res.status(400).send("No data");
   } else {
@@ -20,7 +19,7 @@ router.post("/register", async function (req, res, done) {
       // creats new user model from retrieved data
       const newNormalUser = {
         firstName: name,
-        email: email,
+        email: email.toLowerCase(),
         password: hashPassword,
       };
       //looks through database to make sure the emial hasn't been used
@@ -41,7 +40,6 @@ router.post("/register", async function (req, res, done) {
       res.status(400).send({
         message: err,
       });
-
     }
   }
 });

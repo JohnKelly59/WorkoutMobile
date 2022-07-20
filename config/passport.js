@@ -45,7 +45,7 @@ module.exports = function (passport) {
   // fucntion that authenticate user (authenticaeuser function is a paremeter in the local strategy)
   const authenticateUser = (email, password, done) => {
     //search user in db
-    User.findOne({ email: email })
+    User.findOne({ email: email.toLowerCase() })
       .then((user) => {
         if (user == null) {
           return done(null, false, { message: "No user with that email" });
