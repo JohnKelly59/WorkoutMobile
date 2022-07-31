@@ -59,7 +59,7 @@ const FavoriteWorkoutsDetail = (props) => {
   const itemWidth = Math.round(sliderWidth * 0.8);
 
   const deleteFavoriteWorkout = async () => {
-    removeFavoriteWorkout(favoriteWorkout.id);
+    removeFavoriteWorkout(favoriteWorkout);
     props.navigation.navigate("FavoriteWorkoutsScreen");
   };
 

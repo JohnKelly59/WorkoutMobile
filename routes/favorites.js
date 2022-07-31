@@ -106,7 +106,8 @@ router.post("/addFavoriteWorkout", async function (req, res) {
   }
 });
 
-router.post("/removeFavoriteWorokut", async function (req, res) {
+router.post("/removeFavoriteWorkout", async function (req, res) {
+  console.log("here:", req.body);
   try {
     // delete favorite exercise from favorite db
     const deletion = await FavoriteWorkouts.deleteOne({
