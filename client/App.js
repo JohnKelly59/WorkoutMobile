@@ -16,6 +16,7 @@ import SplashScreen from "./src/screens/SplashScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import UserContext from "./src/contexts/UserContext";
 import FavoritesProvider from "./src/contexts/FavoritesContext";
+import ParnersProvider from "./src/contexts/PartnersContext";
 
 const RootStack = createStackNavigator();
 
@@ -31,9 +32,11 @@ const App = () => {
       <RootStack.Screen name={"Main"}>
         {() => (
           <UserContext.Provider value={state.user}>
-            <FavoritesProvider>
-              <MainNavigator />
-            </FavoritesProvider>
+            <ParnersProvider>
+              <FavoritesProvider>
+                <MainNavigator />
+              </FavoritesProvider>
+            </ParnersProvider>
           </UserContext.Provider>
         )}
       </RootStack.Screen>

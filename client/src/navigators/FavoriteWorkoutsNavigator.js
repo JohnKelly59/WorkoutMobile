@@ -6,6 +6,7 @@ import FavoriteWorkoutsScreen from "../screens/FavoriteWorkoutsScreen";
 import FavoriteWorkoutsDetail from "../components/FavoriteWorkoutsDetail";
 import FavoriteWorkoutsProvider from "../contexts/FavoriteWorkoutsContext";
 import FavoritesScreen from "../screens/FavoritesScreen";
+import SharedWorkoutsProvider from "../contexts/SharedWorkoutsContext";
 
 const FavoriteWorkoutsStack = createStackNavigator();
 
@@ -16,23 +17,21 @@ const FavoriteWorkoutsNavigator = (navigation) => {
 
   return (
     <FavoriteWorkoutsProvider>
-      <FavoriteWorkoutsStack.Navigator
-        screenOptions={{ headerTitle: "", headerTransparent: true }}
-      >
-        <FavoriteWorkoutsStack.Screen
-          component={FavoritesScreen}
-          name="FavoritesScreen"
-        />
-        <FavoriteWorkoutsStack.Screen
-          component={RenderFavoriteWorkoutsScreen}
-          name="FavoriteWorkoutsScreen"
-          options={{ headerLeft: () => null }}
-        />
-        <FavoriteWorkoutsStack.Screen
-          component={FavoriteWorkoutsDetail}
-          name="FavoriteWorkoutsDetail"
-        />
-      </FavoriteWorkoutsStack.Navigator>
+      <SharedWorkoutsProvider>
+        <FavoriteWorkoutsStack.Navigator
+          screenOptions={{ headerTitle: "", headerTransparent: true }}
+        >
+          <FavoriteWorkoutsStack.Screen
+            component={RenderFavoriteWorkoutsScreen}
+            name="FavoriteWorkoutsScreen"
+            options={{ headerLeft: () => null }}
+          />
+          <FavoriteWorkoutsStack.Screen
+            component={FavoriteWorkoutsDetail}
+            name="FavoriteWorkoutsDetail"
+          />
+        </FavoriteWorkoutsStack.Navigator>
+      </SharedWorkoutsProvider>
     </FavoriteWorkoutsProvider>
   );
 };

@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { ImageBackground, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import FavoriteWorkoutsNavigator from "../navigators/FavoriteWorkoutsNavigator";
+import SavedWorkoutsNavigator from "../navigators/SavedWorkoutsNavigator";
+import SearchNavigator from "../navigators/SearchNavigator";
 import HomeScreen from "../screens/HomeScreen";
 import SearchScreen from "../screens/SearchScreen";
 import RandomScreen from "../screens/RandomScreen";
 import LogsNavigator from "../navigators/LogsNavigator";
+import MoreNavigator from "../navigators/MoreNavigator";
+import PartnerNavigator from "../navigators/PartnerNavigator";
 import WorkoutNavigator from "../navigators/WorkoutNavigator";
 import AccountScreen from "../screens/AccountScreen";
+import FavoritesScreen from "../screens/FavoritesScreen";
 import { Button, Text } from "react-native";
-import {
-  Ionicons,
-  FontAwesome,
-  Feather,
-  Foundation,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { Ionicons, MaterialIcons, Feather } from "@expo/vector-icons";
 import AuthContainer from "../components/AuthContainer";
 import AuthContext from "../contexts/AuthContext";
 import Loading from "../components/Loading";
@@ -57,26 +55,32 @@ const MainNavigator = () => {
           ),
         })}
       >
-        <Tab.Screen
-          name="Random"
-          component={RandomScreen}
-          options={{
-            headerStatusBarHeight: 40,
-            tabBarLabel: "Random",
-            tabBarIcon: () => (
-              <FontAwesome name="random" color={"#CFB53B"} size={24} />
-            ),
-          }}
-        />
         {user.firstName !== "Guest" ? (
           <Tab.Screen
-            name="Favorites"
-            component={FavoriteWorkoutsNavigator}
+            name="Partners"
+            component={PartnerNavigator}
             options={{
               headerStatusBarHeight: 40,
-              tabBarLabel: "Favorites",
+              tabBarLabel: "Partners",
               tabBarIcon: () => (
-                <Ionicons name="md-star" color={"#CFB53B"} size={24} />
+                <Ionicons name="people-sharp" color={"#CFB53B"} size={24} />
+              ),
+            }}
+          />
+        ) : null}
+        {user.firstName !== "Guest" ? (
+          <Tab.Screen
+            name="Workouts"
+            component={SavedWorkoutsNavigator}
+            options={{
+              headerStatusBarHeight: 40,
+              tabBarLabel: "Workouts",
+              tabBarIcon: () => (
+                <MaterialIcons
+                  name="fitness-center"
+                  color={"#CFB53B"}
+                  size={24}
+                />
               ),
             }}
           />
@@ -94,7 +98,7 @@ const MainNavigator = () => {
         />
         <Tab.Screen
           name="Search"
-          component={SearchScreen}
+          component={SearchNavigator}
           options={{
             headerStatusBarHeight: 40,
             tabBarLabel: "Search",
@@ -105,13 +109,13 @@ const MainNavigator = () => {
         />
         {user.firstName !== "Guest" ? (
           <Tab.Screen
-            name="Logs"
-            component={LogsNavigator}
+            name="More"
+            component={MoreNavigator}
             options={{
               headerStatusBarHeight: 40,
-              tabBarLabel: "Logs",
+              tabBarLabel: "More",
               tabBarIcon: () => (
-                <MaterialIcons name="notes" color={"#CFB53B"} size={24} />
+                <Feather name="more-horizontal" size={24} color={"#CFB53B"} />
               ),
             }}
           />

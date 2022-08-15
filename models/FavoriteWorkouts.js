@@ -16,6 +16,9 @@ const FavoriteWorkoutsSchema = new mongoose.Schema({
   title: {
     type: String,
   },
+  partnerEmails: {
+    type: Array,
+  },
 });
 
 module.exports = mongoose.model("FavoriteWorkouts", FavoriteWorkoutsSchema);

@@ -10,6 +10,7 @@ import {
   View,
   Text,
   Alert,
+  RefreshControl,
 } from "react-native";
 import FavoriteStar from "../components/FavoriteStar";
 import {
@@ -33,10 +34,27 @@ import { useFavorites } from "../contexts/FavoritesContext";
 import UserContext from "../contexts/UserContext";
 
 const FavoritesScreen = ({ navigation }) => {
-  const { favorites } = useFavorites();
+  const { favorites, getFavorites } = useFavorites();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
   const user = React.useContext(UserContext);
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => {
+      setRefreshing(false), getFavorites();
+    });
+  }, []);
+
+  useEffect(() => {
+    getFavorites();
+  }, []);
 
   return (
     <ImageBackground
@@ -47,30 +65,14 @@ const FavoritesScreen = ({ navigation }) => {
       <NativeBaseProvider
         style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
       >
-        <HStack space={0} justifyContent="center" alignItems="center">
-          <Button bg={"#CFB53B"} style={{ flex: 1 }} borderRadius={1} size="lg">
-            Exercises
-          </Button>
-          <Button
-            bg={"black"}
-            style={{ flex: 1 }}
-            borderRadius={1}
-            size="lg"
-            onPress={() => {
-              navigation.navigate("FavoriteWorkoutsScreen");
-            }}
-          >
-            Workouts
-          </Button>
-        </HStack>
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
           <Stack space={3} w="100%" alignItems="center">
             <Error error={error} />
-            {favorites.length <= 0 ? (
-              <View style={styles.emptyHeaderContainer}>
-                <Text style={styles.emptyHeader}>No Favorites</Text>
-              </View>
-            ) : (
+            {favorites ? (
               favorites.map((result, i) => {
                 return (
                   <Box alignItems="center" key={i}>
@@ -199,6 +201,10 @@ const FavoritesScreen = ({ navigation }) => {
                   </Box>
                 );
               })
+            ) : (
+              <View style={styles.emptyHeaderContainer}>
+                <Text style={styles.emptyHeader}>No Favorites</Text>
+              </View>
             )}
           </Stack>
         </ScrollView>

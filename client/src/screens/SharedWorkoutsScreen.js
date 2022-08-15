@@ -25,10 +25,11 @@ import {
   NativeBaseProvider,
   Button,
 } from "native-base";
-import FavoriteWorkout from "../components/FavoriteWorkout";
+import SharedWorkout from "../components/SharedWorkout";
 import NotFound from "../components/NotFound";
 import SearchBar from "../components/SearchBar";
-import { useFavoriteWorkouts } from "../contexts/FavoriteWorkoutsContext";
+import { useSharedWorkouts } from "../contexts/SharedWorkoutsContext";
+import UserContext from "../contexts/UserContext";
 
 const reverseData = (data) => {
   return data.sort((a, b) => {
@@ -40,25 +41,25 @@ const reverseData = (data) => {
   });
 };
 
-const FavoriteWorkoutsScreen = ({ navigation }) => {
+const SharedWorkoutsScreen = ({ navigation }) => {
   const [greet, setGreet] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [resultNotFound, setResultNotFound] = useState(false);
-
+  const user = React.useContext(UserContext);
   const {
-    favoriteWorkouts,
-    setFavoriteWorkouts,
-    getFavoriteWorkouts,
-    removeFavoriteWorkout,
-    addFavoriteWorkout,
-  } = useFavoriteWorkouts();
+    sharedWorkouts,
+    setSharedWorkouts,
+    getSharedWorkouts,
+    removeSharedWorkout,
+    addSharedWorkout,
+  } = useSharedWorkouts();
 
-  const reverseFavoriteWorkouts = reverseData(favoriteWorkouts);
+  const reverseSharedWorkouts = reverseData(sharedWorkouts);
 
-  const openFavoriteWorkout = (favoriteWorkout) => {
-    console.log(favoriteWorkout);
-    navigation.navigate("FavoriteWorkoutsDetail", { favoriteWorkout });
+  const openSharedWorkout = (sharedWorkout) => {
+    console.log(sharedWorkout);
+    navigation.navigate("SharedWorkoutsDetail", { sharedWorkout });
   };
 
   const handleOnSearchInput = async (text) => {
@@ -66,18 +67,16 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
     if (!text.trim()) {
       setSearchQuery("");
       setResultNotFound(false);
-      return await getFavoriteWorkouts();
+      return await getSharedWorkouts();
     }
-    const filteredFavoriteWorkouts = favoriteWorkouts.filter(
-      (favoriteWorkout) => {
-        if (favoriteWorkout.title.toLowerCase().includes(text.toLowerCase())) {
-          return favoriteWorkout;
-        }
+    const filteredSharedWorkouts = sharedWorkouts.filter((sharedWorkout) => {
+      if (sharedWorkout.title.toLowerCase().includes(text.toLowerCase())) {
+        return sharedWorkout;
       }
-    );
+    });
 
-    if (filteredFavoriteWorkouts.length) {
-      setFavoriteWorkouts([...filteredFavoriteWorkouts]);
+    if (filteredSharedWorkouts.length) {
+      setSharedWorkouts([...filteredSharedWorkouts]);
     } else {
       setResultNotFound(true);
     }
@@ -86,12 +85,8 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
   const handleOnClear = async () => {
     setSearchQuery("");
     setResultNotFound(false);
-    await getFavoriteWorkouts();
+    await getSharedWorkouts();
   };
-
-  useEffect(() => {
-    getFavoriteWorkouts();
-  }, []);
 
   return (
     <>
@@ -103,7 +98,7 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
         <NativeBaseProvider>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
-              {favoriteWorkouts.length ? (
+              {sharedWorkouts.length ? (
                 <SearchBar
                   value={searchQuery}
                   onChangeText={handleOnSearchInput}
@@ -116,23 +111,18 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
                 <NotFound />
               ) : (
                 <FlatList
-                  data={reverseFavoriteWorkouts}
-                  numColumns={2}
-                  columnWrapperStyle={{
-                    justifyContent: "space-between",
-                    marginBottom: 15,
-                  }}
+                  data={reverseSharedWorkouts}
                   keyExtractor={(item) => item.id.toString()}
                   renderItem={({ item }) => (
-                    <FavoriteWorkout
-                      onPress={() => openFavoriteWorkout(item)}
+                    <SharedWorkout
+                      onPress={() => openSharedWorkout(item)}
                       item={item}
                     />
                   )}
                 />
               )}
 
-              {!favoriteWorkouts.length ? (
+              {!sharedWorkouts.length ? (
                 <View
                   style={[
                     StyleSheet.absoluteFillObject,
@@ -181,4 +171,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FavoriteWorkoutsScreen;
+export default SharedWorkoutsScreen;
