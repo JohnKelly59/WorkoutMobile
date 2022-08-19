@@ -10,9 +10,11 @@ import {
 import { useHeaderHeight } from "@react-navigation/stack";
 import RoundIconBtn from "./RoundIconBtn";
 import Carousel from "react-native-snap-carousel";
-
+import UserContext from "../contexts/UserContext";
 import { useFavorites } from "../contexts/FavoritesContext";
+import { usePartners } from "../contexts/PartnersContext";
 import { useSharedWorkouts } from "../contexts/SharedWorkoutsContext";
+import PartnerSearchList from "../components/PartnerSearchList";
 import FavoriteStar from "../components/FavoriteStar";
 import Error from "../components/Error";
 import Loading from "../components/Loading";
@@ -46,12 +48,18 @@ const formatDate = (ms) => {
 };
 
 const SharedWorkoutsDetail = (props) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const onClose = () => setIsOpen(false);
+  const cancelRef = React.useRef(null);
+  const user = React.useContext(UserContext);
   const { favorites } = useFavorites();
   const {
     removeSharedWorkout,
     sharedWorkoutsExerciseCards,
     getSharedWorkoutsExerciseCards,
   } = useSharedWorkouts();
+  const { addPartnerSharedWorkout } = useSharedWorkouts();
+  const { getPartners, partners } = usePartners();
   const [sharedWorkout, setSharedWorkout] = useState(
     props.route.params.sharedWorkout
   );
@@ -61,8 +69,12 @@ const SharedWorkoutsDetail = (props) => {
   const itemWidth = Math.round(sliderWidth * 0.8);
 
   const deleteSharedWorkout = async () => {
-    removeSharedWorkout(sharedWorkout);
+    removeSharedWorkout(sharedWorkout, user);
     props.navigation.navigate("SharedWorkoutsScreen");
+  };
+
+  const openPartners = async () => {
+    setIsOpen(!isOpen);
   };
 
   const displayDeleteAlert = () => {
@@ -87,6 +99,7 @@ const SharedWorkoutsDetail = (props) => {
 
   useEffect(() => {
     getSharedWorkoutsExerciseCards(sharedWorkout.exercises);
+    getPartners(user);
   }, []);
 
   const handleOnClose = () => setShowModal(false);
@@ -242,6 +255,7 @@ const SharedWorkoutsDetail = (props) => {
     <View style={{ flex: 1, backgroundColor: "black" }}>
       <NativeBaseProvider>
         <ScrollView contentContainerStyle={[styles.container]}>
+          <Text style={styles.title}>{sharedWorkout.title}</Text>
           <Text style={styles.time}>{`Completed At ${formatDate(
             sharedWorkout.time
           )}`}</Text>
@@ -254,10 +268,19 @@ const SharedWorkoutsDetail = (props) => {
           />
         </ScrollView>
         <View style={styles.btnContainer}>
+          <RoundIconBtn antIconName="sharealt" onPress={() => openPartners()} />
           <RoundIconBtn
             antIconName="delete"
-            style={{ marginBottom: 15 }}
+            style={{ marginTop: 15 }}
             onPress={displayDeleteAlert}
+          />
+          <PartnerSearchList
+            partners={partners}
+            isOpen={isOpen}
+            onClose={onClose}
+            cancelRef={cancelRef}
+            workout={sharedWorkout}
+            shareWorkout={addPartnerSharedWorkout}
           />
         </View>
       </NativeBaseProvider>
@@ -273,7 +296,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   title: {
-    paddingTop: 20,
+    paddingTop: 0,
     fontSize: 30,
     fontWeight: "bold",
     color: "white",

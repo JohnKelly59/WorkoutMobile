@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
-  ImageBackground,
   View,
   Text,
   Alert,
@@ -47,7 +46,7 @@ const FavoritesScreen = ({ navigation }) => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    wait(2000).then(() => {
+    wait(1000).then(() => {
       setRefreshing(false), getFavorites();
     });
   }, []);
@@ -57,160 +56,153 @@ const FavoritesScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <ImageBackground
-      source={require("../../public/images/ape.jpg")}
-      resizeMode="cover"
-      style={styles.image}
+    <NativeBaseProvider
+      style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
     >
-      <NativeBaseProvider
-        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
-        <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          <Stack space={3} w="100%" alignItems="center">
-            <Error error={error} />
-            {favorites ? (
-              favorites.map((result, i) => {
-                return (
-                  <Box alignItems="center" key={i}>
-                    <Box
-                      maxW="80"
-                      rounded="lg"
-                      overflow="hidden"
-                      borderColor="coolGray.200"
-                      borderWidth="1"
-                      _dark={{
-                        borderColor: "coolGray.600",
-                        backgroundColor: "gray.700",
-                      }}
-                      _web={{
-                        shadow: 2,
-                        borderWidth: 0,
-                      }}
-                      _light={{
-                        backgroundColor: "gray.50",
-                      }}
-                    >
-                      <Box>
-                        <AspectRatio w="100%" ratio={16 / 9}>
-                          <Image
-                            source={{
-                              uri: result.gifUrl,
-                            }}
-                            alt="image"
-                          />
-                        </AspectRatio>
-                        <Center
-                          bg="#CFB53B"
-                          _dark={{
-                            bg: "#CFB53B",
+        <Stack space={3} w="100%" alignItems="center">
+          <Error error={error} />
+          {favorites ? (
+            favorites.map((result, i) => {
+              return (
+                <Box alignItems="center" key={i}>
+                  <Box
+                    maxW="80"
+                    rounded="lg"
+                    overflow="hidden"
+                    borderColor="coolGray.200"
+                    borderWidth="1"
+                    _dark={{
+                      borderColor: "coolGray.600",
+                      backgroundColor: "gray.700",
+                    }}
+                    _web={{
+                      shadow: 2,
+                      borderWidth: 0,
+                    }}
+                    _light={{
+                      backgroundColor: "gray.50",
+                    }}
+                  >
+                    <Box>
+                      <AspectRatio w="100%" ratio={16 / 9}>
+                        <Image
+                          source={{
+                            uri: result.gifUrl,
                           }}
-                          _text={{
-                            color: "warmGray.50",
-                            fontWeight: "700",
-                            fontSize: "xs",
-                          }}
-                          position="absolute"
-                          bottom="0"
-                          px="3"
-                          py="1.5"
-                        >
-                          {result.id}
-                        </Center>
-                        <Center
-                          bg="#CFB53B"
-                          _dark={{
-                            bg: "#CFB53B",
-                          }}
-                          _text={{
-                            color: "warmGray.50",
-                            fontWeight: "700",
-                            fontSize: "xs",
-                          }}
-                          position="absolute"
-                          top="0"
-                          right="0"
-                          px="3"
-                          py="1.5"
-                        >
-                          {favorites.some(
-                            (favorite) => favorite.id === result.id
-                          ) ? (
-                            <FavoriteStar icon={"star"} id={result.id} />
-                          ) : (
-                            <FavoriteStar icon={"staro"} id={result.id} />
-                          )}
-                        </Center>
-                      </Box>
-                      <Stack p="4" space={1}>
-                        <Stack space={2}>
-                          <Heading size="xl" ml="-1">
-                            {result.name
-                              .toLowerCase()
-                              .split(" ")
-                              .map(
-                                (s) =>
-                                  s.charAt(0).toUpperCase() + s.substring(1)
-                              )
-                              .join(" ")}
-                          </Heading>
-                          <Text
-                            fontSize="md"
-                            _light={{
-                              color: "#CFB53B",
-                            }}
-                            _dark={{
-                              color: "#CFB53B",
-                            }}
-                            fontWeight="500"
-                            ml="-0.5"
-                            mt="-1"
-                          >
-                            {result.equipment.charAt(0).toUpperCase() +
-                              result.equipment.slice(1)}
-                          </Text>
-                        </Stack>
-                        <Text fontWeight="400" fontSize="lg">
-                          {result.bodyPart.charAt(0).toUpperCase() +
-                            result.bodyPart.slice(1)}
-                        </Text>
-                        <HStack
-                          alignItems="center"
-                          space={4}
-                          justifyContent="space-between"
-                        >
-                          <HStack alignItems="center">
-                            <Text
-                              fontSize="lg"
-                              color="coolGray.600"
-                              _dark={{
-                                color: "warmGray.200",
-                              }}
-                              fontWeight="400"
-                            >
-                              {result.target.charAt(0).toUpperCase() +
-                                result.target.slice(1)}
-                            </Text>
-                          </HStack>
-                        </HStack>
-                      </Stack>
+                          alt="image"
+                        />
+                      </AspectRatio>
+                      <Center
+                        bg="#CFB53B"
+                        _dark={{
+                          bg: "#CFB53B",
+                        }}
+                        _text={{
+                          color: "warmGray.50",
+                          fontWeight: "700",
+                          fontSize: "xs",
+                        }}
+                        position="absolute"
+                        bottom="0"
+                        px="3"
+                        py="1.5"
+                      >
+                        {result.id}
+                      </Center>
+                      <Center
+                        bg="#CFB53B"
+                        _dark={{
+                          bg: "#CFB53B",
+                        }}
+                        _text={{
+                          color: "warmGray.50",
+                          fontWeight: "700",
+                          fontSize: "xs",
+                        }}
+                        position="absolute"
+                        top="0"
+                        right="0"
+                        px="3"
+                        py="1.5"
+                      >
+                        {favorites.some(
+                          (favorite) => favorite.id === result.id
+                        ) ? (
+                          <FavoriteStar icon={"star"} id={result.id} />
+                        ) : (
+                          <FavoriteStar icon={"staro"} id={result.id} />
+                        )}
+                      </Center>
                     </Box>
+                    <Stack p="4" space={1}>
+                      <Stack space={2}>
+                        <Heading size="xl" ml="-1">
+                          {result.name
+                            .toLowerCase()
+                            .split(" ")
+                            .map(
+                              (s) => s.charAt(0).toUpperCase() + s.substring(1)
+                            )
+                            .join(" ")}
+                        </Heading>
+                        <Text
+                          fontSize="md"
+                          _light={{
+                            color: "#CFB53B",
+                          }}
+                          _dark={{
+                            color: "#CFB53B",
+                          }}
+                          fontWeight="500"
+                          ml="-0.5"
+                          mt="-1"
+                        >
+                          {result.equipment.charAt(0).toUpperCase() +
+                            result.equipment.slice(1)}
+                        </Text>
+                      </Stack>
+                      <Text fontWeight="400" fontSize="lg">
+                        {result.bodyPart.charAt(0).toUpperCase() +
+                          result.bodyPart.slice(1)}
+                      </Text>
+                      <HStack
+                        alignItems="center"
+                        space={4}
+                        justifyContent="space-between"
+                      >
+                        <HStack alignItems="center">
+                          <Text
+                            fontSize="lg"
+                            color="coolGray.600"
+                            _dark={{
+                              color: "warmGray.200",
+                            }}
+                            fontWeight="400"
+                          >
+                            {result.target.charAt(0).toUpperCase() +
+                              result.target.slice(1)}
+                          </Text>
+                        </HStack>
+                      </HStack>
+                    </Stack>
                   </Box>
-                );
-              })
-            ) : (
-              <View style={styles.emptyHeaderContainer}>
-                <Text style={styles.emptyHeader}>No Favorites</Text>
-              </View>
-            )}
-          </Stack>
-        </ScrollView>
-        <Loading loading={loading} />
-      </NativeBaseProvider>
-    </ImageBackground>
+                </Box>
+              );
+            })
+          ) : (
+            <View style={styles.emptyHeaderContainer}>
+              <Text style={styles.emptyHeader}>No Favorites</Text>
+            </View>
+          )}
+        </Stack>
+      </ScrollView>
+      <Loading loading={loading} />
+    </NativeBaseProvider>
   );
 };
 

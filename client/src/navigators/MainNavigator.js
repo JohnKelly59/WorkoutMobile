@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ImageBackground, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SavedWorkoutsNavigator from "../navigators/SavedWorkoutsNavigator";
 import SearchNavigator from "../navigators/SearchNavigator";

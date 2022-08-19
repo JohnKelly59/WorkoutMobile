@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
+  RefreshControl,
+  ScrollView,
   View,
   StyleSheet,
   Text,
@@ -7,7 +9,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   FlatList,
-  ImageBackground,
 } from "react-native";
 import {
   Spacer,
@@ -46,6 +47,7 @@ const SharedWorkoutsScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [resultNotFound, setResultNotFound] = useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
   const user = React.useContext(UserContext);
   const {
     sharedWorkouts,
@@ -88,54 +90,64 @@ const SharedWorkoutsScreen = ({ navigation }) => {
     await getSharedWorkouts();
   };
 
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => {
+      setRefreshing(false), getSharedWorkouts(user);
+    });
+  }, []);
+
   return (
     <>
-      <ImageBackground
-        source={require("../../public/images/ape.jpg")}
-        resizeMode="cover"
-        style={styles.image}
-      >
-        <NativeBaseProvider>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.container}>
-              {sharedWorkouts.length ? (
-                <SearchBar
-                  value={searchQuery}
-                  onChangeText={handleOnSearchInput}
-                  containerStyle={{ marginVertical: 15 }}
-                  onClear={handleOnClear}
-                />
-              ) : null}
+      <NativeBaseProvider>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            style={styles.container}
+          >
+            {sharedWorkouts.length ? (
+              <SearchBar
+                value={searchQuery}
+                onChangeText={handleOnSearchInput}
+                containerStyle={{ marginVertical: 15 }}
+                onClear={handleOnClear}
+              />
+            ) : null}
 
-              {resultNotFound ? (
-                <NotFound />
-              ) : (
-                <FlatList
-                  data={reverseSharedWorkouts}
-                  keyExtractor={(item) => item.id.toString()}
-                  renderItem={({ item }) => (
-                    <SharedWorkout
-                      onPress={() => openSharedWorkout(item)}
-                      item={item}
-                    />
-                  )}
-                />
-              )}
+            {resultNotFound ? (
+              <NotFound />
+            ) : (
+              <FlatList
+                data={reverseSharedWorkouts}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <SharedWorkout
+                    onPress={() => openSharedWorkout(item)}
+                    item={item}
+                  />
+                )}
+              />
+            )}
 
-              {!sharedWorkouts.length ? (
-                <View
-                  style={[
-                    StyleSheet.absoluteFillObject,
-                    styles.emptyHeaderContainer,
-                  ]}
-                >
-                  <Text style={styles.emptyHeader}>No Saved Workouts</Text>
-                </View>
-              ) : null}
-            </View>
-          </TouchableWithoutFeedback>
-        </NativeBaseProvider>
-      </ImageBackground>
+            {!sharedWorkouts.length ? (
+              <View
+                style={[
+                  StyleSheet.absoluteFillObject,
+                  styles.emptyHeaderContainer,
+                ]}
+              >
+                <Text style={styles.emptyHeader}>No Saved Workouts</Text>
+              </View>
+            ) : null}
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </NativeBaseProvider>
     </>
   );
 };

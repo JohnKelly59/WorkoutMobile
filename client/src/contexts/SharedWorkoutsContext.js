@@ -40,9 +40,25 @@ const SharedWorkoutsProvider = ({ children }) => {
       });
   };
 
-  const removeSharedWorkout = async (workout, user, partner) => {
+  const addPartnerSharedWorkout = async (workout, user, partner) => {
     axios
-      .post(`${API_URL}/removeFavoriteWorkout`, {
+      .post(`${API_URL}/addPartnerSharedWorkout`, {
+        user: user.email,
+        partner,
+        workout,
+      })
+      .then((response) => {
+        getSharedWorkouts(user);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const removeSharedWorkout = async (workout, user, partner) => {
+    console.log("hithere: ", workout, user);
+    axios
+      .post(`${API_URL}/removeSharedWorkout`, {
         user: user.email,
         partner,
         workout,
@@ -62,6 +78,23 @@ const SharedWorkoutsProvider = ({ children }) => {
     setSharedWorkoutsExerciseCards(results.data);
   };
 
+  const shareCurrentWorkout = async (exercises, user, partners, title) => {
+    console.log("contextexercises: ", exercises);
+    axios
+      .post(`${API_URL}/shareCurrentWorkout`, {
+        user: user.email,
+        partners,
+        exercises,
+        title,
+      })
+      .then((response) => {
+        getSharedWorkouts(user);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   useEffect(() => {
     getSharedWorkouts(user);
   }, []);
@@ -76,6 +109,8 @@ const SharedWorkoutsProvider = ({ children }) => {
         getSharedWorkoutsExerciseCards,
         sharedWorkoutsExerciseCards,
         setSharedWorkoutsExerciseCards,
+        shareCurrentWorkout,
+        addPartnerSharedWorkout,
       }}
     >
       {children}

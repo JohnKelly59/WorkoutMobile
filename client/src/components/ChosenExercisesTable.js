@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
-  ImageBackground,
 } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
 import NumericInput from "react-native-numeric-input";

@@ -8,7 +8,6 @@ import {
   StyleSheet,
   View,
   ScrollView,
-  ImageBackground,
   KeyboardAvoidingView,
 } from "react-native";
 import {
@@ -56,150 +55,144 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../public/images/ape.jpg")}
-      resizeMode="cover"
-      style={styles.image}
-    >
-      <ScrollView>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.container}
-        >
-          <AuthContainer>
-            <NativeBaseProvider>
-              <Stack
-                space={1}
-                w="100%"
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
+    <ScrollView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        <AuthContainer>
+          <NativeBaseProvider>
+            <Stack
+              space={1}
+              w="100%"
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Error error={error} />
+              <Input
+                style={styles.input}
+                onChangeText={setRegisterName}
+                w={{
+                  base: "75%",
+                  md: "25%",
                 }}
-              >
-                <Error error={error} />
-                <Input
-                  style={styles.input}
-                  onChangeText={setRegisterName}
-                  w={{
-                    base: "75%",
-                    md: "25%",
-                  }}
-                  InputLeftElement={
-                    <Icon
-                      as={<MaterialIcons name="person" />}
-                      size={5}
-                      ml="2"
-                      color="white"
-                    />
-                  }
-                  placeholder="Name"
-                  placeholderTextColor="white"
-                  color="white"
-                />
-                <Input
-                  style={styles.input}
-                  onChangeText={setRegisterUsername}
-                  w={{
-                    base: "75%",
-                    md: "25%",
-                  }}
-                  InputLeftElement={
-                    <Icon
-                      as={<MaterialIcons name="person" />}
-                      size={5}
-                      ml="2"
-                      color="white"
-                    />
-                  }
-                  placeholder="Email"
-                  placeholderTextColor="white"
-                  color="white"
-                />
-                <Input
-                  style={styles.input}
-                  onChangeText={setRegisterPassword}
-                  onPress={() => setPasswordError(false)}
-                  w={{
-                    base: "75%",
-                    md: "25%",
-                  }}
-                  type={show ? "text" : "password"}
-                  InputRightElement={
-                    <Icon
-                      as={
-                        <MaterialIcons
-                          name={show ? "visibility" : "visibility-off"}
-                        />
-                      }
-                      size={5}
-                      mr="2"
-                      color="white"
-                      onPress={() => setShow(!show)}
-                    />
-                  }
-                  placeholder="Password"
-                  placeholderTextColor="white"
-                  color="white"
-                />
-                <Input
-                  style={styles.input}
-                  onChangeText={setConfirmRegisterPassword}
-                  onPress={() => setPasswordError(false)}
-                  w={{
-                    base: "75%",
-                    md: "25%",
-                  }}
-                  type={show2 ? "text" : "password"}
-                  InputRightElement={
-                    <Icon
-                      as={
-                        <MaterialIcons
-                          name={show2 ? "visibility" : "visibility-off"}
-                        />
-                      }
-                      size={5}
-                      mr="2"
-                      color="white"
-                      onPress={() => setShow2(!show)}
-                    />
-                  }
-                  placeholder=" Confirm Password"
-                  placeholderTextColor="white"
-                  color="white"
-                />
-
-                {passwordError ? <Text>Passwords do not match</Text> : null}
-              </Stack>
-              <Button
-                p={5}
-                size="lg"
-                style={styles.button}
-                onPress={() =>
-                  registerNewUser(
-                    registerUsername,
-                    registerPassword,
-                    confirmRegisterPassword,
-                    registerName
-                  )
+                InputLeftElement={
+                  <Icon
+                    as={<MaterialIcons name="person" />}
+                    size={5}
+                    ml="2"
+                    color="white"
+                  />
                 }
-              >
-                Register
-              </Button>
-              <Button
-                p={5}
-                size="lg"
-                style={styles.back}
-                onPress={() => navigation.goBack()}
-              >
-                Go Back
-              </Button>
-            </NativeBaseProvider>
-            <Loading loading={loading} />
-          </AuthContainer>
-        </KeyboardAvoidingView>
-      </ScrollView>
-    </ImageBackground>
+                placeholder="Name"
+                placeholderTextColor="white"
+                color="white"
+              />
+              <Input
+                style={styles.input}
+                onChangeText={setRegisterUsername}
+                w={{
+                  base: "75%",
+                  md: "25%",
+                }}
+                InputLeftElement={
+                  <Icon
+                    as={<MaterialIcons name="person" />}
+                    size={5}
+                    ml="2"
+                    color="white"
+                  />
+                }
+                placeholder="Email"
+                placeholderTextColor="white"
+                color="white"
+              />
+              <Input
+                style={styles.input}
+                onChangeText={setRegisterPassword}
+                onPress={() => setPasswordError(false)}
+                w={{
+                  base: "75%",
+                  md: "25%",
+                }}
+                type={show ? "text" : "password"}
+                InputRightElement={
+                  <Icon
+                    as={
+                      <MaterialIcons
+                        name={show ? "visibility" : "visibility-off"}
+                      />
+                    }
+                    size={5}
+                    mr="2"
+                    color="white"
+                    onPress={() => setShow(!show)}
+                  />
+                }
+                placeholder="Password"
+                placeholderTextColor="white"
+                color="white"
+              />
+              <Input
+                style={styles.input}
+                onChangeText={setConfirmRegisterPassword}
+                onPress={() => setPasswordError(false)}
+                w={{
+                  base: "75%",
+                  md: "25%",
+                }}
+                type={show2 ? "text" : "password"}
+                InputRightElement={
+                  <Icon
+                    as={
+                      <MaterialIcons
+                        name={show2 ? "visibility" : "visibility-off"}
+                      />
+                    }
+                    size={5}
+                    mr="2"
+                    color="white"
+                    onPress={() => setShow2(!show)}
+                  />
+                }
+                placeholder=" Confirm Password"
+                placeholderTextColor="white"
+                color="white"
+              />
+
+              {passwordError ? <Text>Passwords do not match</Text> : null}
+            </Stack>
+            <Button
+              p={5}
+              size="lg"
+              style={styles.button}
+              onPress={() =>
+                registerNewUser(
+                  registerUsername,
+                  registerPassword,
+                  confirmRegisterPassword,
+                  registerName
+                )
+              }
+            >
+              Register
+            </Button>
+            <Button
+              p={5}
+              size="lg"
+              style={styles.back}
+              onPress={() => navigation.goBack()}
+            >
+              Go Back
+            </Button>
+          </NativeBaseProvider>
+          <Loading loading={loading} />
+        </AuthContainer>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 

@@ -1,17 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
+  View,
   SafeAreaView,
   StyleSheet,
-  ImageBackground,
   KeyboardAvoidingView,
   ScrollView,
 } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 import * as SecureStore from "expo-secure-store";
 import AuthContainer from "../components/AuthContainer";
 import AuthContext from "../contexts/AuthContext";
 import Loading from "../components/Loading";
 import Error from "../components/Error";
 import {
+  Image,
   Input,
   Text,
   Icon,
@@ -20,14 +22,16 @@ import {
   Box,
   NativeBaseProvider,
   Button,
+  Heading,
 } from "native-base";
+
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import DeleteDialog from "../components/DeleteDialog";
 import LogoutDialog from "../components/LogoutDialog";
 import UserContext from "../contexts/UserContext";
 
 const AccountScreen = ({ navigation }) => {
-  const { logout, deleteUser } = React.useContext(AuthContext);
+  const { logout, deleteUser, uploadPic } = React.useContext(AuthContext);
   const [show, setShow] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
@@ -36,61 +40,96 @@ const AccountScreen = ({ navigation }) => {
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
   const cancelRef = React.useRef(null);
   const cancelRef2 = React.useRef(null);
+  const [image, setImage] = useState(null);
 
   const onLogoutClose = () => setIsLogoutOpen(false);
   const onDeleteClose = () => setIsDeleteOpen(false);
 
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+      uploadPic(result, user);
+    }
+  };
+
   return (
-    <ImageBackground
-      source={require("../../public/images/ape.jpg")}
-      resizeMode="cover"
-      style={styles.image}
-    >
-      <NativeBaseProvider
-        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-      >
-        <ScrollView>
-          <Text style={{ color: "white" }}>{user.email}</Text>
-          {user.firstName === "Guest" ? (
-            <Button
-              p={7}
-              size="lg"
-              minWidth="100%"
-              style={styles.button}
-              onPress={() => {
-                logout();
-              }}
-            >
-              Sign in
-            </Button>
-          ) : (
-            <>
+    <>
+      <NativeBaseProvider>
+        <View style={styles.container}>
+          <Box>
+            <Center>
+              <Image
+                size={150}
+                resizeMode={"contain"}
+                borderRadius={100}
+                source={
+                  user.firstName === "Guest" || image === null
+                    ? require("../../public/images/genericProfile.png")
+                    : { uri: image }
+                }
+                alt="Profile Picture"
+              />
+            </Center>
+            {user.firstName === "Guest" ? (
               <Button
-                p={5}
+                p={7}
                 size="lg"
                 minWidth="100%"
                 style={styles.button}
                 onPress={() => {
-                  setIsLogoutOpen(!isLogoutOpen);
+                  logout();
                 }}
               >
-                Log Out
+                Sign in
               </Button>
+            ) : (
+              <>
+                <Heading style={styles.heading}>{user.email}</Heading>
+                <Button
+                  style={styles.pictureButton}
+                  size="md"
+                  variant="outline"
+                  onPress={pickImage}
+                >
+                  <Text style={{ color: "#CFB53B" }}>
+                    Upload Profile Picture
+                  </Text>
+                </Button>
+                <Button
+                  p={5}
+                  size="lg"
+                  minWidth="100%"
+                  style={styles.button}
+                  onPress={() => {
+                    setIsLogoutOpen(!isLogoutOpen);
+                  }}
+                >
+                  Log Out
+                </Button>
 
-              <Button
-                p={2}
-                size="lg"
-                minWidth="100%"
-                style={styles.signin}
-                onPress={() => {
-                  setIsDeleteOpen(!isDeleteOpen);
-                }}
-              >
-                Delete Account
-              </Button>
-            </>
-          )}
-        </ScrollView>
+                <Button
+                  p={2}
+                  size="lg"
+                  minWidth="100%"
+                  style={styles.signin}
+                  onPress={() => {
+                    setIsDeleteOpen(!isDeleteOpen);
+                  }}
+                >
+                  Delete Account
+                </Button>
+              </>
+            )}
+          </Box>
+        </View>
         <LogoutDialog
           logout={logout}
           isLogoutOpen={isLogoutOpen}
@@ -106,11 +145,16 @@ const AccountScreen = ({ navigation }) => {
         />
       </NativeBaseProvider>
       <Loading loading={loading} />
-    </ImageBackground>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  heading: {
+    color: "white",
+    backgroundColor: "black",
+    textAlign: "center",
+  },
   input: {
     height: 40,
     margin: 12,
@@ -122,14 +166,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
-  button: {
-    marginTop: 200,
-    backgroundColor: "#CFB53B",
-    flex: 1,
+  pictureButton: {
+    backgroundColor: "black",
+    color: "#CFB53B",
     borderRadius: 0,
   },
+  button: {
+    backgroundColor: "#CFB53B",
+    borderRadius: 0,
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   signin: {
-    marginTop: 0,
     backgroundColor: "#CFB53B",
     borderRadius: 0,
   },

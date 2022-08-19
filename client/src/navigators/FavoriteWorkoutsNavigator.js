@@ -17,21 +17,19 @@ const FavoriteWorkoutsNavigator = (navigation) => {
 
   return (
     <FavoriteWorkoutsProvider>
-      <SharedWorkoutsProvider>
-        <FavoriteWorkoutsStack.Navigator
-          screenOptions={{ headerTitle: "", headerTransparent: true }}
-        >
-          <FavoriteWorkoutsStack.Screen
-            component={RenderFavoriteWorkoutsScreen}
-            name="FavoriteWorkoutsScreen"
-            options={{ headerLeft: () => null }}
-          />
-          <FavoriteWorkoutsStack.Screen
-            component={FavoriteWorkoutsDetail}
-            name="FavoriteWorkoutsDetail"
-          />
-        </FavoriteWorkoutsStack.Navigator>
-      </SharedWorkoutsProvider>
+      <FavoriteWorkoutsStack.Navigator
+        screenOptions={{ headerTitle: "", headerTransparent: true }}
+      >
+        <FavoriteWorkoutsStack.Screen
+          component={RenderFavoriteWorkoutsScreen}
+          name="FavoriteWorkoutsScreen"
+          options={{ headerLeft: () => null }}
+        />
+        <FavoriteWorkoutsStack.Screen
+          component={FavoriteWorkoutsDetail}
+          name="FavoriteWorkoutsDetail"
+        />
+      </FavoriteWorkoutsStack.Navigator>
     </FavoriteWorkoutsProvider>
   );
 };

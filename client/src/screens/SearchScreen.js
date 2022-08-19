@@ -4,7 +4,7 @@ import Loading from "../components/Loading";
 import Error from "../components/Error";
 import {
   SafeAreaView,
-  ImageBackground,
+
   StyleSheet,
   ScrollView,
 } from "react-native";
@@ -124,11 +124,7 @@ const SearchScreen = () => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../public/images/ape.jpg")}
-      resizeMode="cover"
-      style={styles.image}
-    >
+ 
       <NativeBaseProvider
         style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
       >
@@ -389,7 +385,7 @@ const SearchScreen = () => {
 
         <Loading loading={loading} />
       </NativeBaseProvider>
-    </ImageBackground>
+   
   );
 };
 

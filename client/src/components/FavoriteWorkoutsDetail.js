@@ -257,6 +257,7 @@ const FavoriteWorkoutsDetail = (props) => {
     <View style={{ flex: 1, backgroundColor: "black" }}>
       <NativeBaseProvider>
         <ScrollView contentContainerStyle={[styles.container]}>
+          <Text style={styles.title}>{favoriteWorkout.title}</Text>
           <Text style={styles.time}>{`Completed At ${formatDate(
             favoriteWorkout.time
           )}`}</Text>
@@ -297,7 +298,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   title: {
-    paddingTop: 20,
+    paddingTop: 0,
     fontSize: 30,
     fontWeight: "bold",
     color: "white",

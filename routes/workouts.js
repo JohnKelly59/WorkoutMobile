@@ -41,7 +41,15 @@ router.post("/addFavoriteWorkout", async function (req, res) {
       partnerEmails: [],
     };
     //redirect favorite
-    await FavoriteWorkouts.create(newFavoriteWorkout);
+    await FavoriteWorkouts.updateOne(
+      {
+        title: newFavoriteWorkout.title,
+        exercises: newFavoriteWorkout.exercises,
+        UserEmail: newFavoriteWorkout.UserEmail,
+      },
+      newFavoriteWorkout,
+      { upsert: true }
+    );
     res.status(200).send("Success");
   } catch (err) {
     console.error(err);
@@ -107,7 +115,7 @@ router.post("/addSharedWorkout", async function (req, res) {
     const addPartner = await partner.map(async (x) => {
       await FavoriteWorkouts.findOneAndUpdate(
         { UserEmail: user, id: workout },
-        { $push: { partnerEmails: x } }
+        { $addToSet: { partnerEmails: x } }
       );
       return "done";
     });
@@ -123,13 +131,12 @@ router.post("/removeSharedWorkout", async function (req, res) {
   let workout = req.body.workout;
   try {
     //redirect favorite
-    const removePartner = await partner.map((x) => {
-      return FavoriteWorkouts.findOneAndUpdate(
-        { id: workout },
-        { $pop: { partnerEmails: user } }
-      );
-    });
-    console.log(removePartner);
+    const removePartner = await FavoriteWorkouts.findOneAndUpdate(
+      { id: workout.id },
+      { $pull: { partnerEmails: user } }
+    );
+
+    console.log("removed: ", removePartner);
     res.status(200).send("Success");
   } catch (err) {
     console.error(err);
@@ -159,6 +166,54 @@ router.post("/removePartners", async function (req, res) {
       { partnerEmails: array }
     );
     console.log(restart);
+    res.status(200).send("Success");
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+router.post("/shareCurrentWorkout", async function (req, res) {
+  req.body.partners.push(req.body.user);
+  try {
+    const newSharedWorkout = {
+      id: Date.now(),
+      UserEmail: "",
+      title: req.body.title,
+      exercises: req.body.exercises,
+      time: Date.now(),
+      partnerEmails: req.body.partners,
+    };
+
+    await FavoriteWorkouts.updateOne(
+      {
+        title: newSharedWorkout.title,
+        partnerEmails: newSharedWorkout.partnersEmails,
+      },
+      newSharedWorkout,
+      { upsert: true }
+    );
+    res.status(200).send("Success");
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+router.post("/addPartnerSharedWorkout", async function (req, res) {
+  let user = req.body.user;
+  let workout = req.body.workout;
+  let partner = req.body.partner;
+  let partnersAndYou = partner.push(user);
+  console.log("user: ", user, "workout: ", workout, "partner: ", partner);
+  try {
+    //redirect favorite
+    const addPartner = await partner.map(async (x) => {
+      await FavoriteWorkouts.findOneAndUpdate(
+        { id: workout },
+        { $addToSet: { partnerEmails: x } }
+      );
+      return "done";
+    });
+    console.log(addPartner);
     res.status(200).send("Success");
   } catch (err) {
     console.error(err);

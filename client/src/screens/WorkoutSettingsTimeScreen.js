@@ -1,13 +1,7 @@
 import React, { useEffect, useCallback } from "react";
 import Loading from "../components/Loading";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  ImageBackground,
-} from "react-native";
+import { SafeAreaView, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { TimePicker, ValueMap } from "react-native-simple-time-picker";
 
 import {
@@ -93,83 +87,77 @@ const WorkoutSettingsTimeScreen = (props) => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../public/images/ape.jpg")}
-      resizeMode="cover"
-      style={styles.image}
+    <NativeBaseProvider
+      style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
     >
-      <NativeBaseProvider
-        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-      >
-        <ScrollView>
-          <Stack space={4} w="100%" style={{ paddingBottom: 100 }}>
-            <Heading
-              alignItems="center"
-              color="#CFB53B"
-              fontSize="xl"
-              p="4"
-              pb="3"
-            >
-              Workout Duration
-            </Heading>
-            <View style={styles.rnDateTimePicker}>
-              <TimePicker
-                defaultValue={{ hours: 0, minutes: 0, seconds: 0 }}
-                hoursUnit="Hours"
-                minutesUnit="Minutes"
-                secondsUnit="Seconds"
-                value={workoutDuration}
-                onChange={(e) => durationDateChange(e)}
-                textColor="white"
-                pickerShows={["hours", "minutes", "seconds"]}
-              />
-            </View>
-
-            <Heading
-              alignItems="center"
-              color="#CFB53B"
-              fontSize="xl"
-              p="4"
-              pb="3"
-            >
-              Rest Between Sets
-            </Heading>
-            <View style={styles.rnDateTimePicker}>
-              <TimePicker
-                defaultValue={{ hours: 0, minutes: 0, seconds: 0 }}
-                hoursUnit="Hours"
-                minutesUnit="Minutes"
-                secondsUnit="Seconds"
-                value={restDuration}
-                onChange={(e) => restDateChange(e)}
-                textColor="white"
-                pickerShows={["hours", "minutes", "seconds"]}
-              />
-            </View>
-          </Stack>
-        </ScrollView>
-        <WorkoutSearchList
-          searchedExercises={searchedExercises}
-          isOpen={isOpen}
-          onClose={onClose}
-          cancelRef={cancelRef}
-        />
-
-        {chosenExercises.length > 0 ? (
-          <Button
-            onPress={() => props.navigation.navigate("WorkoutScreen")}
-            style={styles.button}
-            p={5}
-            size="lg"
-            minWidth="100%"
+      <ScrollView>
+        <Stack space={4} w="100%" style={{ paddingBottom: 100 }}>
+          <Heading
+            alignItems="center"
+            color="#CFB53B"
+            fontSize="xl"
+            p="4"
+            pb="3"
           >
-            Begin Training
-          </Button>
-        ) : null}
+            Workout Duration
+          </Heading>
+          <View style={styles.rnDateTimePicker}>
+            <TimePicker
+              defaultValue={{ hours: 0, minutes: 0, seconds: 0 }}
+              hoursUnit="Hours"
+              minutesUnit="Minutes"
+              secondsUnit="Seconds"
+              value={workoutDuration}
+              onChange={(e) => durationDateChange(e)}
+              textColor="white"
+              pickerShows={["hours", "minutes", "seconds"]}
+            />
+          </View>
 
-        <Loading loading={loading} />
-      </NativeBaseProvider>
-    </ImageBackground>
+          <Heading
+            alignItems="center"
+            color="#CFB53B"
+            fontSize="xl"
+            p="4"
+            pb="3"
+          >
+            Rest Between Sets
+          </Heading>
+          <View style={styles.rnDateTimePicker}>
+            <TimePicker
+              defaultValue={{ hours: 0, minutes: 0, seconds: 0 }}
+              hoursUnit="Hours"
+              minutesUnit="Minutes"
+              secondsUnit="Seconds"
+              value={restDuration}
+              onChange={(e) => restDateChange(e)}
+              textColor="white"
+              pickerShows={["hours", "minutes", "seconds"]}
+            />
+          </View>
+        </Stack>
+      </ScrollView>
+      <WorkoutSearchList
+        searchedExercises={searchedExercises}
+        isOpen={isOpen}
+        onClose={onClose}
+        cancelRef={cancelRef}
+      />
+
+      {chosenExercises.length > 0 ? (
+        <Button
+          onPress={() => props.navigation.navigate("WorkoutScreen")}
+          style={styles.button}
+          p={5}
+          size="lg"
+          minWidth="100%"
+        >
+          Begin Training
+        </Button>
+      ) : null}
+
+      <Loading loading={loading} />
+    </NativeBaseProvider>
   );
 };
 

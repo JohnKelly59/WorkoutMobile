@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
+  RefreshControl,
+  ScrollView,
   View,
   StyleSheet,
   Text,
@@ -7,7 +9,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   FlatList,
-  ImageBackground,
 } from "react-native";
 import {
   Spacer,
@@ -53,7 +54,7 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
     removeFavoriteWorkout,
     addFavoriteWorkout,
   } = useFavoriteWorkouts();
-
+  const [refreshing, setRefreshing] = React.useState(false);
   const reverseFavoriteWorkouts = reverseData(favoriteWorkouts);
 
   const openFavoriteWorkout = (favoriteWorkout) => {
@@ -89,63 +90,73 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
     await getFavoriteWorkouts();
   };
 
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => {
+      setRefreshing(false), getFavoriteWorkouts();
+    });
+  }, []);
+
   useEffect(() => {
     getFavoriteWorkouts();
   }, []);
 
   return (
     <>
-      <ImageBackground
-        source={require("../../public/images/ape.jpg")}
-        resizeMode="cover"
-        style={styles.image}
-      >
-        <NativeBaseProvider>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.container}>
-              {favoriteWorkouts.length ? (
-                <SearchBar
-                  value={searchQuery}
-                  onChangeText={handleOnSearchInput}
-                  containerStyle={{ marginVertical: 15 }}
-                  onClear={handleOnClear}
-                />
-              ) : null}
+      <NativeBaseProvider>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            style={styles.container}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
+            {favoriteWorkouts.length ? (
+              <SearchBar
+                value={searchQuery}
+                onChangeText={handleOnSearchInput}
+                containerStyle={{ marginVertical: 15 }}
+                onClear={handleOnClear}
+              />
+            ) : null}
 
-              {resultNotFound ? (
-                <NotFound />
-              ) : (
-                <FlatList
-                  data={reverseFavoriteWorkouts}
-                  numColumns={2}
-                  columnWrapperStyle={{
-                    justifyContent: "space-between",
-                    marginBottom: 15,
-                  }}
-                  keyExtractor={(item) => item.id.toString()}
-                  renderItem={({ item }) => (
-                    <FavoriteWorkout
-                      onPress={() => openFavoriteWorkout(item)}
-                      item={item}
-                    />
-                  )}
-                />
-              )}
+            {resultNotFound ? (
+              <NotFound />
+            ) : (
+              <FlatList
+                data={reverseFavoriteWorkouts}
+                numColumns={2}
+                columnWrapperStyle={{
+                  justifyContent: "space-between",
+                  marginBottom: 15,
+                }}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <FavoriteWorkout
+                    onPress={() => openFavoriteWorkout(item)}
+                    item={item}
+                  />
+                )}
+              />
+            )}
 
-              {!favoriteWorkouts.length ? (
-                <View
-                  style={[
-                    StyleSheet.absoluteFillObject,
-                    styles.emptyHeaderContainer,
-                  ]}
-                >
-                  <Text style={styles.emptyHeader}>No Saved Workouts</Text>
-                </View>
-              ) : null}
-            </View>
-          </TouchableWithoutFeedback>
-        </NativeBaseProvider>
-      </ImageBackground>
+            {!favoriteWorkouts.length ? (
+              <View
+                style={[
+                  StyleSheet.absoluteFillObject,
+                  styles.emptyHeaderContainer,
+                ]}
+              >
+                <Text style={styles.emptyHeader}>No Saved Workouts</Text>
+              </View>
+            ) : null}
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </NativeBaseProvider>
     </>
   );
 };

@@ -17,6 +17,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import UserContext from "./src/contexts/UserContext";
 import FavoritesProvider from "./src/contexts/FavoritesContext";
 import ParnersProvider from "./src/contexts/PartnersContext";
+import SharedWorkoutsProvider from "./src/contexts/SharedWorkoutsContext";
 
 const RootStack = createStackNavigator();
 
@@ -33,9 +34,11 @@ const App = () => {
         {() => (
           <UserContext.Provider value={state.user}>
             <ParnersProvider>
-              <FavoritesProvider>
-                <MainNavigator />
-              </FavoritesProvider>
+              <SharedWorkoutsProvider>
+                <FavoritesProvider>
+                  <MainNavigator />
+                </FavoritesProvider>
+              </SharedWorkoutsProvider>
             </ParnersProvider>
           </UserContext.Provider>
         )}

@@ -20,7 +20,7 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  ImageBackground,
+
   Alert,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -38,11 +38,7 @@ const PartnerSearchScreen = (props) => {
 
   return (
     <>
-      <ImageBackground
-        source={require("../../public/images/ape.jpg")}
-        resizeMode="cover"
-        style={styles.image}
-      >
+      
         <NativeBaseProvider
           style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
@@ -125,7 +121,7 @@ const PartnerSearchScreen = (props) => {
             />
           ) : null}
         </NativeBaseProvider>
-      </ImageBackground>
+     
     </>
   );
 };

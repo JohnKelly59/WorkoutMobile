@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  ImageBackground,
 } from "react-native";
 import {
   Heading,
@@ -42,7 +41,7 @@ const PartnerRequestScreen = (props) => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    wait(2000).then(() => {
+    wait(1000).then(() => {
       setRefreshing(false), getPartnerRequests(user);
     });
   }, []);
@@ -52,155 +51,149 @@ const PartnerRequestScreen = (props) => {
   }, []);
 
   return (
-    <ImageBackground
-      source={require("../../public/images/ape.jpg")}
-      resizeMode="cover"
-      style={styles.image}
+    <NativeBaseProvider
+      style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
     >
-      <NativeBaseProvider
-        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+      <ScrollView
+        contentContainerStyle={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
-        <ScrollView
-          contentContainerStyle={styles.scrollView}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          {Object.keys(partnerRequests).length !== 0 ? (
-            <>
-              <Heading
-                alignItems="center"
-                color="#CFB53B"
-                fontSize="xl"
-                p="4"
-                pb="3"
-              >
-                Received
-              </Heading>
-              {}
-              <FlatList
-                backgroundColor="black"
-                data={partnerRequests.received.filter((o) => {
-                  if (o.requester !== null) {
-                    return o;
-                  }
-                })}
-                renderItem={({ item }) => (
-                  <Box
-                    borderBottomWidth="1"
-                    _dark={{
-                      borderColor: "gray.600",
-                    }}
-                    borderColor="coolGray.200"
-                    pl="1"
-                    pr="9"
-                    py="6"
-                  >
-                    {console.log("itemhere: ", item)}
-                    <HStack space={2} justifyContent="space-between">
-                      <VStack>
-                        <Text
-                          _dark={{
-                            color: "#CFB53B",
-                          }}
-                          color="#CFB53B"
-                          bold
-                        >
-                          {item.requester.email}
-                        </Text>
-                      </VStack>
-                      <Spacer />
-                      <Button
-                        backgroundColor="black"
-                        _text={{
+        {Object.keys(partnerRequests).length !== 0 ? (
+          <>
+            <Heading
+              alignItems="center"
+              color="#CFB53B"
+              fontSize="xl"
+              p="4"
+              pb="3"
+            >
+              Received
+            </Heading>
+            {}
+            <FlatList
+              backgroundColor="black"
+              data={partnerRequests.received.filter((o) => {
+                if (o.requester !== null) {
+                  return o;
+                }
+              })}
+              renderItem={({ item }) => (
+                <Box
+                  borderBottomWidth="1"
+                  _dark={{
+                    borderColor: "gray.600",
+                  }}
+                  borderColor="coolGray.200"
+                  pl="1"
+                  pr="9"
+                  py="6"
+                >
+                  {console.log("itemhere: ", item)}
+                  <HStack space={2} justifyContent="space-between">
+                    <VStack>
+                      <Text
+                        _dark={{
                           color: "#CFB53B",
                         }}
-                        size="sm"
-                        onPress={async () => {
-                          denyPartnerRequest(user, item.requester.email);
-                        }}
+                        color="#CFB53B"
+                        bold
                       >
-                        Deny
-                      </Button>
-                      <Button
-                        backgroundColor="black"
-                        _text={{
+                        {item.requester.email}
+                      </Text>
+                    </VStack>
+                    <Spacer />
+                    <Button
+                      backgroundColor="black"
+                      _text={{
+                        color: "#CFB53B",
+                      }}
+                      size="sm"
+                      onPress={async () => {
+                        denyPartnerRequest(user, item.requester.email);
+                      }}
+                    >
+                      Deny
+                    </Button>
+                    <Button
+                      backgroundColor="black"
+                      _text={{
+                        color: "#CFB53B",
+                      }}
+                      size="sm"
+                      onPress={async () => {
+                        acceptPartnerRequest(user, item.requester.email);
+                      }}
+                    >
+                      Accept
+                    </Button>
+                  </HStack>
+                </Box>
+              )}
+              keyExtractor={(item) => item.requested.email}
+            />
+          </>
+        ) : null}
+        {Object.keys(partnerRequests).length !== 0 ? (
+          <>
+            <Heading
+              alignItems="center"
+              color="#CFB53B"
+              fontSize="xl"
+              p="4"
+              pb="3"
+            >
+              Sent
+            </Heading>
+            <FlatList
+              backgroundColor="black"
+              data={partnerRequests.sent}
+              renderItem={({ item }) => (
+                <Box
+                  borderBottomWidth="1"
+                  _dark={{
+                    borderColor: "gray.600",
+                  }}
+                  borderColor="coolGray.200"
+                  pl="1"
+                  pr="9"
+                  py="6"
+                >
+                  <HStack space={2} justifyContent="space-between">
+                    <VStack>
+                      <Text
+                        _dark={{
                           color: "#CFB53B",
                         }}
-                        size="sm"
-                        onPress={async () => {
-                          acceptPartnerRequest(user, item.requester.email);
-                        }}
+                        color="#CFB53B"
+                        bold
                       >
-                        Accept
-                      </Button>
-                    </HStack>
-                  </Box>
-                )}
-                keyExtractor={(item) => item.requested.email}
-              />
-            </>
-          ) : null}
-          {Object.keys(partnerRequests).length !== 0 ? (
-            <>
-              <Heading
-                alignItems="center"
-                color="#CFB53B"
-                fontSize="xl"
-                p="4"
-                pb="3"
-              >
-                Sent
-              </Heading>
-              <FlatList
-                backgroundColor="black"
-                data={partnerRequests.sent}
-                renderItem={({ item }) => (
-                  <Box
-                    borderBottomWidth="1"
-                    _dark={{
-                      borderColor: "gray.600",
-                    }}
-                    borderColor="coolGray.200"
-                    pl="1"
-                    pr="9"
-                    py="6"
-                  >
-                    <HStack space={2} justifyContent="space-between">
-                      <VStack>
-                        <Text
-                          _dark={{
-                            color: "#CFB53B",
-                          }}
-                          color="#CFB53B"
-                          bold
-                        >
-                          {item.requested.email}
-                        </Text>
-                      </VStack>
-                      <Spacer />
-                      <Button
-                        backgroundColor="black"
-                        _text={{
-                          color: "#CFB53B",
-                        }}
-                        size="sm"
-                        onPress={async () => {
-                          cancelPartnerRequest(user, item.requested.email);
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </HStack>
-                  </Box>
-                )}
-                keyExtractor={(item) => item.requested.email}
-              />
-            </>
-          ) : null}
-        </ScrollView>
-      </NativeBaseProvider>
-    </ImageBackground>
+                        {item.requested.email}
+                      </Text>
+                    </VStack>
+                    <Spacer />
+                    <Button
+                      backgroundColor="black"
+                      _text={{
+                        color: "#CFB53B",
+                      }}
+                      size="sm"
+                      onPress={async () => {
+                        cancelPartnerRequest(user, item.requested.email);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </HStack>
+                </Box>
+              )}
+              keyExtractor={(item) => item.requested.email}
+            />
+          </>
+        ) : null}
+      </ScrollView>
+    </NativeBaseProvider>
   );
 };
 

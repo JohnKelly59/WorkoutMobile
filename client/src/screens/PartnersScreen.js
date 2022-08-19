@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  ImageBackground,
   Alert,
 } from "react-native";
 import {
@@ -38,7 +37,7 @@ const PartnersScreen = (props) => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    wait(2000).then(() => {
+    wait(1000).then(() => {
       setRefreshing(false), getPartners(user);
     });
   }, []);
@@ -61,101 +60,43 @@ const PartnersScreen = (props) => {
   }, []);
 
   return (
-    <ImageBackground
-      source={require("../../public/images/ape.jpg")}
-      resizeMode="cover"
-      style={styles.image}
+    <NativeBaseProvider
+      style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
     >
-      <NativeBaseProvider
-        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+      <ScrollView
+        contentContainerStyle={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
-        <ScrollView
-          contentContainerStyle={styles.scrollView}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          {partners.length ? (
-            <FlatList
-              backgroundColor="black"
-              data={partners}
-              renderItem={({ item }) => (
-                <Box
-                  borderBottomWidth="1"
-                  _dark={{
-                    borderColor: "gray.600",
-                  }}
-                  borderColor="coolGray.200"
-                  pl="1"
-                  pr="9"
-                  py="6"
-                >
-                  <HStack space={2} justifyContent="space-between">
-                    <VStack>
-                      <Text
-                        _dark={{
-                          color: "#CFB53B",
-                        }}
-                        color="#CFB53B"
-                        bold
-                      >
-                        {item.email}
-                      </Text>
-                    </VStack>
-                    <Spacer />
-                    <Button
-                      backgroundColor="black"
-                      _text={{
+        {partners.length ? (
+          <FlatList
+            backgroundColor="black"
+            data={partners}
+            renderItem={({ item }) => (
+              <Box
+                borderBottomWidth="1"
+                _dark={{
+                  borderColor: "gray.600",
+                }}
+                borderColor="coolGray.200"
+                pl="1"
+                pr="9"
+                py="6"
+              >
+                <HStack space={2} justifyContent="space-between">
+                  <VStack>
+                    <Text
+                      _dark={{
                         color: "#CFB53B",
                       }}
-                      size="sm"
-                      onPress={async () => {
-                        partnerToRemove(item.email);
-                      }}
+                      color="#CFB53B"
+                      bold
                     >
-                      Remove
-                    </Button>
-                  </HStack>
-                </Box>
-              )}
-              keyExtractor={(item) => item.email}
-            />
-          ) : null}
-
-          <AlertDialog
-            style={{
-              paddingTop: "50%",
-              height: "80%",
-              width: "100%",
-            }}
-            leastDestructiveRef={cancelRef}
-            isOpen={isOpen}
-            onClose={onClose}
-          >
-            <AlertDialog.Content>
-              <AlertDialog.CloseButton />
-              <AlertDialog.Header backgroundColor="#CFB53B">
-                Are you sure?
-              </AlertDialog.Header>
-              <AlertDialog.Body backgroundColor="black">
-                <Text style={{ color: "white" }}>
-                  You and your partner will no longer be able to share workouts.
-                  All workouts previosuly shared will also be deleted.
-                </Text>
-              </AlertDialog.Body>
-              <AlertDialog.Footer
-                backgroundColor="#CFB53B"
-                justifyContent="flex-end"
-              >
-                <Button.Group>
-                  <Button
-                    variant="unstyled"
-                    colorScheme="coolGray"
-                    onPress={onClose}
-                    ref={cancelRef}
-                  >
-                    Cancel
-                  </Button>
+                      {item.email}
+                    </Text>
+                  </VStack>
+                  <Spacer />
                   <Button
                     backgroundColor="black"
                     _text={{
@@ -163,18 +104,70 @@ const PartnersScreen = (props) => {
                     }}
                     size="sm"
                     onPress={async () => {
-                      remove();
+                      partnerToRemove(item.email);
                     }}
                   >
                     Remove
                   </Button>
-                </Button.Group>
-              </AlertDialog.Footer>
-            </AlertDialog.Content>
-          </AlertDialog>
-        </ScrollView>
-      </NativeBaseProvider>
-    </ImageBackground>
+                </HStack>
+              </Box>
+            )}
+            keyExtractor={(item) => item.email}
+          />
+        ) : null}
+
+        <AlertDialog
+          style={{
+            paddingTop: "50%",
+            height: "80%",
+            width: "100%",
+          }}
+          leastDestructiveRef={cancelRef}
+          isOpen={isOpen}
+          onClose={onClose}
+        >
+          <AlertDialog.Content>
+            <AlertDialog.CloseButton />
+            <AlertDialog.Header backgroundColor="#CFB53B">
+              Are you sure?
+            </AlertDialog.Header>
+            <AlertDialog.Body backgroundColor="black">
+              <Text style={{ color: "white" }}>
+                You and your partner will no longer be able to share workouts.
+                All workouts previosuly shared will also be deleted.
+              </Text>
+            </AlertDialog.Body>
+            <AlertDialog.Footer
+              backgroundColor="#CFB53B"
+              justifyContent="flex-end"
+            >
+              <Button.Group>
+                <Button
+                  variant="unstyled"
+                  colorScheme="coolGray"
+                  onPress={onClose}
+                  ref={cancelRef}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  backgroundColor="black"
+                  _text={{
+                    color: "#CFB53B",
+                  }}
+                  size="sm"
+                  onPress={async () => {
+                    remove();
+                  }}
+                >
+                  Remove
+                </Button>
+              </Button.Group>
+            </AlertDialog.Footer>
+          </AlertDialog.Content>
+        </AlertDialog>
+      </ScrollView>
+    </NativeBaseProvider>
   );
 };
 

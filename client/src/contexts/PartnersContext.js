@@ -239,6 +239,15 @@ const PartnersProvider = ({ children }) => {
       });
   };
 
+  useEffect(() => {
+    SecureStore.getItemAsync("user").then((user) => {
+      if (user) {
+        const userData = JSON.parse(user);
+        getPartners(userData);
+      }
+    });
+  }, []);
+
   return (
     <PartnersContext.Provider
       value={{

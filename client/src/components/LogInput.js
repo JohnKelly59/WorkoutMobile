@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Modal,
   Text,
-  ImageBackground,
   StatusBar,
   TextInput,
   TouchableWithoutFeedback,
@@ -54,50 +53,40 @@ const LogInput = ({ visible, onClose, onSubmit, log, isEdit }) => {
 
   return (
     <Modal visible={visible} animationType="fade">
-      <ImageBackground
-        source={require("../../public/images/ape.jpg")}
-        resizeMode="cover"
-        style={styles.image}
-      >
-        <View style={styles.container}>
-          <Text style={styles.header}>Add Log</Text>
-          <TextInput
-            value={title}
-            borderRadius={50}
-            onChangeText={(text) => handleOnChangeText(text, "title")}
-            placeholder="Title"
-            placeholderTextColor="white"
-            style={[styles.input, styles.title]}
-          />
-          <TextInput
-            value={desc}
-            multiline
-            borderRadius={50}
-            placeholder="Log"
-            placeholderTextColor="white"
-            style={[styles.input, styles.desc]}
-            onChangeText={(text) => handleOnChangeText(text, "desc")}
-          />
-          <View style={styles.btnContainer}>
+      <View style={styles.container}>
+        <Text style={styles.header}>Add Log</Text>
+        <TextInput
+          value={title}
+          borderRadius={50}
+          onChangeText={(text) => handleOnChangeText(text, "title")}
+          placeholder="Title"
+          placeholderTextColor="white"
+          style={[styles.input, styles.title]}
+        />
+        <TextInput
+          value={desc}
+          multiline
+          borderRadius={50}
+          placeholder="Log"
+          placeholderTextColor="white"
+          style={[styles.input, styles.desc]}
+          onChangeText={(text) => handleOnChangeText(text, "desc")}
+        />
+        <View style={styles.btnContainer}>
+          <RoundIconBtn size={15} antIconName="check" onPress={handleSubmit} />
+          {title.trim() || desc.trim() ? (
             <RoundIconBtn
               size={15}
-              antIconName="check"
-              onPress={handleSubmit}
+              style={{ marginLeft: 15 }}
+              antIconName="close"
+              onPress={closeModal}
             />
-            {title.trim() || desc.trim() ? (
-              <RoundIconBtn
-                size={15}
-                style={{ marginLeft: 15 }}
-                antIconName="close"
-                onPress={closeModal}
-              />
-            ) : null}
-          </View>
+          ) : null}
         </View>
-        <TouchableWithoutFeedback onPress={handleModalClose}>
-          <View style={[styles.modalBG, StyleSheet.absoluteFillObject]} />
-        </TouchableWithoutFeedback>
-      </ImageBackground>
+      </View>
+      <TouchableWithoutFeedback onPress={handleModalClose}>
+        <View style={[styles.modalBG, StyleSheet.absoluteFillObject]} />
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
