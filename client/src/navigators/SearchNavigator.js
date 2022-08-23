@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-
+import { SimpleLineIcons } from "@expo/vector-icons";
 import SearchScreen from "../screens/SearchScreen";
 import RandomScreen from "../screens/RandomScreen";
 
@@ -11,7 +11,12 @@ const Drawer = createDrawerNavigator();
 
 function SearchNavigator() {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      screenOptions={{
+        drawerActiveTintColor: "#CFB53B",
+        headerTintColor: "#CFB53B",
+      }}
+    >
       <Drawer.Screen name="Look Up" component={SearchScreen} />
       <Drawer.Screen name="Random" component={RandomScreen} />
     </Drawer.Navigator>

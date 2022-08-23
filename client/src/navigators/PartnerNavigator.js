@@ -12,7 +12,12 @@ const Drawer = createDrawerNavigator();
 
 function PartnerNavigator() {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      screenOptions={{
+        drawerActiveTintColor: "#CFB53B",
+        headerTintColor: "#CFB53B",
+      }}
+    >
       <Drawer.Screen name="Your Partners" component={PartnersScreen} />
       <Drawer.Screen name="Partner Requests" component={PartnerRequestScreen} />
       <Drawer.Screen name="Search Users" component={PartnerSearchScreen} />

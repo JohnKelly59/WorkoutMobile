@@ -6,6 +6,7 @@ import { Alert, Vibration } from "react-native";
 const PartnersContext = createContext();
 
 const PartnersProvider = ({ children }) => {
+  const [pic, setPic] = React.useState(null);
   const [partners, setPartners] = useState([]);
   const [partnerRequests, setPartnerRequests] = useState({});
   const [searchedPartners, setSearchedPartners] = useState({});
@@ -239,6 +240,60 @@ const PartnersProvider = ({ children }) => {
       });
   };
 
+  const uploadPic = async (profileImage, user) => {
+    const formData = new FormData();
+    console.log(profileImage, user.id);
+    formData.append("avatar", {
+      name: user.id,
+      uri: profileImage.uri,
+      type: "image/jpg",
+    });
+
+    await axios
+      .post(`${API_URL}/auth/uploadPic`, formData, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+  const profilePic = async (user) => {
+    await axios
+      .get(`${API_URL}/auth/profilePic/${user.id}`, {
+        params: { user: user.id },
+      })
+      .then((response) => {
+        setPic(response.config.url);
+        console.log(pic);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const deletePic = async (user) => {
+    await axios
+      .post(`${API_URL}/auth/deleteProfilePic`, {
+        userid: user.id,
+      })
+      .then((response) => {
+        setPic(null);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const profilePicture = async (user) => {
+    console.log(pic);
+  };
+
   useEffect(() => {
     SecureStore.getItemAsync("user").then((user) => {
       if (user) {
@@ -264,6 +319,12 @@ const PartnersProvider = ({ children }) => {
         setPartnerRequests,
         setPartners,
         searchedPartners,
+        profilePic,
+        profilePicture,
+        uploadPic,
+        deletePic,
+        pic,
+        setPic,
       }}
     >
       {children}

@@ -16,7 +16,12 @@ const SavedWorkoutsStack = createDrawerNavigator();
 
 const SavedWorkoutsNavigator = ({ navigation }) => {
   return (
-    <SavedWorkoutsStack.Navigator>
+    <SavedWorkoutsStack.Navigator
+      screenOptions={{
+        drawerActiveTintColor: "#CFB53B",
+        headerTintColor: "#CFB53B",
+      }}
+    >
       <SavedWorkoutsStack.Screen
         component={FavoriteWorkoutsNavigator}
         name="Saved Workouts"

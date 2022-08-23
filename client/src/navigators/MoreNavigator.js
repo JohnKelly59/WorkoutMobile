@@ -11,7 +11,12 @@ const Drawer = createDrawerNavigator();
 
 function MoreNavigator() {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      screenOptions={{
+        drawerActiveTintColor: "#CFB53B",
+        headerTintColor: "#CFB53B",
+      }}
+    >
       <Drawer.Screen name="Favorites" component={FavoritesScreen} />
       <Drawer.Screen name="Logs" component={LogsNavigator} />
     </Drawer.Navigator>

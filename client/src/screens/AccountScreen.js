@@ -12,6 +12,7 @@ import AuthContainer from "../components/AuthContainer";
 import AuthContext from "../contexts/AuthContext";
 import Loading from "../components/Loading";
 import Error from "../components/Error";
+import { usePartners } from "../contexts/PartnersContext";
 import {
   Image,
   Input,
@@ -24,14 +25,16 @@ import {
   Button,
   Heading,
 } from "native-base";
-
+import useAuth from "../hooks/useAuth";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import DeleteDialog from "../components/DeleteDialog";
 import LogoutDialog from "../components/LogoutDialog";
 import UserContext from "../contexts/UserContext";
 
 const AccountScreen = ({ navigation }) => {
-  const { logout, deleteUser, uploadPic } = React.useContext(AuthContext);
+  const { logout, deleteUser } = React.useContext(AuthContext);
+  const { uploadPic, profilePic, profilePicture, pic, setPic, deletePic } =
+    usePartners();
   const [show, setShow] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
@@ -41,7 +44,6 @@ const AccountScreen = ({ navigation }) => {
   const cancelRef = React.useRef(null);
   const cancelRef2 = React.useRef(null);
   const [image, setImage] = useState(null);
-
   const onLogoutClose = () => setIsLogoutOpen(false);
   const onDeleteClose = () => setIsDeleteOpen(false);
 
@@ -55,10 +57,15 @@ const AccountScreen = ({ navigation }) => {
     });
 
     if (!result.cancelled) {
-      setImage(result.uri);
+      setPic(result.uri);
       uploadPic(result, user);
     }
   };
+
+  useEffect(() => {
+    profilePic(user);
+    console.log("picHere: ", pic);
+  }, []);
 
   return (
     <>
@@ -71,9 +78,9 @@ const AccountScreen = ({ navigation }) => {
                 resizeMode={"contain"}
                 borderRadius={100}
                 source={
-                  user.firstName === "Guest" || image === null
+                  user.firstName === "Guest" || pic === null
                     ? require("../../public/images/genericProfile.png")
-                    : { uri: image }
+                    : { uri: pic }
                 }
                 alt="Profile Picture"
               />
@@ -93,16 +100,32 @@ const AccountScreen = ({ navigation }) => {
             ) : (
               <>
                 <Heading style={styles.heading}>{user.email}</Heading>
-                <Button
-                  style={styles.pictureButton}
-                  size="md"
-                  variant="outline"
-                  onPress={pickImage}
-                >
-                  <Text style={{ color: "#CFB53B" }}>
-                    Upload Profile Picture
-                  </Text>
-                </Button>
+                {pic === null ? (
+                  <Button
+                    style={styles.pictureButton}
+                    size="md"
+                    variant="outline"
+                    onPress={pickImage}
+                  >
+                    <Text style={{ color: "#CFB53B" }}>
+                      Upload Profile Picture
+                    </Text>
+                  </Button>
+                ) : (
+                  <Button
+                    style={styles.pictureButton}
+                    size="md"
+                    variant="outline"
+                    onPress={() => {
+                      deletePic(user);
+                    }}
+                  >
+                    <Text style={{ color: "#CFB53B" }}>
+                      Delete Profile Picture
+                    </Text>
+                  </Button>
+                )}
+
                 <Button
                   p={5}
                   size="lg"
@@ -125,6 +148,17 @@ const AccountScreen = ({ navigation }) => {
                   }}
                 >
                   Delete Account
+                </Button>
+                <Button
+                  style={styles.pictureButton}
+                  size="md"
+                  variant="outline"
+                  onPress={() => {
+                    console.log(pic);
+                    profilePicture();
+                  }}
+                >
+                  <Text style={{ color: "#CFB53B" }}>Get Picture</Text>
                 </Button>
               </>
             )}

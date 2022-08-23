@@ -85,28 +85,6 @@ const useAuth = () => {
           password: registerPassword,
         });
       },
-      uploadPic: async (profileImage, user) => {
-        const formData = new FormData();
-        formData.append("avatar", {
-          name: user.id + "_profile",
-          uri: profileImage,
-          type: "image/jpg",
-        });
-
-        await axios
-          .post(`${API_URL}/auth/uploadPic`, formData, {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((response) => {
-            console.log(response.data);
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-      },
     }),
     []
   );
