@@ -28,7 +28,6 @@ FavoritesProvider = ({ children }) => {
             email: rUser.email,
           })
           .then((response) => {
-            console.log(response.data);
             dispatch(createAction("SET_FAVORITES", response.data));
           })
           .catch((e) => {

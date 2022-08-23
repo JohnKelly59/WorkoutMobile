@@ -2,13 +2,7 @@ import React, { useEffect } from "react";
 import useRandomResults from "../hooks/useRandomResults";
 import Error from "../components/Error";
 import Loading from "../components/Loading";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  ImageBackground,
-} from "react-native";
+import { SafeAreaView, StyleSheet, Dimensions, ScrollView } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import FavoriteStar from "../components/FavoriteStar";
 import {
@@ -224,121 +218,115 @@ const RandomScreen = () => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../public/images/ape.jpg")}
-      resizeMode="cover"
-      style={styles.image}
+    <NativeBaseProvider
+      style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
     >
-      <NativeBaseProvider
-        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-      >
-        <ScrollView>
-          <Stack space={4} w="100%" alignItems="center">
-            <Center>
-              <Select
-                textAlign="center"
-                bg="#CFB53B"
-                p={3}
-                color="white"
-                _actionSheetBody={{ h: "300" }}
-                style={{ flex: 1 }}
-                selectedValue={bodyPart}
-                minWidth="100%"
-                accessibilityLabel="Body Part"
-                placeholder="Body Part"
-                placeholderTextColor="white"
-                _selectedItem={{
-                  bg: "#CFB53B",
-                  endIcon: <CheckIcon size="5" />,
-                }}
-                mt={1}
-                onValueChange={(itemValue) => setBodyPart(itemValue)}
-              >
-                {bodyParts.map((bodyPart, i) => {
-                  return (
-                    <Select.Item
-                      label={bodyPart.label}
-                      value={bodyPart.value}
-                      key={i}
-                    />
-                  );
-                })}
-              </Select>
-              <Select
-                textAlign="center"
-                bg="#CFB53B"
-                p={3}
-                color="white"
-                _actionSheetBody={{ h: "300" }}
-                style={{ flex: 1 }}
-                selectedValue={exercises}
-                minWidth="100%"
-                accessibilityLabel="Exercise Count"
-                placeholder="Exercise Count"
-                placeholderTextColor="white"
-                _selectedItem={{
-                  bg: "#CFB53B",
-                  endIcon: <CheckIcon size="5" />,
-                }}
-                mt={1}
-                onValueChange={(itemValue) => setExercises(itemValue)}
-              >
-                {exerciseCount.map((exercise, i) => {
-                  return (
-                    <Select.Item
-                      label={exercise.label}
-                      value={exercise.value}
-                      key={i}
-                    />
-                  );
-                })}
-              </Select>
-            </Center>
-
-            <Input
+      <ScrollView>
+        <Stack space={4} w="100%" alignItems="center">
+          <Center>
+            <Select
+              textAlign="center"
               bg="#CFB53B"
               p={3}
-              w={{
-                base: "85%",
-                md: "25%",
-              }}
-              variant="underlined"
-              minWidth="100%"
-              placeholder="Search List"
-              onChangeText={(text) => randomFilterFunction(text)}
-              value={random}
-              underlineColorAndroid="transparent"
-              placeholderTextColor="white"
               color="white"
-            />
+              _actionSheetBody={{ h: "300" }}
+              style={{ flex: 1 }}
+              selectedValue={bodyPart}
+              minWidth="100%"
+              accessibilityLabel="Body Part"
+              placeholder="Body Part"
+              placeholderTextColor="white"
+              _selectedItem={{
+                bg: "#CFB53B",
+                endIcon: <CheckIcon size="5" />,
+              }}
+              mt={1}
+              onValueChange={(itemValue) => setBodyPart(itemValue)}
+            >
+              {bodyParts.map((bodyPart, i) => {
+                return (
+                  <Select.Item
+                    label={bodyPart.label}
+                    value={bodyPart.value}
+                    key={i}
+                  />
+                );
+              })}
+            </Select>
+            <Select
+              textAlign="center"
+              bg="#CFB53B"
+              p={3}
+              color="white"
+              _actionSheetBody={{ h: "300" }}
+              style={{ flex: 1 }}
+              selectedValue={exercises}
+              minWidth="100%"
+              accessibilityLabel="Exercise Count"
+              placeholder="Exercise Count"
+              placeholderTextColor="white"
+              _selectedItem={{
+                bg: "#CFB53B",
+                endIcon: <CheckIcon size="5" />,
+              }}
+              mt={1}
+              onValueChange={(itemValue) => setExercises(itemValue)}
+            >
+              {exerciseCount.map((exercise, i) => {
+                return (
+                  <Select.Item
+                    label={exercise.label}
+                    value={exercise.value}
+                    key={i}
+                  />
+                );
+              })}
+            </Select>
+          </Center>
 
-            {randomError ? <Text>{randomError}</Text> : null}
-            <Error error={error} />
-            {randomResults.length > 0 ? (
-              <Carousel
-                data={randomResults}
-                renderItem={rendorCarousel}
-                sliderWidth={sliderWidth}
-                itemWidth={itemWidth}
-              />
-            ) : null}
-          </Stack>
-        </ScrollView>
-        {bodyPart === "" || exercises === "" ? null : (
-          <Button
-            style={styles.button}
-            p={5}
-            size="lg"
+          <Input
+            bg="#CFB53B"
+            p={3}
+            w={{
+              base: "85%",
+              md: "25%",
+            }}
+            variant="underlined"
             minWidth="100%"
-            onPress={buttonTap}
-          >
-            Randomize
-          </Button>
-        )}
+            placeholder="Search List"
+            onChangeText={(text) => randomFilterFunction(text)}
+            value={random}
+            underlineColorAndroid="transparent"
+            placeholderTextColor="white"
+            color="white"
+          />
 
-        <Loading loading={loading} />
-      </NativeBaseProvider>
-    </ImageBackground>
+          {randomError ? <Text>{randomError}</Text> : null}
+          <Error error={error} />
+          {randomResults.length > 0 ? (
+            <Carousel
+              data={randomResults}
+              renderItem={rendorCarousel}
+              sliderWidth={sliderWidth}
+              itemWidth={itemWidth}
+            />
+          ) : null}
+        </Stack>
+      </ScrollView>
+      {bodyPart === "" || exercises === "" ? null : (
+        <Button
+          style={styles.button}
+          p={5}
+          size="lg"
+          minWidth="100%"
+          onPress={buttonTap}
+        >
+          Randomize
+        </Button>
+      )}
+
+      <Loading loading={loading} />
+    </NativeBaseProvider>
   );
 };
 

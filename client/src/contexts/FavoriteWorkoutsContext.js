@@ -18,7 +18,6 @@ const FavoriteWorkoutsProvider = ({ children }) => {
             email: userData.email,
           })
           .then((response) => {
-            console.log(response.data);
             setFavoriteWorkouts(response.data);
           })
           .catch((e) => {

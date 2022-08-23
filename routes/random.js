@@ -3,6 +3,11 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios").default;
 const Workouts = require("../models/Workouts");
+const Favorite = require("../models/Favorites");
+const User = require("../models/User");
+const Logs = require("../models/Logs");
+const FavoriteWorkouts = require("../models/FavoriteWorkouts");
+const Favorites = require("../models/Favorites");
 
 //array that holds selected data from api call
 var rworkout = [];
@@ -90,6 +95,32 @@ router.get("/migrate", async function (req, res) {
     res.status(200).send("success");
   } catch (e) {
     console.error(e);
+  }
+});
+
+router.post("/change", async function (req, res) {
+  const email = req.body.email;
+  try {
+    const fav = await Favorites.updateMany(
+      { UserEmail: email },
+      { UserEmail: email.toLowerCase() }
+    );
+    const log = await Logs.updateMany(
+      { email: email },
+      { email: email.toLowerCase() }
+    );
+    const favwork = await FavoriteWorkouts.updateMany(
+      { UserEmail: email },
+      { UserEmail: email.toLowerCase() }
+    );
+
+    const use = await User.updateMany(
+      { email: email },
+      { email: email.toLowerCase() }
+    );
+    res.send(fav, log, favwork, use);
+  } catch (e) {
+    console.log(e);
   }
 });
 

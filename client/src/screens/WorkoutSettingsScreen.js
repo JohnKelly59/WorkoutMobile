@@ -1,13 +1,7 @@
 import React, { useEffect, useCallback } from "react";
 import Loading from "../components/Loading";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  ImageBackground,
-} from "react-native";
+import { SafeAreaView, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { TimePicker, ValueMap } from "react-native-simple-time-picker";
 
 import {
@@ -34,6 +28,7 @@ import {
 } from "native-base";
 import { useWorkout } from "../contexts/WorkoutContext";
 import { useFavoriteWorkouts } from "../contexts/FavoriteWorkoutsContext";
+import { useSharedWorkouts } from "../contexts/SharedWorkoutsContext";
 import WorkoutSearchList from "../components/WorkoutSearchList";
 import FavoritesSearchList from "../components/FavoritesSearchList";
 import ChosenExercisesTable from "../components/ChosenExercisesTable";
@@ -85,11 +80,10 @@ const WorkoutSettingsScreen = (props) => {
     getExerciseSearch,
     addChosenExercise,
   } = useWorkout();
-
+  const { sharedWorkouts } = useSharedWorkouts();
   const { favoriteWorkouts } = useFavoriteWorkouts();
 
   const durationDateChange = (e) => {
-    console.log(e);
     setWorkoutDuration(e);
   };
 
@@ -104,152 +98,182 @@ const WorkoutSettingsScreen = (props) => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../public/images/ape.jpg")}
-      resizeMode="cover"
-      style={styles.image}
+    <NativeBaseProvider
+      style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
     >
-      <NativeBaseProvider
-        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-      >
-        <ScrollView>
-          <Stack space={4} w="100%" style={{ paddingBottom: 100 }}>
-            <Heading
-              alignItems="center"
-              color="#CFB53B"
-              fontSize="xl"
-              p="4"
-              pb="3"
-            >
-              Search For Exercise
-            </Heading>
-            <Select
-              textAlign="center"
-              bg="#CFB53B"
-              p={3}
-              color="white"
-              _actionSheetBody={{ h: "300" }}
-              style={{ flex: 1 }}
-              selectedValue={searchParam}
-              minWidth="100%"
-              accessibilityLabel="Search Param"
-              placeholder="Search for Exercise"
-              placeholderTextColor="white"
-              _selectedItem={{
-                bg: "#CFB53B",
-                endIcon: <CheckIcon size="5" />,
-              }}
-              mt={1}
-              onValueChange={(itemValue) => selectedSearchParam(itemValue)}
-            >
-              {targetMuscles.map((muscle, i) => {
-                return (
-                  <Select.Item
-                    label={muscle.label}
-                    value={muscle.value}
-                    key={i}
-                  />
-                );
-              })}
-            </Select>
+      <ScrollView>
+        <Stack space={4} w="100%" style={{ paddingBottom: 100 }}>
+          <Heading
+            alignItems="center"
+            color="#CFB53B"
+            fontSize="xl"
+            p="4"
+            pb="3"
+          >
+            Search For Exercise
+          </Heading>
+          <Select
+            textAlign="center"
+            bg="#CFB53B"
+            p={3}
+            color="white"
+            _actionSheetBody={{ h: "300" }}
+            style={{ flex: 1 }}
+            selectedValue={searchParam}
+            minWidth="100%"
+            accessibilityLabel="Search Param"
+            placeholder="Search for Exercise"
+            placeholderTextColor="white"
+            _selectedItem={{
+              bg: "#CFB53B",
+              endIcon: <CheckIcon size="5" />,
+            }}
+            mt={1}
+            onValueChange={(itemValue) => selectedSearchParam(itemValue)}
+          >
+            {targetMuscles.map((muscle, i) => {
+              return (
+                <Select.Item
+                  label={muscle.label}
+                  value={muscle.value}
+                  key={i}
+                />
+              );
+            })}
+          </Select>
 
-            <Heading
-              alignItems="center"
-              color="#CFB53B"
-              fontSize="xl"
-              p="4"
-              pb="3"
-            >
-              Favorite Exercises
-            </Heading>
-            <Button
-              style={styles.favoritesButton}
-              onPress={() => setIsFavoriteOpen(!isFavoriteOpen)}
-              p={2}
-              size="md"
-              minWidth="100%"
-            >
-              Favorite Exercises
-            </Button>
-
-            <Heading
-              alignItems="center"
-              color="#CFB53B"
-              fontSize="xl"
-              p="4"
-              pb="3"
-            >
-              Favorite Workouts
-            </Heading>
-            <Select
-              textAlign="center"
-              bg="#CFB53B"
-              p={3}
-              color="white"
-              _actionSheetBody={{ h: "300" }}
-              style={{ flex: 1 }}
-              selectedValue={searchParam}
-              minWidth="100%"
-              accessibilityLabel="Workouts"
-              placeholder="Favorite Workouts"
-              placeholderTextColor="white"
-              _selectedItem={{
-                bg: "#CFB53B",
-                endIcon: <CheckIcon size="5" />,
-              }}
-              mt={1}
-              onValueChange={async (itemValue) => {
-                let picked = await favoriteWorkouts[itemValue].exercises.map(
-                  (exercise) => {
-                    return exercise.name;
-                  }
-                );
-                addChosenExercise(picked);
-              }}
-            >
-              {favoriteWorkouts.map((favWorkout, i) => {
-                return (
-                  <Select.Item label={favWorkout.title} value={i} key={i} />
-                );
-              })}
-            </Select>
-
-            {chosenExercises.length > 0 ? (
-              <>
-                <ChosenExercisesTable />
-              </>
-            ) : null}
-          </Stack>
-        </ScrollView>
-        <WorkoutSearchList
-          searchedExercises={searchedExercises}
-          isOpen={isOpen}
-          onClose={onClose}
-          cancelRef={cancelRef}
-        />
-        <FavoritesSearchList
-          isOpen={isFavoriteOpen}
-          onClose={onFavoriteClose}
-          cancelRef={cancelRef2}
-        />
-
-        {chosenExercises.length > 0 ? (
+          <Heading
+            alignItems="center"
+            color="#CFB53B"
+            fontSize="xl"
+            p="4"
+            pb="3"
+          >
+            Favorite Exercises
+          </Heading>
           <Button
-            onPress={() =>
-              props.navigation.navigate("WorkoutSettingsTimeScreen")
-            }
-            style={styles.button}
-            p={5}
-            size="lg"
+            style={styles.favoritesButton}
+            onPress={() => setIsFavoriteOpen(!isFavoriteOpen)}
+            p={2}
+            size="md"
             minWidth="100%"
           >
-            Next
+            Favorite Exercises
           </Button>
-        ) : null}
 
-        <Loading loading={loading} />
-      </NativeBaseProvider>
-    </ImageBackground>
+          <Heading
+            alignItems="center"
+            color="#CFB53B"
+            fontSize="xl"
+            p="4"
+            pb="3"
+          >
+            Favorite Workouts
+          </Heading>
+          <Select
+            textAlign="center"
+            bg="#CFB53B"
+            p={3}
+            color="white"
+            _actionSheetBody={{ h: "300" }}
+            style={{ flex: 1 }}
+            selectedValue={searchParam}
+            minWidth="100%"
+            accessibilityLabel="Workouts"
+            placeholder="Favorite Workouts"
+            placeholderTextColor="white"
+            _selectedItem={{
+              bg: "#CFB53B",
+              endIcon: <CheckIcon size="5" />,
+            }}
+            mt={1}
+            onValueChange={async (itemValue) => {
+              let picked = await favoriteWorkouts[itemValue].exercises.map(
+                (exercise) => {
+                  return exercise.name;
+                }
+              );
+              addChosenExercise(picked);
+            }}
+          >
+            {favoriteWorkouts.map((favWorkout, i) => {
+              return <Select.Item label={favWorkout.title} value={i} key={i} />;
+            })}
+          </Select>
+
+          <Heading
+            alignItems="center"
+            color="#CFB53B"
+            fontSize="xl"
+            p="4"
+            pb="3"
+          >
+            Shared Workouts
+          </Heading>
+          <Select
+            textAlign="center"
+            bg="#CFB53B"
+            p={3}
+            color="white"
+            _actionSheetBody={{ h: "300" }}
+            style={{ flex: 1 }}
+            selectedValue={searchParam}
+            minWidth="100%"
+            accessibilityLabel="Workouts"
+            placeholder="Shared Workouts"
+            placeholderTextColor="white"
+            _selectedItem={{
+              bg: "#CFB53B",
+              endIcon: <CheckIcon size="5" />,
+            }}
+            mt={1}
+            onValueChange={async (itemValue) => {
+              let picked = await sharedWorkouts[itemValue].exercises.map(
+                (exercise) => {
+                  return exercise.name;
+                }
+              );
+              addChosenExercise(picked);
+            }}
+          >
+            {sharedWorkouts.map((shaWorkout, i) => {
+              return <Select.Item label={shaWorkout.title} value={i} key={i} />;
+            })}
+          </Select>
+
+          {chosenExercises.length > 0 ? (
+            <>
+              <ChosenExercisesTable />
+            </>
+          ) : null}
+        </Stack>
+      </ScrollView>
+      <WorkoutSearchList
+        searchedExercises={searchedExercises}
+        isOpen={isOpen}
+        onClose={onClose}
+        cancelRef={cancelRef}
+      />
+      <FavoritesSearchList
+        isOpen={isFavoriteOpen}
+        onClose={onFavoriteClose}
+        cancelRef={cancelRef2}
+      />
+
+      {chosenExercises.length > 0 ? (
+        <Button
+          onPress={() => props.navigation.navigate("WorkoutSettingsTimeScreen")}
+          style={styles.button}
+          p={5}
+          size="lg"
+          minWidth="100%"
+        >
+          Next
+        </Button>
+      ) : null}
+
+      <Loading loading={loading} />
+    </NativeBaseProvider>
   );
 };
 

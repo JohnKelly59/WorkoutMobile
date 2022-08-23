@@ -7,7 +7,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   FlatList,
-  ImageBackground,
 } from "react-native";
 import Log from "../components/Log";
 import LogInput from "../components/LogInput";
@@ -73,62 +72,56 @@ const LogsScreen = ({ navigation }) => {
 
   return (
     <>
-      <ImageBackground
-        source={require("../../public/images/ape.jpg")}
-        resizeMode="cover"
-        style={styles.image}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.container}>
-            {logs.length ? (
-              <SearchBar
-                value={searchQuery}
-                onChangeText={handleOnSearchInput}
-                containerStyle={{ marginVertical: 15 }}
-                onClear={handleOnClear}
-              />
-            ) : null}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          {logs.length ? (
+            <SearchBar
+              value={searchQuery}
+              onChangeText={handleOnSearchInput}
+              containerStyle={{ marginVertical: 15 }}
+              onClear={handleOnClear}
+            />
+          ) : null}
 
-            {resultNotFound ? (
-              <NotFound />
-            ) : (
-              <FlatList
-                data={reverseLogs}
-                numColumns={2}
-                columnWrapperStyle={{
-                  justifyContent: "space-between",
-                  marginBottom: 15,
-                }}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                  <Log onPress={() => openLog(item)} item={item} />
-                )}
-              />
-            )}
+          {resultNotFound ? (
+            <NotFound />
+          ) : (
+            <FlatList
+              data={reverseLogs}
+              numColumns={2}
+              columnWrapperStyle={{
+                justifyContent: "space-between",
+                marginBottom: 15,
+              }}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <Log onPress={() => openLog(item)} item={item} />
+              )}
+            />
+          )}
 
-            {!logs.length ? (
-              <View
-                style={[
-                  StyleSheet.absoluteFillObject,
-                  styles.emptyHeaderContainer,
-                ]}
-              >
-                <Text style={styles.emptyHeader}>Add Log</Text>
-              </View>
-            ) : null}
-          </View>
-        </TouchableWithoutFeedback>
-        <RoundIconBtn
-          onPress={() => setModalVisible(true)}
-          antIconName="plus"
-          style={styles.addBtn}
-        />
-        <LogInput
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          onSubmit={handleOnSubmit}
-        />
-      </ImageBackground>
+          {!logs.length ? (
+            <View
+              style={[
+                StyleSheet.absoluteFillObject,
+                styles.emptyHeaderContainer,
+              ]}
+            >
+              <Text style={styles.emptyHeader}>Add Log</Text>
+            </View>
+          ) : null}
+        </View>
+      </TouchableWithoutFeedback>
+      <RoundIconBtn
+        onPress={() => setModalVisible(true)}
+        antIconName="plus"
+        style={styles.addBtn}
+      />
+      <LogInput
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSubmit={handleOnSubmit}
+      />
     </>
   );
 };

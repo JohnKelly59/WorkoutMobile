@@ -1,4 +1,10 @@
 const mongoose = require("mongoose");
+var options = {
+  personModelName: "User",
+  friendshipModelName: "Friendship",
+  friendshipCollectionName: "Relationships_Collection",
+};
+var friendsOfFriends = require("friends-of-friends")(mongoose, options);
 //user schema
 const UserSchema = new mongoose.Schema({
   googleId: {
@@ -28,5 +34,5 @@ const UserSchema = new mongoose.Schema({
     type: String,
   },
 });
-
-module.exports = mongoose.model("User", UserSchema);
+UserSchema.plugin(friendsOfFriends.plugin, options);
+module.exports = mongoose.model(options.personModelName, UserSchema);

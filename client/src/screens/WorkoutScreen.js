@@ -1,6 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import Loading from "../components/Loading";
 import CountdownTimer from "../components/CountdownTimer";
+import Instructions from "../components/Instructions";
+import SaveWorkout from "../components/SaveWorkout";
+import ShareCurrentWorkout from "../components/ShareCurrentWorkout";
 import CountDown from "react-native-countdown-component";
 import {
   TouchableOpacity,
@@ -9,14 +12,15 @@ import {
   Dimensions,
   ScrollView,
   Text,
-  ImageBackground,
   Alert,
+  RefreshControl,
   Vibration,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import CardFlip from "react-native-card-flip";
 import { useWorkout } from "../contexts/WorkoutContext";
 import UserContext from "../contexts/UserContext";
+import { usePartners } from "../contexts/PartnersContext";
 import { useFavoriteWorkouts } from "../contexts/FavoriteWorkoutsContext";
 import Carousel from "react-native-snap-carousel";
 import {
@@ -58,7 +62,7 @@ const WorkoutScreen = ({ navigation }) => {
     editSets,
     startOver,
   } = useWorkout();
-
+  const { partners } = usePartners();
   const { addFavoriteWorkout } = useFavoriteWorkouts();
 
   useEffect(() => {
@@ -68,7 +72,7 @@ const WorkoutScreen = ({ navigation }) => {
   let hoursToSeconds = workoutDuration.hours * 60 * 60;
   let minutesToSeconds = workoutDuration.minutes * 60;
   let time = hoursToSeconds + minutesToSeconds + workoutDuration.seconds;
-
+  const cancelRef = React.useRef(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
   const sliderWidth = Dimensions.get("window").width;
@@ -86,6 +90,9 @@ const WorkoutScreen = ({ navigation }) => {
   };
   const [title, setTitle] = React.useState("");
   const user = React.useContext(UserContext);
+  const [share, setShare] = React.useState(false);
+  const shareClose = () => setShare(false);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const PATTERN = [1 * 1000];
 
@@ -135,6 +142,17 @@ const WorkoutScreen = ({ navigation }) => {
   const displayEndAlert = () => {
     setEnd(true);
   };
+
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => {
+      setRefreshing(false), setShare(true);
+    });
+  }, []);
 
   const rendorCarousel = ({ index }) => {
     let i = index;
@@ -250,11 +268,7 @@ const WorkoutScreen = ({ navigation }) => {
         </Box>
         <Box style={{ paddingTop: 20 }}>
           <Box style={styles.card}>
-            <Text
-              style={{ fontSize: 32, fontWeight: "bold", alignSelf: "center" }}
-            >
-              {chosenExerciseCards[i].name}
-            </Text>
+            {" "}
             <TouchableOpacity
               onPress={() => refs.current[i].flip()}
               style={styles.touchable}
@@ -264,9 +278,19 @@ const WorkoutScreen = ({ navigation }) => {
                 name="arrow-redo"
                 size={50}
                 color="black"
-                styles={{ position: "absolute", right: 0 }}
+                styles={{ right: 0 }}
               />
             </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: 32,
+                fontWeight: "bold",
+                alignSelf: "center",
+                marginTop: 10,
+              }}
+            >
+              {chosenExerciseCards[i].name}
+            </Text>
             <Center
               pl="10"
               w="64"
@@ -341,143 +365,79 @@ const WorkoutScreen = ({ navigation }) => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../public/images/ape.jpg")}
-      resizeMode="cover"
-      style={styles.image}
+    <NativeBaseProvider
+      style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
     >
-      <NativeBaseProvider
-        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
-        <ScrollView>
-          <Stack space={4} w="100%" alignItems="center">
-            <Carousel
-              data={chosenExerciseCards}
-              renderItem={rendorCarousel}
-              sliderWidth={sliderWidth}
-              itemWidth={itemWidth}
-            />
-          </Stack>
-        </ScrollView>
+        <Stack space={4} w="100%" alignItems="center">
+          <Carousel
+            data={chosenExerciseCards}
+            renderItem={rendorCarousel}
+            sliderWidth={sliderWidth}
+            itemWidth={itemWidth}
+          />
+        </Stack>
+      </ScrollView>
 
-        <Button
-          style={styles.button}
-          p={1}
-          size="lg"
-          minWidth="100%"
-          onPress={displayEndAlert}
-        >
-          <Center
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "row",
-            }}
-          >
-            <Text style={{ paddingRight: 20, fontSize: 30 }}>End Workout</Text>
-            <CountDown
-              until={time}
-              digitTxtStyle={{ color: "black" }}
-              digitStyle={{ backgroundColor: "#CFB53B" }}
-              running={running}
-              timeToShow={["H", "M", "S"]}
-              onFinish={() => {
-                Alert.alert("Time!", "Workout Duration Reached", [
-                  {
-                    text: "OK",
-                    onPress: () => Vibration.cancel(),
-                    style: "done",
-                  },
-                ]),
-                  Vibration.vibrate(PATTERN, true);
-              }}
-              size={20}
-            />
-          </Center>
-        </Button>
-
-        <AlertDialog isOpen={start} onClose={onStart}>
-          <AlertDialog.Content>
-            <AlertDialog.Header>Instructions</AlertDialog.Header>
-            <AlertDialog.Body>
-              When the "Begin Workout" button is clicked, the workout out timer
-              will start. To view and edit your progress on a particular
-              exercise, simply flip the exercise card by clicking the arrow on
-              the top right corner.
-            </AlertDialog.Body>
-            <AlertDialog.Footer>
-              <Button.Group space={2}>
-                <Button
-                  style={{ backgroundColor: "#CFB53B" }}
-                  minWidth="100%"
-                  onPress={onStart}
-                >
-                  Begin Workout
-                </Button>
-              </Button.Group>
-            </AlertDialog.Footer>
-          </AlertDialog.Content>
-        </AlertDialog>
-
-        <AlertDialog
+      <Button
+        style={styles.button}
+        p={1}
+        size="lg"
+        minWidth="100%"
+        onPress={displayEndAlert}
+      >
+        <Center
           style={{
-            paddingTop: "50%",
-            height: "80%",
-            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "row",
           }}
-          isOpen={end}
-          onClose={onEnd}
         >
-          <AlertDialog.Content>
-            <AlertDialog.CloseButton />
-            <AlertDialog.Header backgroundColor="#CFB53B">
-              Finished?
-            </AlertDialog.Header>
-            <AlertDialog.Body backgroundColor="black">
-              <Text style={{ color: "white" }}>
-                Do you want to save this workout?
-              </Text>
-              <Input
-                placeholder="Insert Workout Name"
-                placeholderTextColor="white"
-                color="white"
-                onChangeText={setTitle}
-              />
-            </AlertDialog.Body>
-            <AlertDialog.Footer
-              backgroundColor="#CFB53B"
-              justifyContent="flex-end"
-            >
-              <Button.Group>
-                <Button
-                  variant="unstyled"
-                  colorScheme="coolGray"
-                  onPress={() => {
-                    startOver(), navigation.navigate("HomeScreen");
-                  }}
-                >
-                  Don't Save
-                </Button>
-                <Button
-                  backgroundColor="black"
-                  _text={{
-                    color: "#CFB53B",
-                  }}
-                  size="sm"
-                  onPress={async () => {
-                    handleOnSubmit();
-                  }}
-                >
-                  Save
-                </Button>
-              </Button.Group>
-            </AlertDialog.Footer>
-          </AlertDialog.Content>
-        </AlertDialog>
-
-        <Loading loading={loading} />
-      </NativeBaseProvider>
-    </ImageBackground>
+          <Text style={{ paddingRight: 20, fontSize: 30 }}>End Workout</Text>
+          <CountDown
+            until={time}
+            digitTxtStyle={{ color: "black" }}
+            digitStyle={{ backgroundColor: "#CFB53B" }}
+            running={running}
+            timeToShow={["H", "M", "S"]}
+            onFinish={() => {
+              Alert.alert("Time!", "Workout Duration Reached", [
+                {
+                  text: "OK",
+                  onPress: () => Vibration.cancel(),
+                  style: "done",
+                },
+              ]),
+                Vibration.vibrate(PATTERN, true);
+            }}
+            size={20}
+          />
+        </Center>
+      </Button>
+      <Instructions start={start} onStart={onStart} />
+      <SaveWorkout
+        end={end}
+        onEnd={onEnd}
+        startOver={startOver}
+        navigation={navigation}
+        handleOnSubmit={handleOnSubmit}
+        setTitle={setTitle}
+      />
+      <ShareCurrentWorkout
+        signInAlert={signInAlert}
+        needTitleAlert={needTitleAlert}
+        share={share}
+        shareClose={shareClose}
+        partners={partners}
+        cancelRef={cancelRef}
+        chosenExercises={chosenExercises}
+      />
+      <Loading loading={loading} />
+    </NativeBaseProvider>
   );
 };
 
