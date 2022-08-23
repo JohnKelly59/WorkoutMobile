@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
+import { API_URL } from "../config";
 import {
   NativeBaseProvider,
   FlatList,
@@ -86,6 +87,16 @@ const PartnersScreen = (props) => {
               >
                 <HStack space={2} justifyContent="space-between">
                   <VStack>
+                    <Image
+                      size={60}
+                      resizeMode={"contain"}
+                      borderRadius={100}
+                      source={{
+                        uri: `${API_URL}/auth/profilePic/${item._id}`,
+                      }}
+                      fallbackSource={require("../../public/images/genericProfile.png")}
+                      alt="Profile Pic"
+                    />
                     <Text
                       _dark={{
                         color: "#CFB53B",

@@ -17,7 +17,6 @@ const SharedWorkoutsProvider = ({ children }) => {
         user: user.email,
       })
       .then((response) => {
-        console.log("response: ", response.data);
         setSharedWorkouts(response.data);
       })
       .catch((e) => {
@@ -56,7 +55,6 @@ const SharedWorkoutsProvider = ({ children }) => {
   };
 
   const removeSharedWorkout = async (workout, user, partner) => {
-    console.log("hithere: ", workout, user);
     axios
       .post(`${API_URL}/removeSharedWorkout`, {
         user: user.email,
@@ -79,7 +77,6 @@ const SharedWorkoutsProvider = ({ children }) => {
   };
 
   const shareCurrentWorkout = async (exercises, user, partners, title) => {
-    console.log("contextexercises: ", exercises);
     axios
       .post(`${API_URL}/shareCurrentWorkout`, {
         user: user.email,

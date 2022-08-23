@@ -268,11 +268,7 @@ const WorkoutScreen = ({ navigation }) => {
         </Box>
         <Box style={{ paddingTop: 20 }}>
           <Box style={styles.card}>
-            <Text
-              style={{ fontSize: 32, fontWeight: "bold", alignSelf: "center" }}
-            >
-              {chosenExerciseCards[i].name}
-            </Text>
+            {" "}
             <TouchableOpacity
               onPress={() => refs.current[i].flip()}
               style={styles.touchable}
@@ -282,9 +278,19 @@ const WorkoutScreen = ({ navigation }) => {
                 name="arrow-redo"
                 size={50}
                 color="black"
-                styles={{ position: "absolute", right: 0 }}
+                styles={{ right: 0 }}
               />
             </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: 32,
+                fontWeight: "bold",
+                alignSelf: "center",
+                marginTop: 10,
+              }}
+            >
+              {chosenExerciseCards[i].name}
+            </Text>
             <Center
               pl="10"
               w="64"

@@ -14,7 +14,11 @@ const LogsNavigator = (navigation) => {
   return (
     <LogsProvider>
       <LogStack.Navigator
-        screenOptions={{ headerTitle: "", headerTransparent: true }}
+        screenOptions={{
+          headerTitle: "",
+          headerTransparent: true,
+          headerTintColor: "#CFB53B",
+        }}
       >
         <LogStack.Screen component={RenderLogScreen} name="LogsScreen" />
         <LogStack.Screen component={LogsDetail} name="LogsDetail" />

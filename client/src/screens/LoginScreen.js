@@ -122,7 +122,7 @@ const LoginScreen = ({ navigation }) => {
             }
           }}
         >
-          Sign in as Guest
+          <Text style={{ color: "#CFB53B" }}>Sign in as guest</Text>
         </Button>
       </NativeBaseProvider>
       <Loading loading={loading} />

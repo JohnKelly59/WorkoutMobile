@@ -18,7 +18,11 @@ const FavoriteWorkoutsNavigator = (navigation) => {
   return (
     <FavoriteWorkoutsProvider>
       <FavoriteWorkoutsStack.Navigator
-        screenOptions={{ headerTitle: "", headerTransparent: true }}
+        screenOptions={{
+          headerTitle: "",
+          headerTransparent: true,
+          headerTintColor: "#CFB53B",
+        }}
       >
         <FavoriteWorkoutsStack.Screen
           component={RenderFavoriteWorkoutsScreen}

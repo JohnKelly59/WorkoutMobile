@@ -60,7 +60,6 @@ const SharedWorkoutsScreen = ({ navigation }) => {
   const reverseSharedWorkouts = reverseData(sharedWorkouts);
 
   const openSharedWorkout = (sharedWorkout) => {
-    console.log(sharedWorkout);
     navigation.navigate("SharedWorkoutsDetail", { sharedWorkout });
   };
 

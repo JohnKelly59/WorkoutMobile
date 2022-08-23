@@ -54,7 +54,6 @@ router.post("/uploadPic", uploads.single("avatar"), async function (req, res) {
 });
 
 router.post("/deleteProfilePic", (req, res) => {
-  console.log("why:", req.body.userid);
   gfs.delete(req.body.userid).then((result, err) => {
     if (err) {
       console.log("error", err);
@@ -68,12 +67,11 @@ router.get("/profilePic/:userid", async function (req, res) {
   if (!req.params.userid || req.params.userid === "undefined")
     return res.status(400).send("no image id");
   const _id = new mongoose.Types.ObjectId(req.params.userid);
-  gfs
+  await gfs
     .find({ filename: req.params.userid + "_profile" })
     .toArray((err, files) => {
       if (!files || files.length === 0) {
-        console.log(req.params.userid);
-        return res.status(400).send("no files exist");
+        return res.status(400).send(err);
       }
       gfs.openDownloadStream(req.params.userid).pipe(res);
     });

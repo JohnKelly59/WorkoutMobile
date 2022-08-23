@@ -84,7 +84,6 @@ const WorkoutSettingsScreen = (props) => {
   const { favoriteWorkouts } = useFavoriteWorkouts();
 
   const durationDateChange = (e) => {
-    console.log(e);
     setWorkoutDuration(e);
   };
 

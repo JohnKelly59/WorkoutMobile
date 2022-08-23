@@ -16,7 +16,11 @@ const SharedWorkoutsNavigator = (navigation) => {
   return (
     <SharedWorkoutsProvider>
       <SharedWorkoutsStack.Navigator
-        screenOptions={{ headerTitle: "", headerTransparent: true }}
+        screenOptions={{
+          headerTitle: "",
+          headerTintColor: "#CFB53B",
+          headerTransparent: true,
+        }}
       >
         <SharedWorkoutsStack.Screen
           component={RenderSharedWorkoutsScreen}

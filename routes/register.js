@@ -46,7 +46,6 @@ router.post("/register", async function (req, res, done) {
 
 router.post("/deleteUser", async function (req, res, done) {
   const email = req.body.email;
-  console.log(email);
   if (email === null) {
     res.status(400).send("No data");
   } else {

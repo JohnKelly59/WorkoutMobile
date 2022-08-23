@@ -57,7 +57,6 @@ router.post("/addFavoriteWorkout", async function (req, res) {
 });
 
 router.post("/removeFavoriteWorkout", async function (req, res) {
-  console.log("here:", req.body);
   try {
     // delete favorite exercise from favorite db
     const deletion = await FavoriteWorkouts.deleteOne({
@@ -86,7 +85,7 @@ router.post("/favoriteWorkoutExerciseCards", async function (req, res) {
 
 router.post("/sharedWorkouts", async function (req, res) {
   let email = req.body.user;
-  console.log("email: ", email);
+
   try {
     const sharedWorkoutData = await FavoriteWorkouts.find({
       partnerEmails: email,
@@ -96,7 +95,6 @@ router.post("/sharedWorkouts", async function (req, res) {
       console.log("No record found");
       res.send([]);
     } else {
-      console.log("datareturnhere: ", sharedWorkoutData);
       res.send(sharedWorkoutData);
     }
   } catch (e) {
@@ -109,7 +107,7 @@ router.post("/addSharedWorkout", async function (req, res) {
   let workout = req.body.workout;
   let partner = req.body.partner;
   let partnersAndYou = partner.push(user);
-  console.log("user: ", user, "workout: ", workout, "partner: ", partner);
+
   try {
     //redirect favorite
     const addPartner = await partner.map(async (x) => {
@@ -119,7 +117,7 @@ router.post("/addSharedWorkout", async function (req, res) {
       );
       return "done";
     });
-    console.log(addPartner);
+
     res.status(200).send("Success");
   } catch (err) {
     console.error(err);
@@ -136,7 +134,6 @@ router.post("/removeSharedWorkout", async function (req, res) {
       { $pull: { partnerEmails: user } }
     );
 
-    console.log("removed: ", removePartner);
     res.status(200).send("Success");
   } catch (err) {
     console.error(err);
@@ -165,7 +162,7 @@ router.post("/removePartners", async function (req, res) {
       {},
       { partnerEmails: array }
     );
-    console.log(restart);
+
     res.status(200).send("Success");
   } catch (err) {
     console.error(err);
@@ -203,7 +200,7 @@ router.post("/addPartnerSharedWorkout", async function (req, res) {
   let workout = req.body.workout;
   let partner = req.body.partner;
   let partnersAndYou = partner.push(user);
-  console.log("user: ", user, "workout: ", workout, "partner: ", partner);
+
   try {
     //redirect favorite
     const addPartner = await partner.map(async (x) => {
@@ -213,7 +210,7 @@ router.post("/addPartnerSharedWorkout", async function (req, res) {
       );
       return "done";
     });
-    console.log(addPartner);
+
     res.status(200).send("Success");
   } catch (err) {
     console.error(err);

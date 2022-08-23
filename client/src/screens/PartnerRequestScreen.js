@@ -18,9 +18,11 @@ import {
   Checkbox,
   AlertDialog,
   Button,
+  Image,
 } from "native-base";
 import { usePartners } from "../contexts/PartnersContext";
 import UserContext from "../contexts/UserContext";
+import { API_URL } from "../config";
 
 const PartnerRequestScreen = (props) => {
   const {
@@ -90,9 +92,18 @@ const PartnerRequestScreen = (props) => {
                   pr="9"
                   py="6"
                 >
-                  {console.log("itemhere: ", item)}
                   <HStack space={2} justifyContent="space-between">
                     <VStack>
+                      <Image
+                        size={60}
+                        resizeMode={"contain"}
+                        borderRadius={100}
+                        source={{
+                          uri: `${API_URL}/auth/profilePic/${item.requester._id}`,
+                        }}
+                        fallbackSource={require("../../public/images/genericProfile.png")}
+                        alt="Profile Pic"
+                      />
                       <Text
                         _dark={{
                           color: "#CFB53B",
@@ -162,6 +173,16 @@ const PartnerRequestScreen = (props) => {
                 >
                   <HStack space={2} justifyContent="space-between">
                     <VStack>
+                      <Image
+                        size={60}
+                        resizeMode={"contain"}
+                        borderRadius={100}
+                        source={{
+                          uri: `${API_URL}/auth/profilePic/${item.requested._id}`,
+                        }}
+                        fallbackSource={require("../../public/images/genericProfile.png")}
+                        alt="Profile Pic"
+                      />
                       <Text
                         _dark={{
                           color: "#CFB53B",

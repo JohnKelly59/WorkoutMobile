@@ -58,7 +58,6 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
   const reverseFavoriteWorkouts = reverseData(favoriteWorkouts);
 
   const openFavoriteWorkout = (favoriteWorkout) => {
-    console.log(favoriteWorkout);
     navigation.navigate("FavoriteWorkoutsDetail", { favoriteWorkout });
   };
 

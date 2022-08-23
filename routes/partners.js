@@ -5,7 +5,6 @@ const axios = require("axios").default;
 const User = require("../models/User");
 
 router.post("/findUser", async function (req, res) {
-  console.log(req.body.email);
   let results = await User.find({ email: new RegExp(req.body.email, "i") });
   res.send(results);
 });
@@ -13,6 +12,7 @@ router.post("/findUser", async function (req, res) {
 router.post("/getPartners", async function (req, res) {
   let currentUser = req.body.email;
   let dbUser = await User.find({ email: currentUser });
+
   dbUser[0].getFriends(function (err, friends) {
     if (err) {
       res.send({ error: err.message });
@@ -27,7 +27,7 @@ router.post("/removePartner", async function (req, res) {
   let requestUser = req.body.partnerRemove;
   let dbUser = await User.find({ email: currentUser });
   let dbRequestUser = await User.find({ email: requestUser });
-  console.log(dbUser, dbRequestUser);
+
   dbUser[0].endFriendship(dbRequestUser[0], function (err, request) {
     if (err) {
       res.send({ error: err.message });
@@ -60,7 +60,7 @@ router.post("/sendPartnerRequest", async function (req, res) {
 router.post("/getPartnerRequests", async function (req, res) {
   let currentUser = req.body.email;
   let dbUser = await User.find({ email: currentUser });
-  console.log(dbUser);
+
   dbUser[0].getRequests(function (err, request) {
     if (err) {
       res.send({ error: err.message });
@@ -91,7 +91,7 @@ router.post("/denyPartnerRequest", async function (req, res) {
   let requestUser = req.body.partner;
   let dbUser = await User.find({ email: currentUser });
   let dbRequestUser = await User.find({ email: requestUser });
-  console.log(dbUser, dbRequestUser);
+
   dbUser[0].denyRequest(dbRequestUser[0], function (err, denied) {
     if (err) {
       res.send({ error: err.message });
@@ -106,7 +106,7 @@ router.post("/cancelPartnerRequest", async function (req, res) {
   let requestUser = req.body.partner;
   let dbUser = await User.find({ email: currentUser });
   let dbRequestUser = await User.find({ email: requestUser });
-  console.log(dbUser, dbRequestUser);
+
   dbUser[0].cancelRequest(dbRequestUser[0], function (err, canceled) {
     if (err) {
       res.send({ error: err.message });

@@ -20,7 +20,6 @@ const PartnersProvider = ({ children }) => {
     ]);
 
   const successAlert = (message) => {
-    console.log("whyrunning: ", message);
     Alert.alert("Success", "Request sent" + ".", [
       {
         text: "OK",
@@ -30,7 +29,6 @@ const PartnersProvider = ({ children }) => {
   };
 
   const acceptAlert = (message) => {
-    console.log("whyrunning: ", message);
     Alert.alert("Success", "Request accepted" + ".", [
       {
         text: "OK",
@@ -40,7 +38,6 @@ const PartnersProvider = ({ children }) => {
   };
 
   const denyAlert = (message) => {
-    console.log("whyrunning: ", message);
     Alert.alert("Success", "Request denied" + ".", [
       {
         text: "OK",
@@ -50,7 +47,6 @@ const PartnersProvider = ({ children }) => {
   };
 
   const removeAlert = (message) => {
-    console.log("whyrunning: ", message);
     Alert.alert("Success", "Partner removed" + ".", [
       {
         text: "OK",
@@ -59,7 +55,6 @@ const PartnersProvider = ({ children }) => {
     ]);
   };
   const cancelAlert = (message) => {
-    console.log("cancel: ", message);
     Alert.alert("Success", "Request canceled" + ".", [
       {
         text: "OK",
@@ -82,7 +77,6 @@ const PartnersProvider = ({ children }) => {
   };
 
   const getPartners = async (user) => {
-    console.log("herePartners");
     axios
       .post(`${API_URL}/getPartners`, {
         email: user.email,
@@ -92,10 +86,8 @@ const PartnersProvider = ({ children }) => {
           typeof response.data === "object" &&
           Object.keys(response.data)[0] === "error"
         ) {
-          console.log("error: ", response.data);
           errorAlert(response.data);
         } else {
-          console.log(response.data);
           setPartners(response.data);
         }
       })
@@ -105,7 +97,6 @@ const PartnersProvider = ({ children }) => {
   };
 
   const getPartnerRequests = async (user) => {
-    console.log(user.email);
     axios
       .post(`${API_URL}/getPartnerRequests`, {
         email: user.email,
@@ -126,7 +117,6 @@ const PartnersProvider = ({ children }) => {
   };
 
   const removePartner = async (user, partnerRemove) => {
-    console.log(partnerRemove);
     axios
       .post(`${API_URL}/removePartner`, {
         email: user.email,
@@ -137,7 +127,6 @@ const PartnersProvider = ({ children }) => {
           typeof response.data === "object" &&
           Object.keys(response.data)[0] === "error"
         ) {
-          console.log("error: ", response.data);
           errorAlert(response.data);
         } else {
           removeAlert(response.data);
@@ -160,7 +149,6 @@ const PartnersProvider = ({ children }) => {
           typeof response.data === "object" &&
           Object.keys(response.data)[0] === "error"
         ) {
-          console.log("error: ", response.data);
           errorAlert(response.data);
         } else {
           successAlert(response.data);
@@ -182,7 +170,6 @@ const PartnersProvider = ({ children }) => {
           typeof response.data === "object" &&
           Object.keys(response.data)[0] === "error"
         ) {
-          console.log("error: ", response.data);
           errorAlert(response.data);
         } else {
           acceptAlert(response.data);
@@ -205,7 +192,6 @@ const PartnersProvider = ({ children }) => {
           typeof response.data === "object" &&
           Object.keys(response.data)[0] === "error"
         ) {
-          console.log("error: ", response.data);
           errorAlert(response.data);
         } else {
           denyAlert(response.data);
@@ -218,7 +204,6 @@ const PartnersProvider = ({ children }) => {
   };
 
   const cancelPartnerRequest = async (user, partner) => {
-    console.log("user: ", user.email, "partner: ", partner);
     axios
       .post(`${API_URL}/cancelPartnerRequest`, {
         user: user.email,
@@ -242,7 +227,7 @@ const PartnersProvider = ({ children }) => {
 
   const uploadPic = async (profileImage, user) => {
     const formData = new FormData();
-    console.log(profileImage, user.id);
+
     formData.append("avatar", {
       name: user.id,
       uri: profileImage.uri,
@@ -269,8 +254,11 @@ const PartnersProvider = ({ children }) => {
         params: { user: user.id },
       })
       .then((response) => {
-        setPic(response.config.url);
-        console.log(pic);
+        if (response.status === 400) {
+          console.log("noPic");
+        } else {
+          setPic(response.config.url);
+        }
       })
       .catch((e) => {
         console.log(e);

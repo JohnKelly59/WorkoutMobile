@@ -3,6 +3,7 @@ import {
   NativeBaseProvider,
   FlatList,
   Box,
+  Image,
   HStack,
   VStack,
   Text,
@@ -20,10 +21,10 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-
   Alert,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { API_URL } from "../config";
 const PartnerSearchScreen = (props) => {
   const {
     searchedPartners,
@@ -38,90 +39,98 @@ const PartnerSearchScreen = (props) => {
 
   return (
     <>
-      
-        <NativeBaseProvider
-          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        >
-          <Box alignItems="center">
-            <Input
-              bg="#CFB53B"
-              p={3}
-              w={{
-                base: "85%",
-                md: "25%",
-              }}
-              onChangeText={setSearchBar}
-              minWidth="100%"
-              variant="underlined"
-              placeholder="Search for User"
-              underlineColorAndroid="transparent"
-              placeholderTextColor="white"
-              color="white"
-              InputRightElement={
-                <Button
-                  bg={"black"}
-                  size="xs"
-                  rounded="none"
-                  w="1/6"
-                  h="full"
-                  onPress={(e) => {
-                    getUsers(searchBar);
-                  }}
-                >
-                  <FontAwesome5 name="search" size={24} color="#CFB53B" />
-                </Button>
-              }
-            />
-          </Box>
+      <NativeBaseProvider
+        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+      >
+        <Box alignItems="center">
+          <Input
+            bg="#CFB53B"
+            p={3}
+            w={{
+              base: "85%",
+              md: "25%",
+            }}
+            onChangeText={setSearchBar}
+            minWidth="100%"
+            variant="underlined"
+            placeholder="Search for User"
+            underlineColorAndroid="transparent"
+            placeholderTextColor="white"
+            color="white"
+            InputRightElement={
+              <Button
+                bg={"black"}
+                size="xs"
+                rounded="none"
+                w="1/6"
+                h="full"
+                onPress={(e) => {
+                  getUsers(searchBar);
+                }}
+              >
+                <FontAwesome5 name="search" size={24} color="#CFB53B" />
+              </Button>
+            }
+          />
+        </Box>
 
-          {searchedPartners.length ? (
-            <FlatList
-              backgroundColor="black"
-              data={searchedPartners}
-              renderItem={({ item }) => (
-                <Box
-                  borderBottomWidth="1"
-                  _dark={{
-                    borderColor: "gray.600",
-                  }}
-                  borderColor="coolGray.200"
-                  pl="1"
-                  pr="9"
-                  py="6"
-                >
-                  <HStack space={2} justifyContent="space-between">
-                    <VStack>
-                      <Text
-                        _dark={{
-                          color: "#CFB53B",
-                        }}
-                        color="#CFB53B"
-                        bold
-                      >
-                        {item.email}
-                      </Text>
-                    </VStack>
-                    <Spacer />
-                    <Button
-                      backgroundColor="black"
-                      _text={{
+        {searchedPartners.length ? (
+          <FlatList
+            backgroundColor="black"
+            data={searchedPartners}
+            renderItem={({ item }) => (
+              <Box
+                borderBottomWidth="1"
+                _dark={{
+                  borderColor: "gray.600",
+                }}
+                borderColor="coolGray.200"
+                pl="1"
+                pr="9"
+                py="6"
+              >
+                <HStack space={2} justifyContent="space-between">
+                  <VStack>
+                    <Image
+                      size={60}
+                      resizeMode={"contain"}
+                      borderRadius={100}
+                      source={{
+                        uri: `${API_URL}/auth/profilePic/${item._id}`,
+                      }}
+                      fallbackSource={require("../../public/images/genericProfile.png")}
+                      alt="Profile Pic"
+                    />
+                    <Text
+                      _dark={{
                         color: "#CFB53B",
                       }}
-                      size="sm"
-                      onPress={async () => {
-                        sendPartnerRequest(user, item.email);
-                      }}
+                      color="#CFB53B"
+                      bold
                     >
-                      Send Request
-                    </Button>
-                  </HStack>
-                </Box>
-              )}
-              keyExtractor={(item) => item.email}
-            />
-          ) : null}
-        </NativeBaseProvider>
-     
+                      {item.email}
+                    </Text>
+                  </VStack>
+                  <Spacer />
+                  <Button
+                    backgroundColor="black"
+                    _text={{
+                      color: "#CFB53B",
+                    }}
+                    size="sm"
+                    onPress={async () => {
+                      sendPartnerRequest(user, item.email);
+                    }}
+                  >
+                    Send Request
+                  </Button>
+                </HStack>
+              </Box>
+            )}
+            keyExtractor={(item) => item.email}
+          />
+        ) : null}
+      </NativeBaseProvider>
     </>
   );
 };

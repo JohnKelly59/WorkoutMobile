@@ -5,6 +5,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   ScrollView,
+  Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as SecureStore from "expo-secure-store";
@@ -62,9 +63,28 @@ const AccountScreen = ({ navigation }) => {
     }
   };
 
+  const deleteAlert = () => {
+    Alert.alert(
+      "Wait!",
+      "Are you sure you want to delete your profile picture?",
+      [
+        {
+          text: "Delete",
+          onPress: () => deletePic(user),
+        },
+        {
+          text: "Cancel",
+          onPress: () => console.log("no thanks"),
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    );
+  };
+
   useEffect(() => {
     profilePic(user);
-    console.log("picHere: ", pic);
   }, []);
 
   return (
@@ -74,6 +94,7 @@ const AccountScreen = ({ navigation }) => {
           <Box>
             <Center>
               <Image
+                style={styles.picture}
                 size={150}
                 resizeMode={"contain"}
                 borderRadius={100}
@@ -99,7 +120,9 @@ const AccountScreen = ({ navigation }) => {
               </Button>
             ) : (
               <>
-                <Heading style={styles.heading}>{user.email}</Heading>
+                <Heading size="lg" style={styles.heading}>
+                  {user.email}
+                </Heading>
                 {pic === null ? (
                   <Button
                     style={styles.pictureButton}
@@ -117,7 +140,7 @@ const AccountScreen = ({ navigation }) => {
                     size="md"
                     variant="outline"
                     onPress={() => {
-                      deletePic(user);
+                      deleteAlert();
                     }}
                   >
                     <Text style={{ color: "#CFB53B" }}>
@@ -139,7 +162,7 @@ const AccountScreen = ({ navigation }) => {
                 </Button>
 
                 <Button
-                  p={2}
+                  p={5}
                   size="lg"
                   minWidth="100%"
                   style={styles.signin}
@@ -148,17 +171,6 @@ const AccountScreen = ({ navigation }) => {
                   }}
                 >
                   Delete Account
-                </Button>
-                <Button
-                  style={styles.pictureButton}
-                  size="md"
-                  variant="outline"
-                  onPress={() => {
-                    console.log(pic);
-                    profilePicture();
-                  }}
-                >
-                  <Text style={{ color: "#CFB53B" }}>Get Picture</Text>
                 </Button>
               </>
             )}
@@ -185,9 +197,9 @@ const AccountScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   heading: {
-    color: "white",
-    backgroundColor: "black",
+    color: "#CFB53B",
     textAlign: "center",
+    margin: 10,
   },
   input: {
     height: 40,
@@ -207,6 +219,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#CFB53B",
+    margin: 10,
     borderRadius: 0,
   },
   container: {
@@ -217,6 +230,9 @@ const styles = StyleSheet.create({
   signin: {
     backgroundColor: "#CFB53B",
     borderRadius: 0,
+  },
+  picture: {
+    marginBottom: 40,
   },
 });
 

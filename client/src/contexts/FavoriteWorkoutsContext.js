@@ -18,7 +18,6 @@ const FavoriteWorkoutsProvider = ({ children }) => {
             email: userData.email,
           })
           .then((response) => {
-            console.log(response.data);
             setFavoriteWorkouts(response.data);
           })
           .catch((e) => {
@@ -51,7 +50,6 @@ const FavoriteWorkoutsProvider = ({ children }) => {
   };
 
   const removeFavoriteWorkout = async (favWorkout) => {
-    console.log("workoutdelete: ", favWorkout);
     SecureStore.getItemAsync("user").then((user) => {
       if (user) {
         const userData = JSON.parse(user);
