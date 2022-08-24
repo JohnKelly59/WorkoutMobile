@@ -66,7 +66,6 @@ router.post("/deleteProfilePic", (req, res) => {
 router.get("/profilePic/:userid", async function (req, res) {
   if (!req.params.userid || req.params.userid === "undefined")
     return res.status(400).send("no image id");
-  const _id = new mongoose.Types.ObjectId(req.params.userid);
   await gfs
     .find({ filename: req.params.userid + "_profile" })
     .toArray((err, files) => {
