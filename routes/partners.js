@@ -10,9 +10,9 @@ router.post("/findUser", async function (req, res) {
 });
 
 router.post("/getPartners", async function (req, res) {
-  let currentUser = req.body.email;
+  let currentUser = req.body.user;
   let dbUser = await User.find({ email: currentUser });
-
+  console.log(dbUser);
   dbUser[0].getFriends(function (err, friends) {
     if (err) {
       res.send({ error: err.message });
