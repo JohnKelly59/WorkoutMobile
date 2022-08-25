@@ -84,7 +84,10 @@ const AccountScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    profilePic(user);
+    setLoading(true);
+    profilePic(user).then((results) => {
+      setLoading(false);
+    });
   }, []);
 
   return (
