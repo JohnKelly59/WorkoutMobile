@@ -10,7 +10,7 @@ router.post("/findUser", async function (req, res) {
 });
 
 router.post("/getPartners", async function (req, res) {
-  let currentUser = req.body.user;
+  let currentUser = req.body.email;
   let dbUser = await User.find({ email: currentUser });
   console.log(dbUser);
   dbUser[0].getFriends(function (err, friends) {
