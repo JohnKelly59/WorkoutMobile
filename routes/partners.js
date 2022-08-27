@@ -15,7 +15,8 @@ router.post("/getPartners", async function (req, res) {
   console.log(dbUser);
   dbUser[0].getFriends(function (err, friends) {
     if (err) {
-      res.send({ error: err.message });
+      res.status(200).send({ error: "no partners" });
+      console.log("no friends");
     } else {
       res.send(friends);
     }
