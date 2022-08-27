@@ -2,14 +2,14 @@
   "expo": {
     "name": "Monster Fitness",
     "slug": "monsterFitnessWorkoutApp",
-    "version": "2.0",
+    "version": "2.0.1",
     "orientation": "portrait",
     "icon": "./assets/homeScreenIcon.jpg",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/homeScreenIcon.jpg",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "plugins": [
       [
@@ -27,7 +27,7 @@
       "supportsTablet": true,
       "userInterfaceStyle": "automatic",
       "bundleIdentifier": "com.batboy12.monsterFitnessWorkoutApp",
-      "buildNumber": "11"
+      "buildNumber": "12"
     },
     "android": {
       "userInterfaceStyle": "automatic",

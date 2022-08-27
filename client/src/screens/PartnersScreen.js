@@ -19,6 +19,7 @@ import {
   Checkbox,
   AlertDialog,
   Button,
+  Image,
 } from "native-base";
 import { usePartners } from "../contexts/PartnersContext";
 import UserContext from "../contexts/UserContext";
