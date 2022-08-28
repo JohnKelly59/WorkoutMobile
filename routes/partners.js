@@ -12,17 +12,17 @@ router.post("/findUser", async function (req, res) {
 router.post("/getPartners", async function (req, res) {
   let currentUser = req.body.email;
   let dbUser = await User.find({ email: currentUser });
-  if (!dbUser) {
+  if (dbUser.length === 0) {
     res.status(404).send("no user found");
-  }
-  dbUser[0].getFriends(function (err, friends) {
-    if (err) {
-      res.status(200).send({ error: "no partners" });
-      console.log("no friends");
-    } else {
-      res.send(friends);
-    }
-  });
+  } else
+    dbUser[0].getFriends(function (err, friends) {
+      if (err) {
+        res.status(200).send({ error: "no partners" });
+        console.log("no friends");
+      } else {
+        res.send(friends);
+      }
+    });
 });
 
 router.post("/removePartner", async function (req, res) {
