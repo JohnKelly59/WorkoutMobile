@@ -57,10 +57,6 @@ const PartnersScreen = (props) => {
     });
   };
 
-  useEffect(() => {
-    getPartners(user);
-  }, []);
-
   return (
     <NativeBaseProvider
       style={{ flex: 1, alignItems: "center", justifyContent: "center" }}

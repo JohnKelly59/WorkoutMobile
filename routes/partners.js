@@ -12,7 +12,9 @@ router.post("/findUser", async function (req, res) {
 router.post("/getPartners", async function (req, res) {
   let currentUser = req.body.email;
   let dbUser = await User.find({ email: currentUser });
-  console.log(dbUser);
+  if (!dbUser) {
+    res.status(404).send("no user found");
+  }
   dbUser[0].getFriends(function (err, friends) {
     if (err) {
       res.status(200).send({ error: "no partners" });
