@@ -1,7 +1,13 @@
 import React, { useEffect, useCallback } from "react";
 import Loading from "../components/Loading";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import { SafeAreaView, StyleSheet, Dimensions, ScrollView } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
 import { TimePicker, ValueMap } from "react-native-simple-time-picker";
 
 import {
@@ -26,6 +32,8 @@ import {
   Button,
   Checkbox,
 } from "native-base";
+import { useFavorites } from "../contexts/FavoritesContext";
+import UserContext from "../contexts/UserContext";
 import { useWorkout } from "../contexts/WorkoutContext";
 import { useFavoriteWorkouts } from "../contexts/FavoriteWorkoutsContext";
 import { useSharedWorkouts } from "../contexts/SharedWorkoutsContext";
@@ -59,7 +67,7 @@ const WorkoutSettingsScreen = (props) => {
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [isFavoriteOpen, setIsFavoriteOpen] = React.useState(false);
-
+  const [refreshing, setRefreshing] = React.useState(false);
   const onClose = () => setIsOpen(false);
   const cancelRef = React.useRef(null);
   const onFavoriteClose = () => setIsFavoriteOpen(false);
@@ -80,8 +88,10 @@ const WorkoutSettingsScreen = (props) => {
     getExerciseSearch,
     addChosenExercise,
   } = useWorkout();
-  const { sharedWorkouts } = useSharedWorkouts();
-  const { favoriteWorkouts } = useFavoriteWorkouts();
+  const { getFavorites } = useFavorites();
+  const { sharedWorkouts, getSharedWorkouts } = useSharedWorkouts();
+  const { favoriteWorkouts, getFavoriteWorkouts } = useFavoriteWorkouts();
+  const user = React.useContext(UserContext);
 
   const durationDateChange = (e) => {
     setWorkoutDuration(e);
@@ -97,11 +107,29 @@ const WorkoutSettingsScreen = (props) => {
     setIsOpen(!isOpen);
   };
 
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => {
+      setRefreshing(false),
+        getFavoriteWorkouts(),
+        getSharedWorkouts(user),
+        getFavorites();
+    });
+  }, []);
+
   return (
     <NativeBaseProvider
       style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
     >
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <Stack space={4} w="100%" style={{ paddingBottom: 100 }}>
           <Heading
             alignItems="center"

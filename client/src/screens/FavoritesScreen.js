@@ -51,10 +51,6 @@ const FavoritesScreen = ({ navigation }) => {
     });
   }, []);
 
-  useEffect(() => {
-    getFavorites();
-  }, []);
-
   return (
     <NativeBaseProvider
       style={{ flex: 1, alignItems: "center", justifyContent: "center" }}

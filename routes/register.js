@@ -24,10 +24,18 @@ router.post("/register", async function (req, res, done) {
       };
       //looks through database to make sure the emial hasn't been used
       let user = await User.findOne({ email: email });
+      let userName = await User.findOne({ firstName: name });
       if (user) {
         done(null, user, { message: "User with that email already exist" });
         res.render("register", {
           message: "User with that email already exist",
+        });
+      } else if (userName) {
+        done(null, userName, {
+          message: "User with that username already exist",
+        });
+        res.render("register", {
+          message: "User with that username already exist",
         });
       } else {
         //creates new user

@@ -63,10 +63,10 @@ const PartnersProvider = ({ children }) => {
     ]);
   };
 
-  const getUsers = async (email) => {
+  const getUsers = async (firstName) => {
     axios
       .post(`${API_URL}/findUser`, {
-        email,
+        firstName,
       })
       .then((response) => {
         setSearchedPartners(response.data);
@@ -287,6 +287,7 @@ const PartnersProvider = ({ children }) => {
       if (user) {
         const userData = JSON.parse(user);
         getPartners(userData);
+        getPartnerRequests(userData);
       }
     });
   }, []);

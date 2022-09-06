@@ -31,6 +31,7 @@ const RegisterScreen = ({ navigation }) => {
   const [show, setShow] = React.useState(false);
   const [show2, setShow2] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
+  const [usernameError, setUsernameError] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
 
@@ -42,6 +43,8 @@ const RegisterScreen = ({ navigation }) => {
   ) => {
     if (registerPassword != confirmRegisterPassword) {
       setPasswordError(true);
+    } else if (/\s/g.test(registerName) === true) {
+      setUsernameError(true);
     } else {
       try {
         setLoading(true);
@@ -72,6 +75,14 @@ const RegisterScreen = ({ navigation }) => {
               }}
             >
               <Error error={error} />
+              {passwordError ? (
+                <Text style={{ color: "red" }}>Passwords do not match</Text>
+              ) : null}
+              {usernameError ? (
+                <Text style={{ color: "red" }}>
+                  Username cannot have whitespaces
+                </Text>
+              ) : null}
               <Input
                 style={styles.input}
                 onChangeText={setRegisterName}
@@ -87,7 +98,7 @@ const RegisterScreen = ({ navigation }) => {
                     color="white"
                   />
                 }
-                placeholder="Name"
+                placeholder="Username"
                 placeholderTextColor="white"
                 color="white"
               />
@@ -162,8 +173,6 @@ const RegisterScreen = ({ navigation }) => {
                 placeholderTextColor="white"
                 color="white"
               />
-
-              {passwordError ? <Text>Passwords do not match</Text> : null}
             </Stack>
             <Button
               p={5}

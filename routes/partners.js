@@ -5,7 +5,9 @@ const axios = require("axios").default;
 const User = require("../models/User");
 
 router.post("/findUser", async function (req, res) {
-  let results = await User.find({ email: new RegExp(req.body.email, "i") });
+  let results = await User.find({
+    firstName: new RegExp(req.body.firstName, "i"),
+  });
   res.send(results);
 });
 

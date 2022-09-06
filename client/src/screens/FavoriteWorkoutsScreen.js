@@ -100,10 +100,6 @@ const FavoriteWorkoutsScreen = ({ navigation }) => {
     });
   }, []);
 
-  useEffect(() => {
-    getFavoriteWorkouts();
-  }, []);
-
   return (
     <>
       <NativeBaseProvider>

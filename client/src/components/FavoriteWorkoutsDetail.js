@@ -99,7 +99,6 @@ const FavoriteWorkoutsDetail = (props) => {
 
   useEffect(() => {
     getFavoriteWorkoutsExerciseCards(favoriteWorkout.exercises);
-    getPartners(user);
   }, []);
 
   const handleOnClose = () => setShowModal(false);
