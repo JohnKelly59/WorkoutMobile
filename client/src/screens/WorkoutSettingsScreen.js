@@ -104,7 +104,14 @@ const WorkoutSettingsScreen = (props) => {
   const selectedSearchParam = async (param) => {
     setSearchParam(param);
     getExerciseSearch(param);
-    setIsOpen(!isOpen);
+    setLoading(true);
+    wait(1000)
+      .then(() => {
+        setIsOpen(!isOpen);
+      })
+      .then(() => {
+        setLoading(false);
+      });
   };
 
   const wait = (timeout) => {
