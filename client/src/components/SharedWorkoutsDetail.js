@@ -99,7 +99,6 @@ const SharedWorkoutsDetail = (props) => {
 
   useEffect(() => {
     getSharedWorkoutsExerciseCards(sharedWorkout.exercises);
-    getPartners(user);
   }, []);
 
   const handleOnClose = () => setShowModal(false);

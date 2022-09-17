@@ -48,10 +48,6 @@ const PartnerRequestScreen = (props) => {
     });
   }, []);
 
-  useEffect(() => {
-    getPartnerRequests(user);
-  }, []);
-
   return (
     <NativeBaseProvider
       style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
@@ -75,7 +71,6 @@ const PartnerRequestScreen = (props) => {
             </Heading>
             {}
             <FlatList
-              backgroundColor="black"
               data={partnerRequests.received.filter((o) => {
                 if (o.requester !== null) {
                   return o;
@@ -104,42 +99,42 @@ const PartnerRequestScreen = (props) => {
                         fallbackSource={require("../../public/images/genericProfile.png")}
                         alt="Profile Pic"
                       />
-                      <Text
-                        _dark={{
-                          color: "#CFB53B",
-                        }}
-                        color="#CFB53B"
-                        bold
-                      >
-                        {item.requester.email}
-                      </Text>
                     </VStack>
-                    <Spacer />
-                    <Button
-                      backgroundColor="black"
-                      _text={{
+                    <Text
+                      fontSize="md"
+                      _dark={{
                         color: "#CFB53B",
                       }}
-                      size="sm"
-                      onPress={async () => {
-                        denyPartnerRequest(user, item.requester.email);
-                      }}
+                      color="#CFB53B"
+                      bold
                     >
-                      Deny
-                    </Button>
-                    <Button
-                      backgroundColor="black"
-                      _text={{
-                        color: "#CFB53B",
-                      }}
-                      size="sm"
-                      onPress={async () => {
-                        acceptPartnerRequest(user, item.requester.email);
-                      }}
-                    >
-                      Accept
-                    </Button>
+                      {item.requester.firstName}
+                    </Text>
                   </HStack>
+                  <Button
+                    backgroundColor="#CFB53B"
+                    _text={{
+                      color: "white",
+                    }}
+                    size="sm"
+                    onPress={async () => {
+                      denyPartnerRequest(user, item.requester.email);
+                    }}
+                  >
+                    Deny
+                  </Button>
+                  <Button
+                    backgroundColor="#CFB53B"
+                    _text={{
+                      color: "white",
+                    }}
+                    size="sm"
+                    onPress={async () => {
+                      acceptPartnerRequest(user, item.requester.email);
+                    }}
+                  >
+                    Accept
+                  </Button>
                 </Box>
               )}
               keyExtractor={(item) => item.requested.email}
@@ -158,7 +153,6 @@ const PartnerRequestScreen = (props) => {
               Sent
             </Heading>
             <FlatList
-              backgroundColor="black"
               data={partnerRequests.sent}
               renderItem={({ item }) => (
                 <Box
@@ -171,7 +165,7 @@ const PartnerRequestScreen = (props) => {
                   pr="9"
                   py="6"
                 >
-                  <HStack space={2} justifyContent="space-between">
+                  <HStack space={2}>
                     <VStack>
                       <Image
                         size={60}
@@ -183,30 +177,31 @@ const PartnerRequestScreen = (props) => {
                         fallbackSource={require("../../public/images/genericProfile.png")}
                         alt="Profile Pic"
                       />
-                      <Text
-                        _dark={{
-                          color: "#CFB53B",
-                        }}
-                        color="#CFB53B"
-                        bold
-                      >
-                        {item.requested.email}
-                      </Text>
                     </VStack>
-                    <Spacer />
-                    <Button
-                      backgroundColor="black"
-                      _text={{
-                        color: "#CFB53B",
+                    <Text
+                      fontSize="md"
+                      _dark={{
+                        color: "white",
                       }}
-                      size="sm"
-                      onPress={async () => {
-                        cancelPartnerRequest(user, item.requested.email);
-                      }}
+                      color="#CFB53B"
+                      bold
                     >
-                      Cancel
-                    </Button>
+                      {item.requested.firstName}
+                    </Text>
                   </HStack>
+                  <Button
+                    style={styles.button}
+                    backgroundColor="#CFB53B"
+                    _text={{
+                      color: "white",
+                    }}
+                    size="sm"
+                    onPress={async () => {
+                      cancelPartnerRequest(user, item.requested.email);
+                    }}
+                  >
+                    Cancel
+                  </Button>
                 </Box>
               )}
               keyExtractor={(item) => item.requested.email}
@@ -244,7 +239,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button: {
-    backgroundColor: "#CFB53B",
+    flex: 1,
   },
 });
 

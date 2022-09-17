@@ -76,7 +76,6 @@ const PartnerSearchScreen = (props) => {
 
         {searchedPartners.length ? (
           <FlatList
-            backgroundColor="black"
             data={searchedPartners}
             renderItem={({ item }) => (
               <Box
@@ -89,7 +88,7 @@ const PartnerSearchScreen = (props) => {
                 pr="9"
                 py="6"
               >
-                <HStack space={2} justifyContent="space-between">
+                <HStack space={2}>
                   <VStack>
                     <Image
                       size={60}
@@ -101,30 +100,31 @@ const PartnerSearchScreen = (props) => {
                       fallbackSource={require("../../public/images/genericProfile.png")}
                       alt="Profile Pic"
                     />
-                    <Text
-                      _dark={{
-                        color: "#CFB53B",
-                      }}
-                      color="#CFB53B"
-                      bold
-                    >
-                      {item.email}
-                    </Text>
                   </VStack>
-                  <Spacer />
-                  <Button
-                    backgroundColor="black"
-                    _text={{
+                  <Text
+                    fontSize="md"
+                    style
+                    _dark={{
                       color: "#CFB53B",
                     }}
-                    size="sm"
-                    onPress={async () => {
-                      sendPartnerRequest(user, item.email);
-                    }}
+                    color="#CFB53B"
+                    bold
                   >
-                    Send Request
-                  </Button>
+                    {item.firstName}
+                  </Text>
                 </HStack>
+                <Button
+                  backgroundColor="#CFB53B"
+                  _text={{
+                    color: "white",
+                  }}
+                  size="sm"
+                  onPress={async () => {
+                    sendPartnerRequest(user, item.email);
+                  }}
+                >
+                  Send Request
+                </Button>
               </Box>
             )}
             keyExtractor={(item) => item.email}

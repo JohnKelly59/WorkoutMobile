@@ -1,5 +1,6 @@
 import React from "react";
 import createAction from "../utils/createAction";
+import Loading from "./Loading";
 import { SafeAreaView } from "react-native";
 import {
   FlatList,
@@ -11,10 +12,12 @@ import {
   Checkbox,
   AlertDialog,
   Button,
+  Input,
 } from "native-base";
 import { useWorkout } from "../contexts/WorkoutContext";
 
 const WorkoutSearchList = (props) => {
+  const [loading, setLoading] = React.useState(false);
   const [listToAdd, dispatch] = React.useReducer((listToAdd, action) => {
     switch (action.type) {
       case true:
@@ -41,6 +44,39 @@ const WorkoutSearchList = (props) => {
     editSets,
   } = useWorkout();
 
+  const [search, setSearch] = React.useState("");
+  const [filtered, setFiltered] = React.useState("");
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+
+  const filterFunction = (text) => {
+    // Check if searched text is not blank
+    if (text) {
+      // Inserted text is not blank
+      // Filter the masterDataSource and update FilteredDataSource
+      const newData = searchedExercises.filter(function (item) {
+        console.log(searchedExercises);
+        // Applying filter for the inserted text in search bar
+        const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFiltered(newData);
+      setSearch(text);
+    } else {
+      setFiltered(searchedExercises);
+      setSearch(text);
+    }
+  };
+
+  React.useEffect(() => {
+    setLoading(true);
+    wait(1000).then(() => {
+      filterFunction(), setLoading(false);
+    });
+  }, searchedExercises);
+
   return (
     <AlertDialog
       style={{
@@ -58,9 +94,24 @@ const WorkoutSearchList = (props) => {
           Select Exercise
         </AlertDialog.Header>
         <AlertDialog.Body backgroundColor="black">
+          <Input
+            bg="#CFB53B"
+            p={3}
+            w={{
+              base: "85%",
+              md: "25%",
+            }}
+            minWidth="100%"
+            variant="underlined"
+            placeholder="Search List"
+            onChangeText={(text) => filterFunction(text)}
+            value={search}
+            underlineColorAndroid="transparent"
+            placeholderTextColor="white"
+            color="white"
+          />
           <FlatList
-            backgroundColor="black"
-            data={props.searchedExercises}
+            data={filtered}
             renderItem={({ item }) => (
               <Box
                 borderBottomWidth="1"
@@ -101,6 +152,7 @@ const WorkoutSearchList = (props) => {
             )}
             keyExtractor={(item) => item.name}
           />
+          <Loading loading={loading} />
         </AlertDialog.Body>
         <AlertDialog.Footer backgroundColor="#CFB53B" justifyContent="flex-end">
           <Button.Group>

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Monster Fitness",
+    "name": "Workout Monster",
     "slug": "monsterFitnessWorkoutApp",
-    "version": "2.0.3",
+    "version": "2.1.2",
     "orientation": "portrait",
     "icon": "./assets/homeScreenIcon.jpg",
     "userInterfaceStyle": "automatic",
@@ -27,7 +27,7 @@
       "supportsTablet": true,
       "userInterfaceStyle": "automatic",
       "bundleIdentifier": "com.batboy12.monsterFitnessWorkoutApp",
-      "buildNumber": "14"
+      "buildNumber": "17"
     },
     "android": {
       "userInterfaceStyle": "automatic",

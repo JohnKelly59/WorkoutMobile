@@ -69,7 +69,6 @@ const PartnersScreen = (props) => {
       >
         {partners.length ? (
           <FlatList
-            backgroundColor="black"
             data={partners}
             renderItem={({ item }) => (
               <Box
@@ -82,7 +81,7 @@ const PartnersScreen = (props) => {
                 pr="9"
                 py="6"
               >
-                <HStack space={2} justifyContent="space-between">
+                <HStack space={2}>
                   <VStack>
                     <Image
                       size={60}
@@ -94,30 +93,32 @@ const PartnersScreen = (props) => {
                       fallbackSource={require("../../public/images/genericProfile.png")}
                       alt="Profile Pic"
                     />
-                    <Text
-                      _dark={{
-                        color: "#CFB53B",
-                      }}
-                      color="#CFB53B"
-                      bold
-                    >
-                      {item.email}
-                    </Text>
                   </VStack>
-                  <Spacer />
-                  <Button
-                    backgroundColor="black"
-                    _text={{
+                  <Text
+                    fontSize="md"
+                    style
+                    _dark={{
                       color: "#CFB53B",
                     }}
-                    size="sm"
-                    onPress={async () => {
-                      partnerToRemove(item.email);
-                    }}
+                    color="#CFB53B"
+                    bold
                   >
-                    Remove
-                  </Button>
+                    {" "}
+                    {item.firstName}
+                  </Text>
                 </HStack>
+                <Button
+                  backgroundColor="#CFB53B"
+                  _text={{
+                    color: "white",
+                  }}
+                  size="sm"
+                  onPress={async () => {
+                    partnerToRemove(item.email);
+                  }}
+                >
+                  Remove
+                </Button>
               </Box>
             )}
             keyExtractor={(item) => item.email}
