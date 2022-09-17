@@ -65,14 +65,17 @@ router.post("/sendPartnerRequest", async function (req, res) {
 router.post("/getPartnerRequests", async function (req, res) {
   let currentUser = req.body.email;
   let dbUser = await User.find({ email: currentUser });
-
-  dbUser[0].getRequests(function (err, request) {
-    if (err) {
-      res.send({ error: err.message });
-    } else {
-      res.send(request);
-    }
-  });
+  if (dbUser[0]) {
+    dbUser[0].getRequests(function (err, request) {
+      if (err) {
+        res.send({ error: err.message });
+      } else {
+        res.send(request);
+      }
+    });
+  } else {
+    res.send({ error: "Something went wrong" });
+  }
 });
 
 router.post("/acceptPartnerRequest", async function (req, res) {

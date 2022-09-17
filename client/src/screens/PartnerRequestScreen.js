@@ -71,7 +71,6 @@ const PartnerRequestScreen = (props) => {
             </Heading>
             {}
             <FlatList
-              backgroundColor="black"
               data={partnerRequests.received.filter((o) => {
                 if (o.requester !== null) {
                   return o;
@@ -154,7 +153,6 @@ const PartnerRequestScreen = (props) => {
               Sent
             </Heading>
             <FlatList
-              backgroundColor="black"
               data={partnerRequests.sent}
               renderItem={({ item }) => (
                 <Box
@@ -192,6 +190,7 @@ const PartnerRequestScreen = (props) => {
                     </Text>
                   </HStack>
                   <Button
+                    style={styles.button}
                     backgroundColor="#CFB53B"
                     _text={{
                       color: "white",
@@ -240,7 +239,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button: {
-    backgroundColor: "#CFB53B",
+    flex: 1,
   },
 });
 

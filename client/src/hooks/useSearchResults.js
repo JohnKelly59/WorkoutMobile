@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../config";
+import { Alert, Vibration } from "react-native";
 
 export default () => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchError, setSearchError] = useState("");
   const [search, setSearch] = useState("");
+  const noResultsAlert = (message) => {
+    Alert.alert("No Results", "0 exercises matched parameters." + ".", [
+      {
+        text: "OK",
+        onPress: () => console.log("closed no results"),
+      },
+    ]);
+  };
 
   const searchWorkout = async (bodyPart, targetMuscle, equipment) => {
     try {
@@ -17,6 +26,9 @@ export default () => {
         })
         .then((response) => {
           setSearchResults(response.data[0]);
+          if (response.data[0].length === 0) {
+            noResultsAlert();
+          }
         });
     } catch (err) {
       console.log(err);
