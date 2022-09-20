@@ -2,12 +2,7 @@ import React, { useEffect } from "react";
 import useSearchResults from "../hooks/useSearchResults";
 import Loading from "../components/Loading";
 import Error from "../components/Error";
-import {
-  SafeAreaView,
-
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { SafeAreaView, StyleSheet, ScrollView } from "react-native";
 import {
   Input,
   Heading,
@@ -35,6 +30,7 @@ const SearchScreen = () => {
     searchError,
     searchFilterFunction,
     search,
+    resetSearch,
   ] = useSearchResults();
   const { favorites } = useFavorites();
   const [bodyPart, setBodyPart] = React.useState("");
@@ -115,7 +111,9 @@ const SearchScreen = () => {
   const buttonTap = async () => {
     try {
       setLoading(true);
-      await searchWorkout(bodyPart, targetMuscle, equipment);
+      searchResults.length > 0
+        ? resetSearch()
+        : await searchWorkout(bodyPart, targetMuscle, equipment);
       setLoading(false);
     } catch (e) {
       setError(e.message);
@@ -124,152 +122,169 @@ const SearchScreen = () => {
   };
 
   return (
- 
-      <NativeBaseProvider
-        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-      >
-        <ScrollView>
-          <Stack space={4} w="100%" alignItems="center">
-            <Center>
-              <Select
-                textAlign="center"
-                bg="#CFB53B"
-                p={3}
-                color="white"
-                _actionSheetBody={{ h: "300" }}
-                style={{ flex: 1 }}
-                selectedValue={bodyPart}
-                minWidth="100%"
-                accessibilityLabel="Body Part"
-                placeholder="Body Part"
-                placeholderTextColor="white"
-                _selectedItem={{
-                  bg: "#CFB53B",
-                  endIcon: <CheckIcon size="5" />,
-                }}
-                mt={1}
-                onValueChange={(itemValue) => setBodyPart(itemValue)}
-              >
-                {bodyParts.map((bodyPart, i) => {
-                  return (
-                    <Select.Item
-                      label={bodyPart.label}
-                      value={bodyPart.value}
-                      key={i}
-                    />
-                  );
-                })}
-              </Select>
-              <Select
-                textAlign="center"
-                bg="#CFB53B"
-                p={3}
-                color="white"
-                _actionSheetBody={{ h: "300" }}
-                style={{ flex: 1 }}
-                selectedValue={targetMuscle}
-                minWidth="100%"
-                accessibilityLabel="Target"
-                placeholderTextColor="white"
-                placeholder="Target"
-                _selectedItem={{
-                  bg: "#CFB53B",
-                  endIcon: <CheckIcon size="5" />,
-                }}
-                mt={1}
-                onValueChange={(itemValue) => setTargetMuscle(itemValue)}
-              >
-                {targetMuscles.map((targetMuscle, i) => {
-                  return (
-                    <Select.Item
-                      label={targetMuscle.label}
-                      value={targetMuscle.value}
-                      key={i}
-                    />
-                  );
-                })}
-              </Select>
-              <Select
-                textAlign="center"
-                bg="#CFB53B"
-                p={3}
-                color="white"
-                _actionSheetBody={{ h: "300" }}
-                style={{ flex: 1 }}
-                selectedValue={equipment}
-                minWidth="100%"
-                accessibilityLabel="Equipment"
-                placeholder="Equipment"
-                placeholderTextColor="white"
-                _selectedItem={{
-                  bg: "#CFB53B",
-                  endIcon: <CheckIcon size="5" />,
-                }}
-                mt={1}
-                onValueChange={(itemValue) => setEquipment(itemValue)}
-              >
-                {equipments.map((equipment, i) => {
-                  return (
-                    <Select.Item
-                      label={equipment.label}
-                      value={equipment.value}
-                      key={i}
-                    />
-                  );
-                })}
-              </Select>
-            </Center>
+    <NativeBaseProvider
+      style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+    >
+      <ScrollView>
+        <Stack space={4} w="100%" alignItems="center">
+          <Center>
+            <Select
+              textAlign="center"
+              bg="#CFB53B"
+              p={3}
+              color="white"
+              _actionSheetBody={{ h: "300" }}
+              style={{ flex: 1 }}
+              selectedValue={bodyPart}
+              minWidth="100%"
+              accessibilityLabel="Body Part"
+              placeholder="Body Part"
+              placeholderTextColor="white"
+              _selectedItem={{
+                bg: "#CFB53B",
+                endIcon: <CheckIcon size="5" />,
+              }}
+              mt={1}
+              onValueChange={(itemValue) => setBodyPart(itemValue)}
+            >
+              {bodyParts.map((bodyPart, i) => {
+                return (
+                  <Select.Item
+                    label={bodyPart.label}
+                    value={bodyPart.value}
+                    key={i}
+                  />
+                );
+              })}
+            </Select>
+            <Select
+              textAlign="center"
+              bg="#CFB53B"
+              p={3}
+              color="white"
+              _actionSheetBody={{ h: "300" }}
+              style={{ flex: 1 }}
+              selectedValue={targetMuscle}
+              minWidth="100%"
+              accessibilityLabel="Target"
+              placeholderTextColor="white"
+              placeholder="Target"
+              _selectedItem={{
+                bg: "#CFB53B",
+                endIcon: <CheckIcon size="5" />,
+              }}
+              mt={1}
+              onValueChange={(itemValue) => setTargetMuscle(itemValue)}
+            >
+              {targetMuscles.map((targetMuscle, i) => {
+                return (
+                  <Select.Item
+                    label={targetMuscle.label}
+                    value={targetMuscle.value}
+                    key={i}
+                  />
+                );
+              })}
+            </Select>
+            <Select
+              textAlign="center"
+              bg="#CFB53B"
+              p={3}
+              color="white"
+              _actionSheetBody={{ h: "300" }}
+              style={{ flex: 1 }}
+              selectedValue={equipment}
+              minWidth="100%"
+              accessibilityLabel="Equipment"
+              placeholder="Equipment"
+              placeholderTextColor="white"
+              _selectedItem={{
+                bg: "#CFB53B",
+                endIcon: <CheckIcon size="5" />,
+              }}
+              mt={1}
+              onValueChange={(itemValue) => setEquipment(itemValue)}
+            >
+              {equipments.map((equipment, i) => {
+                return (
+                  <Select.Item
+                    label={equipment.label}
+                    value={equipment.value}
+                    key={i}
+                  />
+                );
+              })}
+            </Select>
+          </Center>
 
-            {searchResults.length > 0 ? (
-              <Input
-                bg="#CFB53B"
-                p={3}
-                w={{
-                  base: "85%",
-                  md: "25%",
-                }}
-                minWidth="100%"
-                variant="underlined"
-                placeholder="Search List"
-                onChangeText={(text) => searchFilterFunction(text)}
-                value={search}
-                underlineColorAndroid="transparent"
-                placeholderTextColor="white"
-                color="white"
-              />
-            ) : null}
-            {searchError ? <Text>{searchError}</Text> : null}
-            <Error error={error} />
-            {searchResults.map((result, i) => {
-              return (
-                <Box alignItems="center" key={i}>
-                  <Box
-                    maxW="80"
-                    rounded="lg"
-                    overflow="hidden"
-                    borderColor="coolGray.200"
-                    borderWidth="1"
-                    _dark={{
-                      borderColor: "coolGray.600",
-                      backgroundColor: "gray.700",
-                    }}
-                    _web={{
-                      shadow: 2,
-                      borderWidth: 0,
-                    }}
-                    _light={{
-                      backgroundColor: "gray.50",
-                    }}
-                  >
-                    <Box>
-                      <AspectRatio w="100%" ratio={16 / 9}>
-                        <Image
-                          source={{
-                            uri: result.gifUrl,
-                          }}
-                          alt="image"
-                        />
-                      </AspectRatio>
+          {searchResults.length > 0 ? (
+            <Input
+              bg="#CFB53B"
+              p={3}
+              w={{
+                base: "85%",
+                md: "25%",
+              }}
+              minWidth="100%"
+              variant="underlined"
+              placeholder="Search List"
+              onChangeText={(text) => searchFilterFunction(text)}
+              value={search}
+              underlineColorAndroid="transparent"
+              placeholderTextColor="white"
+              color="white"
+            />
+          ) : null}
+          {searchError ? <Text>{searchError}</Text> : null}
+          <Error error={error} />
+          {searchResults.map((result, i) => {
+            return (
+              <Box alignItems="center" key={i}>
+                <Box
+                  maxW="80"
+                  rounded="lg"
+                  overflow="hidden"
+                  borderColor="coolGray.200"
+                  borderWidth="1"
+                  _dark={{
+                    borderColor: "coolGray.600",
+                    backgroundColor: "gray.700",
+                  }}
+                  _web={{
+                    shadow: 2,
+                    borderWidth: 0,
+                  }}
+                  _light={{
+                    backgroundColor: "gray.50",
+                  }}
+                >
+                  <Box>
+                    <AspectRatio w="100%" ratio={16 / 9}>
+                      <Image
+                        source={{
+                          uri: result.gifUrl,
+                        }}
+                        alt="image"
+                      />
+                    </AspectRatio>
+                    <Center
+                      bg="#CFB53B"
+                      _dark={{
+                        bg: "#CFB53B",
+                      }}
+                      _text={{
+                        color: "warmGray.50",
+                        fontWeight: "700",
+                        fontSize: "xs",
+                      }}
+                      position="absolute"
+                      bottom="0"
+                      px="3"
+                      py="1.5"
+                    >
+                      {result.id}
+                    </Center>
+                    {user.firstName !== "Guest" ? (
                       <Center
                         bg="#CFB53B"
                         _dark={{
@@ -281,111 +296,92 @@ const SearchScreen = () => {
                           fontSize: "xs",
                         }}
                         position="absolute"
-                        bottom="0"
+                        top="0"
+                        right="0"
                         px="3"
                         py="1.5"
                       >
-                        {result.id}
+                        {favorites.some(
+                          (favorite) => favorite.id === result.id
+                        ) ? (
+                          <FavoriteStar icon={"star"} id={result.id} />
+                        ) : (
+                          <FavoriteStar icon={"staro"} id={result.id} />
+                        )}
                       </Center>
-                      {user.firstName !== "Guest" ? (
-                        <Center
-                          bg="#CFB53B"
-                          _dark={{
-                            bg: "#CFB53B",
-                          }}
-                          _text={{
-                            color: "warmGray.50",
-                            fontWeight: "700",
-                            fontSize: "xs",
-                          }}
-                          position="absolute"
-                          top="0"
-                          right="0"
-                          px="3"
-                          py="1.5"
-                        >
-                          {favorites.some(
-                            (favorite) => favorite.id === result.id
-                          ) ? (
-                            <FavoriteStar icon={"star"} id={result.id} />
-                          ) : (
-                            <FavoriteStar icon={"staro"} id={result.id} />
-                          )}
-                        </Center>
-                      ) : null}
-                    </Box>
-                    <Stack p="4" space={1}>
-                      <Stack space={2}>
-                        <Heading size="xl" ml="-1">
-                          {result.name
-                            .toLowerCase()
-                            .split(" ")
-                            .map(
-                              (s) => s.charAt(0).toUpperCase() + s.substring(1)
-                            )
-                            .join(" ")}
-                        </Heading>
-                        <Text
-                          fontSize="md"
-                          _light={{
-                            color: "#CFB53B",
-                          }}
-                          _dark={{
-                            color: "#CFB53B",
-                          }}
-                          fontWeight="500"
-                          ml="-0.5"
-                          mt="-1"
-                        >
-                          {result.equipment.charAt(0).toUpperCase() +
-                            result.equipment.slice(1)}
-                        </Text>
-                      </Stack>
-                      <Text fontWeight="400" fontSize="lg">
-                        {result.bodyPart.charAt(0).toUpperCase() +
-                          result.bodyPart.slice(1)}
-                      </Text>
-                      <HStack
-                        alignItems="center"
-                        space={4}
-                        justifyContent="space-between"
-                      >
-                        <HStack alignItems="center">
-                          <Text
-                            fontSize="lg"
-                            color="coolGray.600"
-                            _dark={{
-                              color: "warmGray.200",
-                            }}
-                            fontWeight="400"
-                          >
-                            {result.target.charAt(0).toUpperCase() +
-                              result.target.slice(1)}
-                          </Text>
-                        </HStack>
-                      </HStack>
-                    </Stack>
+                    ) : null}
                   </Box>
+                  <Stack p="4" space={1}>
+                    <Stack space={2}>
+                      <Heading size="xl" ml="-1">
+                        {result.name
+                          .toLowerCase()
+                          .split(" ")
+                          .map(
+                            (s) => s.charAt(0).toUpperCase() + s.substring(1)
+                          )
+                          .join(" ")}
+                      </Heading>
+                      <Text
+                        fontSize="md"
+                        _light={{
+                          color: "#CFB53B",
+                        }}
+                        _dark={{
+                          color: "#CFB53B",
+                        }}
+                        fontWeight="500"
+                        ml="-0.5"
+                        mt="-1"
+                      >
+                        {result.equipment.charAt(0).toUpperCase() +
+                          result.equipment.slice(1)}
+                      </Text>
+                    </Stack>
+                    <Text fontWeight="400" fontSize="lg">
+                      {result.bodyPart.charAt(0).toUpperCase() +
+                        result.bodyPart.slice(1)}
+                    </Text>
+                    <HStack
+                      alignItems="center"
+                      space={4}
+                      justifyContent="space-between"
+                    >
+                      <HStack alignItems="center">
+                        <Text
+                          fontSize="lg"
+                          color="coolGray.600"
+                          _dark={{
+                            color: "warmGray.200",
+                          }}
+                          fontWeight="400"
+                        >
+                          {result.target.charAt(0).toUpperCase() +
+                            result.target.slice(1)}
+                        </Text>
+                      </HStack>
+                    </HStack>
+                  </Stack>
                 </Box>
-              );
-            })}
-          </Stack>
-        </ScrollView>
-        {bodyPart === "" && equipment === "" && targetMuscle === "" ? null : (
-          <Button
-            style={styles.button}
-            p={5}
-            size="lg"
-            minWidth="100%"
-            onPress={buttonTap}
-          >
-            Search
-          </Button>
-        )}
+              </Box>
+            );
+          })}
+        </Stack>
+      </ScrollView>
+      {bodyPart === "" && equipment === "" && targetMuscle === "" ? null : (
+        <Button
+          style={styles.button}
+          p={5}
+          size="lg"
+          minWidth="100%"
+          onPress={buttonTap}
+        >
+          {searchResults.length > 0 ? "Reset" : "Search"}
+        </Button>
+      )}
 
-        <Loading loading={loading} />
-      </NativeBaseProvider>
-   
+      <Loading loading={loading} />
+    </NativeBaseProvider>
   );
 };
 

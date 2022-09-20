@@ -56,7 +56,6 @@ const WorkoutSearchList = (props) => {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
       const newData = searchedExercises.filter(function (item) {
-        console.log(searchedExercises);
         // Applying filter for the inserted text in search bar
         const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
         const textData = text.toUpperCase();
