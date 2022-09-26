@@ -63,24 +63,23 @@ const WorkoutProvider = ({ children }) => {
     }
   };
 
-  const addChosenExercise = async (exercises) => {
-    exercises.forEach((exercise) => {
-      let chosenExercise = {
-        name: exercise,
-        sets: 1,
-        reps: 1,
-      };
-      try {
-        dispatch(createAction("ADD_CHOSEN_EXERCISE", chosenExercise));
-      } catch (err) {
-        console.error(err);
-      }
-    });
+  const addChosenExercise = async (exercise) => {
+    let chosenExercise = {
+      name: exercise,
+      sets: 1,
+      reps: 1,
+    };
+    try {
+      dispatch(createAction("ADD_CHOSEN_EXERCISE", chosenExercise));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const removeChosenExercise = async (exercise) => {
     try {
       dispatch(createAction("REMOVE_CHOSEN_EXERCISES", exercise));
+      return "success";
     } catch (err) {
       console.error(err);
     }

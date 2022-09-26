@@ -23,10 +23,11 @@ import {
   Button,
   Heading,
   Stack,
+  NativeBaseProvider,
 } from "native-base";
 import { useWorkout } from "../contexts/WorkoutContext";
 
-const ChosenExercisesList = (props) => {
+const ChosenExercisesScreen = (props) => {
   const {
     setSearchedExercises,
     searchedExercises,
@@ -110,63 +111,73 @@ const ChosenExercisesList = (props) => {
     </View>
   );
 
+  React.useEffect(() => {
+    setSearchedExercises([]);
+  }, []);
+
   return (
-    <View style={{ flex: 1, minWidth: "100%" }}>
-      <Heading alignItems="center" color="#CFB53B" fontSize="xl" p="4" pb="3">
-        Chosen Exercises
-      </Heading>
-      <SwipeListView
-        previewRowKey={"0"}
-        previewOpenValue={-40}
-        rightOpenValue={-90}
-        renderHiddenItem={renderHiddenItem}
-        contentContainerStyle={{}}
-        data={chosenExercises}
-        renderItem={({ item, index }) => (
-          <Box
-            style={{ backgroundColor: "#CFB53B" }}
-            borderBottomWidth="1"
-            _dark={{
-              borderColor: "gray.600",
-            }}
-            borderColor="coolGray.200"
-            pl="1"
-            pr="9"
-            py="6"
-          >
-            <HStack
-              space={2}
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <VStack>
-                <Text
-                  title="Exercise Name"
-                  style={{ color: "white", maxWidth: 200 }}
-                  numberOfLines={2}
-                  ellipsizeMode="tail"
-                  padding="0"
-                  _dark={{
-                    color: "warmGray.50",
-                  }}
-                  color="coolGray.800"
-                  bold
+    <NativeBaseProvider
+      style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+    >
+      <View style={{ flex: 1, minWidth: "100%" }}>
+        <Heading textAlign="center" color="#CFB53B" fontSize="xl" p="4" pb="3">
+          Chosen Exercises
+        </Heading>
+        {chosenExercises.length > 0 ? (
+          <SwipeListView
+            previewRowKey={"0"}
+            previewOpenValue={-40}
+            rightOpenValue={-90}
+            renderHiddenItem={renderHiddenItem}
+            contentContainerStyle={{}}
+            data={chosenExercises}
+            renderItem={({ item, index }) => (
+              <Box
+                style={{ backgroundColor: "#CFB53B" }}
+                borderBottomWidth="1"
+                _dark={{
+                  borderColor: "gray.600",
+                }}
+                borderColor="coolGray.200"
+                pl="1"
+                pr="9"
+                py="6"
+              >
+                <HStack
+                  space={2}
+                  justifyContent="space-between"
+                  alignItems="center"
                 >
-                  {item.name}
-                </Text>
-              </VStack>
-              <Spacer title="Sets" />
-              {setSetNumber(item.name, index)}
-              {setRepNumber(item.name, index)}
-            </HStack>
-          </Box>
-        )}
-        keyExtractor={(item) => item.name}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.text}>{title}</Text>
-        )}
-      />
-    </View>
+                  <VStack>
+                    <Text
+                      title="Exercise Name"
+                      style={{ color: "white", maxWidth: 200 }}
+                      numberOfLines={2}
+                      ellipsizeMode="tail"
+                      padding="0"
+                      _dark={{
+                        color: "warmGray.50",
+                      }}
+                      color="coolGray.800"
+                      bold
+                    >
+                      {item.name}
+                    </Text>
+                  </VStack>
+                  <Spacer title="Sets" />
+                  {setSetNumber(item.name, index)}
+                  {setRepNumber(item.name, index)}
+                </HStack>
+              </Box>
+            )}
+            keyExtractor={(item) => item.name}
+            renderSectionHeader={({ section: { title } }) => (
+              <Text style={styles.text}>{title}</Text>
+            )}
+          />
+        ) : null}
+      </View>
+    </NativeBaseProvider>
   );
 };
 
@@ -204,4 +215,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChosenExercisesList;
+export default ChosenExercisesScreen;

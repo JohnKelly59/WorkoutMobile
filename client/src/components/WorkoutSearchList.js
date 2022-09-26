@@ -1,33 +1,32 @@
 import React from "react";
 import createAction from "../utils/createAction";
 import Loading from "./Loading";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, Dimensions } from "react-native";
+import Carousel from "react-native-snap-carousel";
 import {
-  FlatList,
-  Box,
-  HStack,
-  VStack,
-  Text,
-  Spacer,
-  Checkbox,
-  AlertDialog,
-  Button,
   Input,
+  Heading,
+  AspectRatio,
+  Image,
+  Icon,
+  Stack,
+  Box,
+  Text,
+  Select,
+  Center,
+  HStack,
+  CheckIcon,
+  NativeBaseProvider,
+  Button,
 } from "native-base";
+import SetExerciseIcon from "./SetExerciseIcon";
 import { useWorkout } from "../contexts/WorkoutContext";
 
 const WorkoutSearchList = (props) => {
   const [loading, setLoading] = React.useState(false);
-  const [listToAdd, dispatch] = React.useReducer((listToAdd, action) => {
-    switch (action.type) {
-      case true:
-        return [...listToAdd, action.payload];
-      case false:
-        return listToAdd.filter((listToAdd) => listToAdd !== action.payload);
-      default:
-        return listToAdd;
-    }
-  }, []);
+
+  const sliderWidth = Dimensions.get("window").width;
+  const itemWidth = Math.round(sliderWidth * 0.8);
 
   const {
     setSearchedExercises,
@@ -69,6 +68,140 @@ const WorkoutSearchList = (props) => {
     }
   };
 
+  const rendorCarousel = ({ index }) => {
+    let i = index;
+    return (
+      <Box alignItems="center" key={i}>
+        <Box
+          maxW="80"
+          rounded="lg"
+          overflow="hidden"
+          borderColor="coolGray.200"
+          borderWidth="1"
+          _dark={{
+            borderColor: "coolGray.600",
+            backgroundColor: "gray.700",
+          }}
+          _web={{
+            shadow: 2,
+            borderWidth: 0,
+          }}
+          _light={{
+            backgroundColor: "gray.50",
+          }}
+        >
+          <Box>
+            <AspectRatio w="100%" ratio={16 / 9}>
+              <Image
+                source={{
+                  uri: searchedExercises[i].gifUrl,
+                }}
+                alt="image"
+              />
+            </AspectRatio>
+            <Center
+              bg="#CFB53B"
+              _dark={{
+                bg: "#CFB53B",
+              }}
+              _text={{
+                color: "warmGray.50",
+                fontWeight: "700",
+                fontSize: "xs",
+              }}
+              position="absolute"
+              bottom="0"
+              px="3"
+              py="1.5"
+            >
+              {searchedExercises[i].id}
+            </Center>
+
+            <Center
+              bg="#CFB53B"
+              _dark={{
+                bg: "#CFB53B",
+              }}
+              _text={{
+                color: "warmGray.50",
+                fontWeight: "700",
+                fontSize: "xs",
+              }}
+              position="absolute"
+              top="0"
+              right="0"
+              px="3"
+              py="1.5"
+            >
+              {chosenExercises.some(
+                (exercise) => exercise.id === searchedExercises[i].name
+              ) ? (
+                <SetExerciseIcon
+                  icon={"minus"}
+                  name={searchedExercises[i].name}
+                />
+              ) : (
+                <SetExerciseIcon
+                  icon={"plus"}
+                  name={searchedExercises[i].name}
+                />
+              )}
+            </Center>
+          </Box>
+          <Stack p="4" space={1}>
+            <Stack space={2}>
+              <Heading size="xl" ml="-1">
+                {searchedExercises[i].name
+                  .toLowerCase()
+                  .split(" ")
+                  .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+                  .join(" ")}
+              </Heading>
+              <Text
+                fontSize="md"
+                _light={{
+                  color: "#CFB53B",
+                }}
+                _dark={{
+                  color: "#CFB53B",
+                }}
+                fontWeight="500"
+                ml="-0.5"
+                mt="-1"
+              >
+                {searchedExercises[i].equipment.charAt(0).toUpperCase() +
+                  searchedExercises[i].equipment.slice(1)}
+              </Text>
+            </Stack>
+            <Text fontWeight="400" fontSize="lg">
+              {searchedExercises[i].bodyPart.charAt(0).toUpperCase() +
+                searchedExercises[i].bodyPart.slice(1)}
+            </Text>
+            <HStack
+              alignItems="center"
+              space={4}
+              justifyContent="space-between"
+            >
+              <HStack alignItems="center">
+                <Text
+                  fontSize="lg"
+                  color="coolGray.600"
+                  _dark={{
+                    color: "warmGray.200",
+                  }}
+                  fontWeight="400"
+                >
+                  {searchedExercises[i].target.charAt(0).toUpperCase() +
+                    searchedExercises[i].target.slice(1)}
+                </Text>
+              </HStack>
+            </HStack>
+          </Stack>
+        </Box>
+      </Box>
+    );
+  };
+
   React.useEffect(() => {
     setLoading(true);
     wait(1000).then(() => {
@@ -77,108 +210,16 @@ const WorkoutSearchList = (props) => {
   }, searchedExercises);
 
   return (
-    <AlertDialog
-      style={{
-        paddingTop: "50%",
-        height: "80%",
-        width: "100%",
-      }}
-      leastDestructiveRef={props.cancelRef}
-      isOpen={props.isOpen}
-      onClose={props.onClose}
-    >
-      <AlertDialog.Content>
-        <AlertDialog.CloseButton />
-        <AlertDialog.Header backgroundColor="#CFB53B">
-          Select Exercise
-        </AlertDialog.Header>
-        <AlertDialog.Body backgroundColor="black">
-          <Input
-            bg="#CFB53B"
-            p={3}
-            w={{
-              base: "85%",
-              md: "25%",
-            }}
-            minWidth="100%"
-            variant="underlined"
-            placeholder="Search List"
-            onChangeText={(text) => filterFunction(text)}
-            value={search}
-            underlineColorAndroid="transparent"
-            placeholderTextColor="white"
-            color="white"
-          />
-          <FlatList
-            data={filtered}
-            renderItem={({ item }) => (
-              <Box
-                borderBottomWidth="1"
-                _dark={{
-                  borderColor: "gray.600",
-                }}
-                borderColor="coolGray.200"
-                pl="1"
-                pr="9"
-                py="6"
-              >
-                <HStack space={2} justifyContent="space-between">
-                  <VStack>
-                    <Text
-                      _dark={{
-                        color: "#CFB53B",
-                      }}
-                      color="#CFB53B"
-                      bold
-                    >
-                      {item.name}
-                    </Text>
-                  </VStack>
-                  <Spacer />
-                  <Checkbox
-                    size="lg"
-                    _borderColor="white"
-                    _icon={{ color: "black" }}
-                    backgroundColor="#CFB53B"
-                    onChange={(e) => {
-                      dispatch(createAction(e, item.name));
-                    }}
-                    value={item.name}
-                    accessibilityLabel="Add exercise"
-                  />
-                </HStack>
-              </Box>
-            )}
-            keyExtractor={(item) => item.name}
-          />
-          <Loading loading={loading} />
-        </AlertDialog.Body>
-        <AlertDialog.Footer backgroundColor="#CFB53B" justifyContent="flex-end">
-          <Button.Group>
-            <Button
-              variant="unstyled"
-              colorScheme="coolGray"
-              onPress={props.onClose}
-              ref={props.cancelRef}
-            >
-              Cancel
-            </Button>
-            <Button
-              backgroundColor="black"
-              _text={{
-                color: "#CFB53B",
-              }}
-              size="sm"
-              onPress={() => {
-                props.onClose(), addChosenExercise(listToAdd);
-              }}
-            >
-              Done
-            </Button>
-          </Button.Group>
-        </AlertDialog.Footer>
-      </AlertDialog.Content>
-    </AlertDialog>
+    <>
+      {searchedExercises.length > 0 ? (
+        <Carousel
+          data={searchedExercises}
+          renderItem={rendorCarousel}
+          sliderWidth={sliderWidth}
+          itemWidth={itemWidth}
+        />
+      ) : null}
+    </>
   );
 };
 

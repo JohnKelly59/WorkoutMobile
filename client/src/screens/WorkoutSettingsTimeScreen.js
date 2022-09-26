@@ -28,32 +28,8 @@ import {
 } from "native-base";
 import { useWorkout } from "../contexts/WorkoutContext";
 import WorkoutSearchList from "../components/WorkoutSearchList";
-import ChosenExercisesTable from "../components/ChosenExercisesTable";
 
 const WorkoutSettingsTimeScreen = (props) => {
-  const targetMuscles = [
-    { label: "", value: "" },
-    { label: "Abductors", value: "abductors" },
-    { label: "Abs", value: "abs" },
-    { label: "Adductors", value: "adductors" },
-    { label: "Biceps", value: "biceps" },
-    { label: "Calves", value: "calves" },
-    { label: "Cardiovascular System", value: "cardiovascular system" },
-    { label: "Delts", value: "delts" },
-    { label: "Forearms", value: "forearms" },
-    { label: "Glutes", value: "glutes" },
-    { label: "Hamstrings", value: "hamstrings" },
-    { label: "Lats", value: "lats" },
-    { label: "Leator Scapulae", value: "leator Scapulae" },
-    { label: "Pectorals", value: "pectorals" },
-    { label: "Quads", value: "quads" },
-    { label: "Serratus Anterior", value: "serratus anterior" },
-    { label: "Spine", value: "spine" },
-    { label: "Traps", value: "traps" },
-    { label: "Triceps", value: "triceps" },
-    { label: "Upper Back", value: "upper back" },
-  ];
-
   const [isOpen, setIsOpen] = React.useState(false);
 
   const onClose = () => setIsOpen(false);
@@ -72,7 +48,6 @@ const WorkoutSettingsTimeScreen = (props) => {
   } = useWorkout();
 
   const durationDateChange = (e) => {
-    console.log(e);
     setWorkoutDuration(e);
   };
 
