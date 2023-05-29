@@ -81,7 +81,7 @@ router.post("/getPartnerRequests", async function (req, res) {
 router.post("/acceptPartnerRequest", async function (req, res) {
   let currentUser = req.body.user;
   let requestUser = req.body.partner;
-  console.log("postman: ", requestUser);
+
   let dbUser = await User.find({ email: currentUser });
   let dbRequestUser = await User.find({ email: requestUser });
 

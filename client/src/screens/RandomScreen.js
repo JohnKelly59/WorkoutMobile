@@ -31,6 +31,7 @@ const RandomScreen = () => {
     randomError,
     randomFilterFunction,
     random,
+    resetRandom,
   ] = useRandomResults();
   const user = React.useContext(UserContext);
   const { favorites } = useFavorites();
@@ -80,7 +81,9 @@ const RandomScreen = () => {
   const buttonTap = async () => {
     try {
       setLoading(true);
-      await randomWorkout(bodyPart, exercises);
+      randomResults.length > 0
+        ? resetRandom()
+        : await randomWorkout(bodyPart, exercises);
       setLoading(false);
     } catch (e) {
       setError(e.message);
@@ -321,7 +324,7 @@ const RandomScreen = () => {
           minWidth="100%"
           onPress={buttonTap}
         >
-          Randomize
+          {randomResults.length > 0 ? "Reset" : "Randomize"}
         </Button>
       )}
 

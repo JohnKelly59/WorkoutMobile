@@ -8,6 +8,7 @@ import WorkoutSettingsTimeScreen from "../screens/WorkoutSettingsTimeScreen";
 import WorkoutProvider from "../contexts/WorkoutContext";
 import FavoriteWorkoutsProvider from "../contexts/FavoriteWorkoutsContext";
 import HomeScreen from "../screens/HomeScreen";
+import ChosenExercisesScreen from "../screens/ChosenExercisesScreen";
 
 const WorkoutStack = createStackNavigator();
 
@@ -28,6 +29,10 @@ const WorkoutNavigator = (navigation) => {
               component={RenderWorkoutSettingsScreen}
               name="WorkoutSettingsScreen"
               options={{ headerLeft: () => null }}
+            />
+            <WorkoutStack.Screen
+              component={ChosenExercisesScreen}
+              name="Chosen Exercises"
             />
             <WorkoutStack.Screen
               component={WorkoutSettingsTimeScreen}

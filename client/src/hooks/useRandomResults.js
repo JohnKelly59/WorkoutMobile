@@ -40,11 +40,16 @@ export default () => {
     }
   };
 
+  const resetRandom = async () => {
+    setRandomResults([]);
+  };
+
   return [
     randomWorkout,
     randomResults,
     randomError,
     randomFilterFunction,
     random,
+    resetRandom,
   ];
 };

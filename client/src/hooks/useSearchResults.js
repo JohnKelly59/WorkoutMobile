@@ -7,14 +7,6 @@ export default () => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchError, setSearchError] = useState("");
   const [search, setSearch] = useState("");
-  const noResultsAlert = (message) => {
-    Alert.alert("No Results", "0 exercises matched parameters." + ".", [
-      {
-        text: "OK",
-        onPress: () => console.log("closed no results"),
-      },
-    ]);
-  };
 
   const searchWorkout = async (bodyPart, targetMuscle, equipment) => {
     try {
@@ -27,13 +19,19 @@ export default () => {
         .then((response) => {
           setSearchResults(response.data[0]);
           if (response.data[0].length === 0) {
-            noResultsAlert();
+            setSearchError("No Results.");
+          } else {
+            setSearchError("");
           }
         });
     } catch (err) {
       console.log(err);
       setSearchError("Something went wrong");
     }
+  };
+
+  const resetSearch = async () => {
+    setSearchResults([]);
   };
 
   const searchFilterFunction = (text) => {
@@ -60,5 +58,6 @@ export default () => {
     searchError,
     searchFilterFunction,
     search,
+    resetSearch,
   ];
 };

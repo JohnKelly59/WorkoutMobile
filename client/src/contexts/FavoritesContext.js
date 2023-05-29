@@ -20,6 +20,7 @@ FavoritesProvider = ({ children }) => {
   });
 
   const getFavorites = async () => {
+    dispatch(createAction("SET_FAVORITES", []));
     SecureStore.getItemAsync("user").then((user) => {
       if (user) {
         let rUser = JSON.parse(user);

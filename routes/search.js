@@ -8,61 +8,25 @@ const Workouts = require("../models/Workouts");
 //array to hold data from api call
 var workout = [];
 
-router.post("/search", function (req, res) {
-  //erases array that holds data retrieved from api
-  workout = [];
-  //reteives front-end data
-  const bodyPart = req.body.bodyPart;
-  const equipment = req.body.equipment;
-  const target = req.body.targetMuscle;
-  // api options
-  Workouts.find({})
-    .then(function (response) {
-      // logging data retrieved from api
-      const json = response;
-      // logging all data retrieved from front-end
+router.post("/search", async (req, res) => {
+  const { bodyPart, equipment, targetMuscle } = req.body;
 
-      let result = [];
-      //statements to deteremine what data to filter
-      if (equipment === "" && target === "" && bodyPart === "") {
-        //push data to array
-        workout.push(json);
-      } else if (bodyPart === "" && target === "") {
-        result = json.filter((exercise) => exercise.equipment === equipment);
-      } else if (equipment === "" && bodyPart === "") {
-        result = json.filter((exercise) => exercise.target === target);
-      } else if (equipment === "" && target === "") {
-        result = json.filter((exercise) => exercise.bodyPart === bodyPart);
-      } else if (bodyPart === "") {
-        result = json.filter(
-          (exercise) =>
-            exercise.target === target && exercise.equipment === equipment
-        );
-      } else if (target === "") {
-        result = json.filter(
-          (exercise) =>
-            exercise.bodyPart === bodyPart && exercise.equipment === equipment
-        );
-      } else if (equipment === "") {
-        result = json.filter(
-          (exercise) =>
-            exercise.bodyPart === bodyPart && exercise.target === target
-        );
-      } else if (equipment != "" && target != "" && bodyPart != "") {
-        result = json.filter(
-          (exercise) =>
-            exercise.target === target &&
-            exercise.equipment === equipment &&
-            exercise.bodyPart === bodyPart
-        );
-      }
-      workout.push(result);
-      res.send(workout);
-    })
-    .catch(function (error) {
-      console.error(error);
-      res.send(error);
+  try {
+    let workouts = await Workouts.find({});
+    
+    workouts = workouts.filter((workout) => {
+      return (
+        (!bodyPart || workout.bodyPart === bodyPart) &&
+        (!equipment || workout.equipment === equipment) &&
+        (!targetMuscle || workout.target === targetMuscle)
+      );
     });
+
+    res.send(workouts);
+  } catch (error) {
+    console.error(error);
+    res.send(error);
+  }
 });
 
 router.post("/workoutsearch", async function (req, res) {
