@@ -5,28 +5,40 @@ const Favorite = require("../models/Favorites");
 const Daily = require("../models/Daily");
 const Workouts = require("../models/Workouts");
 
-//array to hold data from api call
-var workout = [];
+router.post("/search", function (req, res) {
+  // Initialize the workout array
+  const workout = [];
 
-router.post("/search", async (req, res) => {
-  const { bodyPart, equipment, targetMuscle } = req.body;
+  // Retrieve front-end data
+  const { bodyPart, equipment, target } = req.body;
 
-  try {
-    let workouts = await Workouts.find({});
-    
-    workouts = workouts.filter((workout) => {
-      return (
-        (!bodyPart || workout.bodyPart === bodyPart) &&
-        (!equipment || workout.equipment === equipment) &&
-        (!targetMuscle || workout.target === targetMuscle)
-      );
-    });
-
-    res.send(workouts);
-  } catch (error) {
-    console.error(error);
-    res.send(error);
+  // Check if at least one filter is provided
+  if (!bodyPart && !equipment && !target) {
+    return res.status(400).send({ error: 'At least one of "bodyPart", "equipment", or "target" must be provided.' });
   }
+
+  // Build the filter object dynamically
+  const filter = {};
+  if (bodyPart) filter.bodyPart = bodyPart;
+  if (equipment) filter.equipment = equipment;
+  if (target) filter.target = target;
+
+  // Query the workouts collection
+  Workouts.find(filter)
+    .then(function (response) {
+      // Log the data retrieved from the database
+      console.log(response);
+
+      // Add the response to the workout array
+      workout.push(...response);
+
+      // Send the workout array as the response
+      res.send(workout);
+    })
+    .catch(function (error) {
+      console.error(error);
+      res.status(500).send(error);
+    });
 });
 
 router.post("/workoutsearch", async function (req, res) {
