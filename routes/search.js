@@ -21,7 +21,7 @@ router.post("/search", function (req, res) {
         });
       }
 
-      res.send(result);
+      res.send([result]);  // Wrap the result in an array before sending it.
     })
     .catch(function (error) {
       console.error(error);
