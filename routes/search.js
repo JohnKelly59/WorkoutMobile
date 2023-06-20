@@ -5,27 +5,59 @@ const Favorite = require("../models/Favorites");
 const Daily = require("../models/Daily");
 const Workouts = require("../models/Workouts");
 
-router.post("/search", function (req, res) {
-  const { bodyPart, equipment, target } = req.body;
+//array to hold data from api call
+var workout = [];
 
+router.post("/search", function (req, res) {
+  //erases array that holds data retrieved from api
+  workout = [];
+  //reteives front-end data
+  const bodyPart = req.body.bodyPart;
+  const equipment = req.body.equipment;
+  const target = req.body.targetMuscle;
+  // api options
   Workouts.find({})
     .then(function (response) {
-      let result;
+      // logging data retrieved from api
+      const json = response;
+      // logging all data retrieved from front-end
 
+      let result = [];
+      //statements to deteremine what data to filter
       if (equipment === "" && target === "" && bodyPart === "") {
-        // Push whole dataset into the array if no filters are specified.
-        result = [response];
-      } else {
-        // Apply filters and then push into an array.
-        result = [response.filter((exercise) => {
-          let matchesEquipment = equipment === "" || exercise.equipment === equipment;
-          let matchesTarget = target === "" || exercise.target === target;
-          let matchesBodyPart = bodyPart === "" || exercise.bodyPart === bodyPart;
-          return matchesEquipment && matchesTarget && matchesBodyPart;
-        })];
+        //push data to array
+        workout.push(json);
+      } else if (bodyPart === "" && target === "") {
+        result = json.filter((exercise) => exercise.equipment === equipment);
+      } else if (equipment === "" && bodyPart === "") {
+        result = json.filter((exercise) => exercise.target === target);
+      } else if (equipment === "" && target === "") {
+        result = json.filter((exercise) => exercise.bodyPart === bodyPart);
+      } else if (bodyPart === "") {
+        result = json.filter(
+          (exercise) =>
+            exercise.target === target && exercise.equipment === equipment
+        );
+      } else if (target === "") {
+        result = json.filter(
+          (exercise) =>
+            exercise.bodyPart === bodyPart && exercise.equipment === equipment
+        );
+      } else if (equipment === "") {
+        result = json.filter(
+          (exercise) =>
+            exercise.bodyPart === bodyPart && exercise.target === target
+        );
+      } else if (equipment != "" && target != "" && bodyPart != "") {
+        result = json.filter(
+          (exercise) =>
+            exercise.target === target &&
+            exercise.equipment === equipment &&
+            exercise.bodyPart === bodyPart
+        );
       }
-
-      res.send(result);
+      workout.push(result);
+      res.send(workout);
     })
     .catch(function (error) {
       console.error(error);
