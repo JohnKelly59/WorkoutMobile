@@ -9,54 +9,34 @@ const Workouts = require("../models/Workouts");
 var workout = [];
 
 router.post("/search", function (req, res) {
-  //erases array that holds data retrieved from api
+  // Erase array that holds data retrieved from api
   workout = [];
-  //reteives front-end data
+
+  // Retrieve front-end data
   const bodyPart = req.body.bodyPart;
   const equipment = req.body.equipment;
   const target = req.body.targetMuscle;
-  // api options
+
+  // API options
   Workouts.find({})
     .then(function (response) {
-      // logging data retrieved from api
+      // Logging data retrieved from api
       const json = response;
-      // logging all data retrieved from front-end
 
-      let result = [];
-      //statements to deteremine what data to filter
-      if (equipment === "" && target === "" && bodyPart === "") {
-        //push data to array
+      // Filter the json data based on the conditions
+      let result = json.filter(exercise => {
+        return (bodyPart === "" || exercise.bodyPart === bodyPart) &&
+               (equipment === "" || exercise.equipment === equipment) &&
+               (target === "" || exercise.target === target);
+      });
+
+      // If no conditions provided, return all workouts
+      if (bodyPart === "" && equipment === "" && target === "") {
         workout.push(json);
-      } else if (bodyPart === "" && target === "") {
-        result = json.filter((exercise) => exercise.equipment === equipment);
-      } else if (equipment === "" && bodyPart === "") {
-        result = json.filter((exercise) => exercise.target === target);
-      } else if (equipment === "" && target === "") {
-        result = json.filter((exercise) => exercise.bodyPart === bodyPart);
-      } else if (bodyPart === "") {
-        result = json.filter(
-          (exercise) =>
-            exercise.target === target && exercise.equipment === equipment
-        );
-      } else if (target === "") {
-        result = json.filter(
-          (exercise) =>
-            exercise.bodyPart === bodyPart && exercise.equipment === equipment
-        );
-      } else if (equipment === "") {
-        result = json.filter(
-          (exercise) =>
-            exercise.bodyPart === bodyPart && exercise.target === target
-        );
-      } else if (equipment != "" && target != "" && bodyPart != "") {
-        result = json.filter(
-          (exercise) =>
-            exercise.target === target &&
-            exercise.equipment === equipment &&
-            exercise.bodyPart === bodyPart
-        );
+      } else {
+        workout.push(result);
       }
-      workout.push(result);
+
       res.send(workout);
     })
     .catch(function (error) {
