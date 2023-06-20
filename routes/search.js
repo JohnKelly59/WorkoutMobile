@@ -10,18 +10,22 @@ router.post("/search", function (req, res) {
 
   Workouts.find({})
     .then(function (response) {
-      let result = response;
+      let result;
 
-      if (equipment !== "" || target !== "" || bodyPart !== "") {
-        result = response.filter((exercise) => {
+      if (equipment === "" && target === "" && bodyPart === "") {
+        // Push whole dataset into the array if no filters are specified.
+        result = [response];
+      } else {
+        // Apply filters and then push into an array.
+        result = [response.filter((exercise) => {
           let matchesEquipment = equipment === "" || exercise.equipment === equipment;
           let matchesTarget = target === "" || exercise.target === target;
           let matchesBodyPart = bodyPart === "" || exercise.bodyPart === bodyPart;
           return matchesEquipment && matchesTarget && matchesBodyPart;
-        });
+        })];
       }
 
-      res.send([result]);  // Wrap the result in an array before sending it.
+      res.send(result);
     })
     .catch(function (error) {
       console.error(error);
