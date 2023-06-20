@@ -9,18 +9,33 @@ const Workouts = require("../models/Workouts");
 var workout = [];
 
 router.post("/search", function (req, res) {
+  // Erase array that holds data retrieved from api
+  workout = [];
+
   // Retrieve front-end data
-  const { bodyPart, equipment, target } = req.body;
+  const bodyPart = req.body.bodyPart;
+  const equipment = req.body.equipment;
+  const target = req.body.targetMuscle;
 
   // API options
   Workouts.find({})
     .then(function (response) {
-      // Filter the response data based on the conditions and push it directly into workout
-      workout.push(response.filter(exercise => {
+      // Logging data retrieved from api
+      const json = response;
+
+      // Filter the json data based on the conditions
+      let result = json.filter(exercise => {
         return (bodyPart === "" || exercise.bodyPart === bodyPart) &&
                (equipment === "" || exercise.equipment === equipment) &&
                (target === "" || exercise.target === target);
-      }));
+      });
+
+      // If no conditions provided, return all workouts
+      if (bodyPart === "" && equipment === "" && target === "") {
+        workout.push(json);
+      } else {
+        workout.push(result);
+      }
 
       res.send(workout);
     })
